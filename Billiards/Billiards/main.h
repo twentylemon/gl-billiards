@@ -10,7 +10,7 @@
 #include <vector>
 #include <new>
 #include <ctime>
-#include <GL/glut.h>
+#include "glut.h"
 
 #define ORTHO_WIDTH 100
 #define ORTHO_HEIGHT 100
@@ -20,6 +20,9 @@
 
 typedef struct {
     int glutWindow;
+	int windowHeight;
+	int windowWidth;
 } Global;
 
 extern Global global;
+
