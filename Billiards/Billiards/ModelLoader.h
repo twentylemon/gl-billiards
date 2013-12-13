@@ -77,8 +77,6 @@ typedef struct {
  *********************************************************/
 
 extern char Load3DS (obj_type_ptr ogg, char *filename);
-extern void disable3dsDebugMode();
-extern void enable3dsDebugMode();
 
 /**********************************************************
  *

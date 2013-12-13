@@ -37,14 +37,16 @@
 
 Global global;
 
-Model crate;
+Model tableBed;
+Model tableEdges;
 
 /**
  *	Loads all the models required for the scene using 3dsloader.h
  */
 void loadModels(){
-
-	crate.loadObject("Objects/crate.3DS", "Objects/crate.bmp");
+	
+	tableEdges.loadObject("Objects/table_edges.3DS", "");
+	tableBed.loadObject("Objects/table_bed.3DS", "Objects/textures/felt.bmp");
 }
 
 
@@ -99,7 +101,8 @@ void displayFunc(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glPushMatrix();
 
-	drawObject(crate.getModel());
+	drawObject(tableBed.getModel());
+	drawObject(tableEdges.getModel());
 
     glPopMatrix();
 	glutSwapBuffers();
@@ -169,7 +172,7 @@ void initializeWindow(){
     glMatrixMode(GL_PROJECTION); 
     glLoadIdentity(); 
 	gluPerspective(45.0f, global.windowWidth/global.windowHeight, 10.0f, 10000.0f); 
-	gluLookAt(350, 150, 350, 0, 20, 0, 0, 1, 0);
+	gluLookAt(180, 20, 100, 0, 0, 30, 0, 0, 1);
    
     glEnable(GL_DEPTH_TEST); //enable z buffer
     glEnable(GL_TEXTURE_2D);

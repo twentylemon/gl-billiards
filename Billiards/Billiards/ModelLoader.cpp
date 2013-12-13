@@ -71,7 +71,7 @@ typedef struct {
 // Counter to keep track of the last loaded texture
 int num_texture;
 
-bool debug_mode;
+static bool debug_mode = true;
 
 
 /**********************************************************
