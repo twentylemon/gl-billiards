@@ -16,7 +16,6 @@ void Model::loadObject(char* modelPath, char* texture)
 {
 	Load3DS (&model, modelPath);
 	model.id_texture = LoadTextureBitmap(texture); 
-    
 }
 
 obj_type* Model::getModel()

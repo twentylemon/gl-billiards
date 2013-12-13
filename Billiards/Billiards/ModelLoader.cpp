@@ -69,9 +69,9 @@ typedef struct {
  *********************************************************/
 
 // Counter to keep track of the last loaded texture
-int num_texture;
+static int num_texture = -1;
 
-static bool debug_mode = true;
+static bool debug_mode = false;
 
 
 /**********************************************************
@@ -84,7 +84,7 @@ static bool debug_mode = true;
 
 int LoadTextureBitmap(char *filename) 
 {
-	int num_texture = -1;
+	//int num_texture = -1;
     int i, j=0; //Index variables
     FILE *l_file; //File pointer
     unsigned char *l_texture; //The pointer to the memory zone in which we will load the texture

@@ -45,7 +45,7 @@ Model tableEdges;
  */
 void loadModels(){
 	
-	tableEdges.loadObject("Objects/table_edges.3DS", "");
+	tableEdges.loadObject("Objects/table_edges.3DS", "Objects/textures/crate.bmp");
 	tableBed.loadObject("Objects/table_bed.3DS", "Objects/textures/felt.bmp");
 }
 
@@ -101,9 +101,10 @@ void displayFunc(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glPushMatrix();
 
+
 	drawObject(tableBed.getModel());
 	drawObject(tableEdges.getModel());
-
+	
     glPopMatrix();
 	glutSwapBuffers();
 }
@@ -154,6 +155,36 @@ void motionFunc(int x, int y){
  * @param y the y coord of where the mouse event occurred
 **/
 void mouseFunc(int button, int state, int x, int y){
+}
+
+
+/**
+ * Initializes all scene lighting
+ *
+ */
+void initializeLighting(){
+	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_NORMALIZE);
+	glEnable(GL_LIGHT0);
+
+	GLfloat ambientLight[] = {0.3, 0.3, 0.3, 1.0};
+	GLfloat diffuseLight[] = {0.7, 0.7, 0.7, 1.0};
+	GLfloat specularLight[] = {0.5, 0.5, 0.5, 1.0};
+	GLfloat shininess[] = {50.0};
+	GLfloat position[] = {0, 0, 100, 1.0};
+	
+	glMaterialfv(GL_FRONT, GL_SPECULAR, specularLight);
+	glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
+
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);	
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+	glLightfv(GL_LIGHT0, GL_POSITION, position);
+		
+	glMaterialfv(GL_FRONT, GL_SPECULAR, specularLight);
+	glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
 }
 
 
@@ -210,6 +241,7 @@ int main(int argc, char** argv){
 
 	initializeWindow();
 	loadModels();
+	initializeLighting();
 
     glutMainLoop();
     return 0;
