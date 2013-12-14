@@ -39,6 +39,7 @@ Global global;
 
 Model tableBed;
 Model tableEdges;
+Model ball01;
 
 /**
  *	Loads all the models required for the scene using 3dsloader.h
@@ -47,6 +48,8 @@ void loadModels(){
 	
 	tableEdges.loadObject("Objects/table_edges.3DS", "Objects/textures/crate.bmp");
 	tableBed.loadObject("Objects/table_bed.3DS", "Objects/textures/felt.bmp");
+	ball01.loadObject("Objects/ball.3DS", "Objects/textures/ball01.bmp");
+
 }
 
 
@@ -104,6 +107,9 @@ void displayFunc(){
 
 	drawObject(tableBed.getModel());
 	drawObject(tableEdges.getModel());
+
+	drawObject(ball01.getModel());
+
 	
     glPopMatrix();
 	glutSwapBuffers();
@@ -203,7 +209,7 @@ void initializeWindow(){
     glMatrixMode(GL_PROJECTION); 
     glLoadIdentity(); 
 	gluPerspective(45.0f, global.windowWidth/global.windowHeight, 10.0f, 10000.0f); 
-	gluLookAt(180, 20, 100, 0, 0, 30, 0, 0, 1);
+	gluLookAt(70, 0, 180, 0, 0, 30, 0, 0, 1);
    
     glEnable(GL_DEPTH_TEST); //enable z buffer
     glEnable(GL_TEXTURE_2D);
