@@ -36,6 +36,11 @@ public:
     static Array3* subtract(Array3*, Array3*);
     static double distance(Array3*, Array3*);
 
+    double length();
+    double lengthSq();
+    void normalize();
+    void normalize(double);
+
     //getters/setters
     double* get();           //pointer to data
     double get(int);         //get single element

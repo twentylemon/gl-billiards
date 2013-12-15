@@ -109,6 +109,45 @@ bool Array3::equals(Array3* other){
 
 
 /**
+ * Returns the length of this Array3.
+ *
+ * @return the length of the Array3
+**/
+double Array3::length(){
+    return sqrt(lengthSq());
+}
+
+
+/**
+ * Returns the squared length of this Array3.
+ *
+ * @return the squared length of this Array3
+**/
+double Array3::lengthSq(){
+    return vec[X]*vec[X] + vec[Y]*vec[Y] + vec[Z]+vec[Z];
+}
+
+
+/**
+ * Normalizes this Array3 to a length of 1.
+**/
+void Array3::normalize(){
+    normalize(1.0);
+}
+
+
+/**
+ * Normalizes this Array3 to the length specified.
+ *
+ * @param length the length to make this Array3
+**/
+void Array3::normalize(double length){
+    divide(this->length());
+    multiply(pow(length, 1.0/2.0));
+}
+
+
+/**
  * Returns the distance squared between this and another Array3.
  *
  * @param other the other Array3 to get the distance from
