@@ -197,6 +197,7 @@ void Array3::set(double x, double y, double z){ vec[X] = x; vec[Y] = y; vec[Z] =
 void Array3::setX(double x){ vec[X] = x; }
 void Array3::setY(double y){ vec[Y] = y; }
 void Array3::setZ(double z){ vec[Z] = z; }
+double* Array3::data(){ return vec.data(); }
 
 
 /**

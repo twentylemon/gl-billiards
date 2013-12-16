@@ -57,6 +57,7 @@ public:
     void setX(double);
     void setY(double);
     void setZ(double);
+    double* data();
 
     std::string toString();
 
