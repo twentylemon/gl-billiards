@@ -49,39 +49,51 @@ void loadModels(){
  */
 void drawObject(obj_type* object){
 
-	int l_index;
+	int j;
 
-    glBindTexture(GL_TEXTURE_2D, (*object).id_texture); // We set the active texture 
+    glBindTexture(GL_TEXTURE_2D, object->id_texture); // We set the active texture 
 
 	glBegin(GL_TRIANGLES); // glBegin and glEnd delimit the vertices that define a primitive (in our case triangles)
-		for (l_index=0;l_index < (*object).polygons_qty;l_index++)
+		for (j = 0; j < object->polygons_qty; j++)
 		{
 			//----------------- FIRST VERTEX -----------------
-			// Texture coordinates of the first vertex
-			glTexCoord2f( (*object).mapcoord[ (*object).polygon[l_index].a ].u,
-						  (*object).mapcoord[ (*object).polygon[l_index].a ].v);
-			// Coordinates of the first vertex
-			glVertex3f( (*object).vertex[ (*object).polygon[l_index].a ].x,
-						(*object).vertex[ (*object).polygon[l_index].a ].y,
-						(*object).vertex[ (*object).polygon[l_index].a ].z); //Vertex definition
+		  //Normal coordinates of the first vertex
+		  glNormal3f( object->normal[ object->polygon[j].a ]->getX(),
+					  object->normal[ object->polygon[j].a ]->getY(),
+					  object->normal[ object->polygon[j].a ]->getZ());
+		  // Texture coordinates of the first vertex
+		  glTexCoord2f( object->mapcoord[ object->polygon[j].a ].u,
+						object->mapcoord[ object->polygon[j].a ].v);
+		  // Coordinates of the first vertex
+		  glVertex3f( object->vertex[ object->polygon[j].a ].x,
+					  object->vertex[ object->polygon[j].a ].y,
+					  object->vertex[ object->polygon[j].a ].z);
 
-			//----------------- SECOND VERTEX -----------------
-			// Texture coordinates of the second vertex
-			glTexCoord2f( (*object).mapcoord[ (*object).polygon[l_index].b ].u,
-						  (*object).mapcoord[ (*object).polygon[l_index].b ].v);
-			// Coordinates of the second vertex
-			glVertex3f( (*object).vertex[ (*object).polygon[l_index].b ].x,
-						(*object).vertex[ (*object).polygon[l_index].b ].y,
-						(*object).vertex[ (*object).polygon[l_index].b ].z);
-        
-			//----------------- THIRD VERTEX -----------------
-			// Texture coordinates of the third vertex
-			glTexCoord2f( (*object).mapcoord[ (*object).polygon[l_index].c ].u,
-						  (*object).mapcoord[ (*object).polygon[l_index].c ].v);
-			// Coordinates of the Third vertex
-			glVertex3f( (*object).vertex[ (*object).polygon[l_index].c ].x,
-						(*object).vertex[ (*object).polygon[l_index].c ].y,
-						(*object).vertex[ (*object).polygon[l_index].c ].z);
+		  //----------------- SECOND VERTEX -----------------
+		  //Normal coordinates of the second vertex
+		  glNormal3f( object->normal[ object->polygon[j].b ]->getX(),
+					  object->normal[ object->polygon[j].b ]->getY(),
+					  object->normal[ object->polygon[j].b ]->getZ());
+		  // Texture coordinates of the second vertex
+		  glTexCoord2f( object->mapcoord[ object->polygon[j].b ].u,
+						object->mapcoord[ object->polygon[j].b ].v);
+		  // Coordinates of the second vertex
+		  glVertex3f( object->vertex[ object->polygon[j].b ].x,
+					  object->vertex[ object->polygon[j].b ].y,
+					  object->vertex[ object->polygon[j].b ].z);
+
+		  //----------------- THIRD VERTEX -----------------
+		  //Normal coordinates of the third vertex
+		  glNormal3f( object->normal[ object->polygon[j].c ]->getX(),
+					  object->normal[ object->polygon[j].c ]->getY(),
+					  object->normal[ object->polygon[j].c ]->getZ());
+		  // Texture coordinates of the third vertex
+		  glTexCoord2f( object->mapcoord[ object->polygon[j].c ].u,
+						object->mapcoord[ object->polygon[j].c ].v);
+		  // Coordinates of the Third vertex
+		  glVertex3f( object->vertex[ object->polygon[j].c ].x,
+					  object->vertex[ object->polygon[j].c ].y,
+					  object->vertex[ object->polygon[j].c ].z);
 		}
 	glEnd();
 }
@@ -92,6 +104,9 @@ void drawObject(obj_type* object){
 void displayFunc(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glPushMatrix();
+	static double r = 0;
+	glRotated(r, 1, 0, 0);
+	r += 0.05;
 
 
 	drawObject(tableBed.getModel());
@@ -165,7 +180,7 @@ int main(int argc, char** argv){
     init();
 
     glutDisplayFunc(displayFunc);
-    //glutIdleFunc(displayFunc);
+    glutIdleFunc(displayFunc);
     glutKeyboardFunc(keyboardFunc);
     glutMouseFunc(mouseFunc);
     glutMotionFunc(motionFunc);

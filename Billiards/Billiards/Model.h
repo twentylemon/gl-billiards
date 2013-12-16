@@ -8,6 +8,7 @@
 
 #pragma once
 #include "ModelLoader.h"
+#include "Array3.h"
 
 class Model{
 
@@ -16,5 +17,4 @@ class Model{
 public:
 	void loadObject(char* model, char* texture);
 	obj_type* getModel();
-
 };

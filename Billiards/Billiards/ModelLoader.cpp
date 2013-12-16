@@ -19,10 +19,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 /////////
 
-#include <stdio.h>
-#include <windows.h>
-#include "glut.h"
-#include <io.h>
+#include "ModelLoader.h"
 
 /**********************************************************
  *
@@ -32,34 +29,6 @@
 
 #define MAX_VERTICES 8000 // Max number of vertices (for each object)
 #define MAX_POLYGONS 8000 // Max number of polygons (for each object)
-
-// Our vertex type
-typedef struct{
-    float x,y,z;
-}vertex_type;
-
-// The polygon (triangle), 3 numbers that aim 3 vertices
-typedef struct{
-    unsigned short a,b,c;
-}polygon_type;
-
-// The mapcoord type, 2 texture coordinates for each vertex
-typedef struct{
-    float u,v;
-}mapcoord_type;
-
-// The object type
-typedef struct {
-	char name[20];
-    
-	int vertices_qty;
-    int polygons_qty;
-
-    vertex_type vertex[MAX_VERTICES]; 
-    polygon_type polygon[MAX_POLYGONS];
-    mapcoord_type mapcoord[MAX_VERTICES];
-    int id_texture;
-} obj_type, *obj_type_ptr;
 
 
 /**********************************************************
@@ -72,6 +41,8 @@ typedef struct {
 static int num_texture = -1;
 
 static bool debug_mode = false;
+
+vertex_type normals[MAX_VERTICES];
 
 
 /**********************************************************
@@ -346,4 +317,61 @@ void enable3dsDebugMode()
 void disable3dsDebugMode()
 {
 	debug_mode = false;
+}
+
+/*
+ * Modified code from Damiano Vitulli makes up this function
+ *
+ */
+void calculateNormals(obj_type_ptr p_object)
+{
+	int i;
+	//Array3* l_vect1, l_vect2, l_vect3, l_vect_b1, l_vect_b2, l_normal;
+	int l_connections_qty[MAX_VERTICES];
+
+	for (i=0; i < p_object->vertices_qty; i++)
+	{
+		p_object->normal[i] = new Array3();
+		l_connections_qty[i]=0;
+	}
+
+	for (i=0; i<p_object->polygons_qty; i++)
+	{
+		Array3* l_vect1 = new Array3(p_object->vertex[p_object->polygon[i].a].x,
+									p_object->vertex[p_object->polygon[i].a].y,
+									p_object->vertex[p_object->polygon[i].a].z);
+		Array3* l_vect2 = new Array3(p_object->vertex[p_object->polygon[i].b].x,
+									p_object->vertex[p_object->polygon[i].b].y,
+									p_object->vertex[p_object->polygon[i].b].z);
+		Array3* l_vect3 = new Array3(p_object->vertex[p_object->polygon[i].c].x,
+									p_object->vertex[p_object->polygon[i].c].y,
+									p_object->vertex[p_object->polygon[i].c].z);
+
+		/*VectCreate(&l_vect1, &l_vect2, &l_vect_b1);
+		VectCreate(&l_vect1, &l_vect3, &l_vect_b2);*/
+		l_vect2->subtract(l_vect1);
+		l_vect3->subtract(l_vect1);
+
+		//VectDotProduct (&l_vect_b1, &l_vect_b2, &l_normal);
+		Array3* l_normal = l_vect2->crossProduct(l_vect3);
+
+		//VectNormalize (&l_normal);
+		l_normal->normalize();
+
+		l_connections_qty[p_object->polygon[i].a]+=1;
+		l_connections_qty[p_object->polygon[i].b]+=1;
+		l_connections_qty[p_object->polygon[i].c]+=1;
+
+		p_object->normal[p_object->polygon[i].a]->add(l_normal);
+		p_object->normal[p_object->polygon[i].b]->add(l_normal);
+		p_object->normal[p_object->polygon[i].c]->add(l_normal);
+	} 
+
+	for (i=0; i<p_object->vertices_qty; i++)
+	{
+		if (l_connections_qty[i]>0)
+		{
+			p_object->normal[i]->divide(l_connections_qty[i]);
+		}
+	}
 }

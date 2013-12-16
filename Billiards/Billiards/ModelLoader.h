@@ -25,7 +25,13 @@
  */
 
 #pragma once
-#include "glut.h"
+#include <stdio.h>
+#include <io.h>
+#include <Windows.h>
+#include <new>
+
+#include "GL/glut.h"
+#include "Array3.h"
 
 /**********************************************************
  *
@@ -61,6 +67,8 @@ typedef struct {
     vertex_type vertex[MAX_VERTICES]; 
     polygon_type polygon[MAX_POLYGONS];
     mapcoord_type mapcoord[MAX_VERTICES];
+	Array3* normal[MAX_VERTICES]; // Array of the vertices' normals
+
     int id_texture;
 } obj_type, *obj_type_ptr;
 
@@ -87,3 +95,5 @@ extern char Load3DS (obj_type_ptr ogg, char *filename);
  *********************************************************/
 
 extern int LoadTextureBitmap(char *filename);
+
+void calculateNormals(obj_type_ptr p_object);

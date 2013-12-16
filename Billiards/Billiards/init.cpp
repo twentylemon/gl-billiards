@@ -60,6 +60,21 @@ void initializeWindow(){
     glPolygonMode (GL_FRONT_AND_BACK, GL_FILL); 
 }
 
+/**
+ *	Initializes the materials used for objects
+ */
+void initializeMaterials(){
+	GLfloat ambient[]= { 0.2f, 0.2f, 0.2f, 0.0f };
+	GLfloat diffuse[]= { 1.0f, 1.0f, 1.0f, 0.0f };
+	GLfloat specular[]= { 0.2f, 0.2f, 0.2f, 0.0f };
+	GLfloat shininess[]= { 1.0f };
+
+	glMaterialfv (GL_FRONT, GL_AMBIENT, ambient);
+	glMaterialfv (GL_FRONT, GL_DIFFUSE, diffuse);
+	glMaterialfv (GL_FRONT, GL_SPECULAR, specular);
+	glMaterialfv (GL_FRONT, GL_SHININESS, shininess); 
+}
+
 
 /**
  * Initializes the glut window and lighting, etc.
@@ -80,5 +95,6 @@ void init(){
     //glOrtho(-ORTHO_WIDTH, ORTHO_WIDTH, -ORTHO_HEIGHT, ORTHO_HEIGHT, -ORTHO_DEPTH, ORTHO_DEPTH);
 
 	initializeLighting();
+	initializeMaterials();
 	initializeWindow();
 }
