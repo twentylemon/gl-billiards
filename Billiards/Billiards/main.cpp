@@ -21,15 +21,15 @@ void loadModels(){
 	tableEdges.loadObject("Objects/table_edges.3DS", "Objects/textures/crate.bmp");
 	tableBed.loadObject("Objects/table_bed.3DS", "Objects/textures/felt.bmp");
 
-	balls[0].loadObject("Objects/ball.3DS", "Objects/textures/ball01.bmp"); //ball 1
-	balls[1].loadObject("Objects/ball.3DS", "Objects/textures/ball02.bmp"); //ball 2
-	balls[2].loadObject("Objects/ball.3DS", "Objects/textures/ball03.bmp"); //ball 3
-	balls[3].loadObject("Objects/ball.3DS", "Objects/textures/ball04.bmp"); //ball 4
-	balls[4].loadObject("Objects/ball.3DS", "Objects/textures/ball05.bmp"); //ball 5
-	balls[5].loadObject("Objects/ball.3DS", "Objects/textures/ball06.bmp"); //ball 6
-	balls[6].loadObject("Objects/ball.3DS", "Objects/textures/ball07.bmp"); //ball 7
-	balls[7].loadObject("Objects/ball.3DS", "Objects/textures/ball08.bmp"); //ball 8
-	balls[8].loadObject("Objects/ball.3DS", "Objects/textures/ball09.bmp"); //ball 9
+	balls[0].loadObject("Objects/ball.3DS", "Objects/textures/ball1.bmp"); //ball 1
+	balls[1].loadObject("Objects/ball.3DS", "Objects/textures/ball2.bmp"); //ball 2
+	balls[2].loadObject("Objects/ball.3DS", "Objects/textures/ball3.bmp"); //ball 3
+	balls[3].loadObject("Objects/ball.3DS", "Objects/textures/ball4.bmp"); //ball 4
+	balls[4].loadObject("Objects/ball.3DS", "Objects/textures/ball5.bmp"); //ball 5
+	balls[5].loadObject("Objects/ball.3DS", "Objects/textures/ball6.bmp"); //ball 6
+	balls[6].loadObject("Objects/ball.3DS", "Objects/textures/ball7.bmp"); //ball 7
+	balls[7].loadObject("Objects/ball.3DS", "Objects/textures/ball8.bmp"); //ball 8
+	balls[8].loadObject("Objects/ball.3DS", "Objects/textures/ball9.bmp"); //ball 9
 	balls[9].loadObject("Objects/ball.3DS", "Objects/textures/ball10.bmp"); //ball 10
 	balls[10].loadObject("Objects/ball.3DS", "Objects/textures/ball11.bmp"); //ball 11
 	balls[11].loadObject("Objects/ball.3DS", "Objects/textures/ball12.bmp"); //ball 12
@@ -37,7 +37,7 @@ void loadModels(){
 	balls[13].loadObject("Objects/ball.3DS", "Objects/textures/ball14.bmp"); //ball 14
 	balls[14].loadObject("Objects/ball.3DS", "Objects/textures/ball15.bmp"); //ball 15
 
-	cueBall.loadObject("Objects/ball.3DS", "Objects/textures/cue_ball.bmp");
+	cueBall.loadObject("Objects/ball.3DS", "Objects/textures/ball0.bmp");
 
 }
 

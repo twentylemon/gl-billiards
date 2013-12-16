@@ -36,6 +36,9 @@
     <ClInclude Include="Model.h">
       <Filter>Header Files\Models</Filter>
     </ClInclude>
+    <ClInclude Include="Ball.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Particle.cpp">
@@ -54,6 +57,9 @@
       <Filter>Source Files\Models</Filter>
     </ClCompile>
     <ClCompile Include="init.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ball.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

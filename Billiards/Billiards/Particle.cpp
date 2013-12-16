@@ -50,6 +50,7 @@ std::string Particle::toString(){
             "rotation: " + rotation->toString() + "\n";
 }
 
+
 /**
  * Destructor. Nothing to destroy.
 **/
