@@ -159,6 +159,31 @@ double Array3::distance(Array3* other){
 
 
 /**
+ * Calculates the dot product between this Array3 and another.
+ *
+ * @param other the other Array3
+ * @return the dot product between the two Array3's
+**/
+double Array3::dotProduct(Array3* other){
+    return vec[X] * other->getX() + vec[Y] * other->getY() + vec[Z] * other->getZ();
+}
+
+
+/**
+ * Calculates the cross product between the two Array3's.
+ *
+ * @param other the other Array3
+ * @return the cross product between the two Array3's
+**/
+Array3* Array3::crossProduct(Array3* other){
+    double x = vec[Y] * other->getZ() - vec[Z] * other->getY();
+    double y = vec[Z] * other->getX() - vec[X] * other->getZ();
+    double z = vec[X] * other->getY() - vec[Y] * other->getX();
+    return new Array3(x, y, z);
+}
+
+
+/**
  * Getters/Setters.
 **/
 double Array3::get(int idx){ return vec[idx]; }
@@ -220,6 +245,33 @@ double Array3::distance(Array3* first, Array3* second){
     double y = first->getY() - second->getY();
     double z = first->getZ() - second->getZ();
     return x*x + y*y + z*z;
+}
+
+
+/**
+ * Calculates the dot product between this Array3 and another.
+ *
+ * @param first one Array3
+ * @param second the other Array3
+ * @return the dot product between the two Array3's
+**/
+double Array3::dotProduct(Array3* first, Array3* second){
+    return first->getX() * second->getX() + first->getY() * second->getY() + first->getZ() * second->getZ();
+}
+
+
+/**
+ * Calculates the cross product between the two Array3's.
+ *
+ * @param first one Array3
+ * @param second the other Array3
+ * @return the cross product between the two Array3's
+**/
+Array3* Array3::crossProduct(Array3* first, Array3* second){
+    double x = first->getY() * second->getZ() - first->getZ() * second->getY();
+    double y = first->getZ() * second->getX() - first->getX() * second->getZ();
+    double z = first->getX() * second->getY() - first->getY() * second->getX();
+    return new Array3(x, y, z);
 }
 
 

@@ -53,5 +53,8 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files\Models</Filter>
     </ClCompile>
+    <ClCompile Include="init.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

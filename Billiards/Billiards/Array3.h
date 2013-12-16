@@ -31,10 +31,14 @@ public:
     void divide(double);
     double distance(Array3*);
     bool equals(Array3*);
+    double dotProduct(Array3*);
+    Array3* crossProduct(Array3*);
 
     static Array3* add(Array3*, Array3*);
     static Array3* subtract(Array3*, Array3*);
     static double distance(Array3*, Array3*);
+    static double dotProduct(Array3*, Array3*);
+    static Array3* crossProduct(Array3*, Array3*);
 
     double length();
     double lengthSq();

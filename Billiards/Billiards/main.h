@@ -11,6 +11,8 @@
 #include <new>
 #include <ctime>
 #include "glut.h"
+#include "Model.h"
+#include "Particle.h"
 
 #define ORTHO_WIDTH 100
 #define ORTHO_HEIGHT 100
@@ -26,3 +28,5 @@ typedef struct {
 
 extern Global global;
 
+//init.cpp
+void init();

@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Array3.cpp" />
+    <ClCompile Include="init.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
