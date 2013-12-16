@@ -57,8 +57,9 @@ void initializeWindow(){
     glEnable(GL_TEXTURE_2D);
 
 	glShadeModel(GL_SMOOTH);
-    glPolygonMode (GL_FRONT_AND_BACK, GL_FILL); 
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
 }
+
 
 /**
  *	Initializes the materials used for objects
@@ -69,10 +70,10 @@ void initializeMaterials(){
 	GLfloat specular[]= { 0.2f, 0.2f, 0.2f, 0.0f };
 	GLfloat shininess[]= { 1.0f };
 
-	glMaterialfv (GL_FRONT, GL_AMBIENT, ambient);
-	glMaterialfv (GL_FRONT, GL_DIFFUSE, diffuse);
-	glMaterialfv (GL_FRONT, GL_SPECULAR, specular);
-	glMaterialfv (GL_FRONT, GL_SHININESS, shininess); 
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, shininess); 
 }
 
 

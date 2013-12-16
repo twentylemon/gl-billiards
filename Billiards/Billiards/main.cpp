@@ -58,9 +58,8 @@ void drawObject(obj_type* object){
 		{
 			//----------------- FIRST VERTEX -----------------
 		  //Normal coordinates of the first vertex
-		  glNormal3f( object->normal[ object->polygon[j].a ]->getX(),
-					  object->normal[ object->polygon[j].a ]->getY(),
-					  object->normal[ object->polygon[j].a ]->getZ());
+		  glNormal3dv(object->normal[object->polygon[j].a]->data());
+		  //std::cerr << object->normal[object->polygon[j].a]->toString() << std::endl;
 		  // Texture coordinates of the first vertex
 		  glTexCoord2f( object->mapcoord[ object->polygon[j].a ].u,
 						object->mapcoord[ object->polygon[j].a ].v);
@@ -71,9 +70,7 @@ void drawObject(obj_type* object){
 
 		  //----------------- SECOND VERTEX -----------------
 		  //Normal coordinates of the second vertex
-		  glNormal3f( object->normal[ object->polygon[j].b ]->getX(),
-					  object->normal[ object->polygon[j].b ]->getY(),
-					  object->normal[ object->polygon[j].b ]->getZ());
+		  glNormal3dv(object->normal[object->polygon[j].b]->data());
 		  // Texture coordinates of the second vertex
 		  glTexCoord2f( object->mapcoord[ object->polygon[j].b ].u,
 						object->mapcoord[ object->polygon[j].b ].v);
@@ -84,9 +81,7 @@ void drawObject(obj_type* object){
 
 		  //----------------- THIRD VERTEX -----------------
 		  //Normal coordinates of the third vertex
-		  glNormal3f( object->normal[ object->polygon[j].c ]->getX(),
-					  object->normal[ object->polygon[j].c ]->getY(),
-					  object->normal[ object->polygon[j].c ]->getZ());
+		  glNormal3dv(object->normal[object->polygon[j].c]->data());
 		  // Texture coordinates of the third vertex
 		  glTexCoord2f( object->mapcoord[ object->polygon[j].c ].u,
 						object->mapcoord[ object->polygon[j].c ].v);
