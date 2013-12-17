@@ -43,9 +43,8 @@ void Model::draw(){
         for (unsigned int i = 0; i < polygons.size(); i++){
             for (int j = 0; j < 3; j++){
                 glTexCoord2fv(mapCoords[polygons[i][j]].data());
-                if (polygons[i][j] < normals.size())
-                    glNormal3dv(normals[polygons[i][j]]->data());
-                glVertex3dv(vecticies[polygons[i][j]]->data());
+                glNormal3dv(normals[polygons[i][j]]->data());
+                glVertex3dv(verticies[polygons[i][j]]->data());
             }
         }
 	glEnd();
@@ -67,7 +66,7 @@ void Model::loadObject(char* modelPath, char* texture){
         for (int j = 0; j < 3; j++)
             if (max < polygons[i][j])
                 max = polygons[i][j];
-    printf("max = %d\nnormals = %d\nvertex = %d\n\n", max, normals.size(), vecticies.size());
+    printf("max = %d\nnormals = %d\nvertex = %d\n\n", max, normals.size(), verticies.size());
 }
 
 
@@ -163,7 +162,7 @@ int Model::load3DS(char* p_filename){
 				fread(&x, sizeof(float), 1, l_file);
                 fread(&y, sizeof(float), 1, l_file);
 				fread(&z, sizeof(float), 1, l_file);
-                vecticies.push_back(new Array3(x, y, z));
+                verticies.push_back(new Array3(x, y, z));
 			}
 			break;
 
@@ -294,12 +293,31 @@ int Model::loadTextureBitmap(char *filename){
  *
  */
 void Model::calculateNormals(){
+    std::vector<int> numPolygons(verticies.size());
+    for (unsigned int i = 0; i < verticies.size(); i++){
+        normals.push_back(new Array3());
+    }
+
     for (unsigned int i = 0; i < polygons.size(); i++){
         //make the two vectors on the polygon
-        Array3* vec1 = Array3::subtract(vecticies[polygons[i][1]], vecticies[polygons[i][0]]);
-        Array3* vec2 = Array3::subtract(vecticies[polygons[i][2]], vecticies[polygons[i][0]]);
+        Array3* vec1 = Array3::subtract(verticies[polygons[i][1]], verticies[polygons[i][0]]);
+        Array3* vec2 = Array3::subtract(verticies[polygons[i][2]], verticies[polygons[i][0]]);
         //their cross product is a normal vector to the polygon
-        normals.push_back(Array3::crossProduct(vec1, vec2));
-        //normals.back()->normalize();  //GL_NORMALIZE is on
+        Array3* normal = Array3::crossProduct(vec1, vec2);
+        
+        //add up all the polygon surface normals
+        for (int j = 0; j < 3; j++){
+            normals[polygons[i][j]]->add(normal);
+            numPolygons[polygons[i][j]]++;
+        }
+    }
+
+    //now to get the vertex normals, just average the polygon normals
+    for (unsigned int i = 0; i < verticies.size(); i++){
+        if (numPolygons[i] > 1){
+            for (int j = 0; j < 3; j++){
+                normals[i]->divide(numPolygons[i]);
+            }
+        }
     }
 }

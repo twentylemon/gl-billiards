@@ -34,7 +34,7 @@ private:
     int loadTextureBitmap(char*);
 
     int textureID;
-    std::vector<Array3*> vecticies;
+    std::vector<Array3*> verticies;
     std::vector<Array3*> normals;
     std::vector<std::array<unsigned short, 3>> polygons;
     std::vector<std::array<float, 2>> mapCoords;
