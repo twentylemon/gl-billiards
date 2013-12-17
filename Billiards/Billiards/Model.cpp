@@ -42,8 +42,8 @@ void Model::draw(){
 	glBegin(GL_TRIANGLES);
         for (unsigned int i = 0; i < polygons.size(); i++){
             for (int j = 0; j < 3; j++){
-                glTexCoord2fv(mapCoords[polygons[i][j]].data());
                 glNormal3dv(normals[polygons[i][j]]->data());
+                glTexCoord2fv(mapCoords[polygons[i][j]].data());
                 glVertex3dv(verticies[polygons[i][j]]->data());
             }
         }
@@ -61,12 +61,6 @@ void Model::loadObject(char* modelPath, char* texture){
 	load3DS(modelPath);
 	textureID = loadTextureBitmap(texture);
 	calculateNormals();
-    int max = -1;
-    for (int i = 0; i < polygons.size(); i++)
-        for (int j = 0; j < 3; j++)
-            if (max < polygons[i][j])
-                max = polygons[i][j];
-    printf("max = %d\nnormals = %d\nvertex = %d\n\n", max, normals.size(), verticies.size());
 }
 
 
@@ -274,7 +268,8 @@ int Model::loadTextureBitmap(char *filename){
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // The magnification function ("linear" produces better results)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST); //The minifying function
 
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); // We don't combine the color with the original surface color, use only the texture map.
+    /** >_> **/
+    //glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); // We don't combine the color with the original surface color, use only the texture map.
 
     // Finally we define the 2d texture
     glTexImage2D(GL_TEXTURE_2D, 0, 4, infoheader.biWidth, infoheader.biHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, l_texture);
@@ -315,9 +310,8 @@ void Model::calculateNormals(){
     //now to get the vertex normals, just average the polygon normals
     for (unsigned int i = 0; i < verticies.size(); i++){
         if (numPolygons[i] > 1){
-            for (int j = 0; j < 3; j++){
-                normals[i]->divide(numPolygons[i]);
-            }
+            normals[i]->divide(numPolygons[i]);
         }
+        normals[i]->normalize();
     }
 }

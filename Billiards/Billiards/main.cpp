@@ -105,14 +105,6 @@ void displayFunc(){
 	glRotated(r, 1, 0, 0);
 	r += 0.5;
 
-
-	//drawObject(tableBed.getModel());
-	//drawObject(tableEdges.getModel());
-    /*
-	drawObject(balls[0].getModel());
-	glTranslatef(10, 10, 30);
-	drawObject(balls[13].getModel()); //ball 14
-    */
     global.table->draw();
     for (unsigned int i = 0; i < global.balls.size(); i++){
         global.balls[i]->draw();

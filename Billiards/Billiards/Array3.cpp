@@ -150,8 +150,10 @@ void Array3::normalize(){
  * @param length the length to make this Array3
 **/
 void Array3::normalize(double length){
-    divide(this->length());
-    multiply(pow(length, 1.0/2.0));
+    if (this->lengthSq() > 0){
+        divide(this->length());
+        multiply(pow(length, 1.0/2.0));
+    }
 }
 
 

@@ -13,7 +13,6 @@
  */
 void initializeLighting(){
 	glEnable(GL_COLOR_MATERIAL);
-	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
@@ -22,11 +21,11 @@ void initializeLighting(){
 	float diffuseLight[] = { 0.7f, 0.7f, 0.7f, 1.0f };
 	float specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	float shininess[] = { 50.0f };
-	float position[] = { 0, 0, 1, 1.0f };
+	float position[] = { 0, 0, 1, 0 };
 
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);	
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+	//glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);	
+	//glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+	//glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
 	glLightfv(GL_LIGHT0, GL_POSITION, position);
 }
 
@@ -41,16 +40,13 @@ void initializeWindow(){
 
 	glViewport(0, 0, global.windowWidth, global.windowHeight);  
 
-	//Projection mode
     glMatrixMode(GL_PROJECTION); 
     glLoadIdentity(); 
 	gluPerspective(45.0f, global.windowWidth/global.windowHeight, 10.0f, 10000.0f); 
 	gluLookAt(70, 0, 180, 0, 0, 30, 0, 0, 1);
    
-    glEnable(GL_DEPTH_TEST); //enable z buffer
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
-
-	glShadeModel(GL_SMOOTH);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
 }
 
@@ -59,9 +55,9 @@ void initializeWindow(){
  *	Initializes the materials used for objects
  */
 void initializeMaterials(){
-	float ambient[]= { 0.2f, 0.2f, 0.2f, 0.0f };
-	float diffuse[]= { 1.0f, 1.0f, 1.0f, 0.0f };
-	float specular[]= { 0.2f, 0.2f, 0.2f, 0.0f };
+	float ambient[]= { 0.2f, 0.2f, 0.2f, 1 };
+	float diffuse[]= { 1.0f, 1.0f, 1.0f, 1 };
+	float specular[]= { 0.2f, 0.2f, 0.2f, 1 };
 	float shininess[]= { 1.0f };
 
 	glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
@@ -75,8 +71,8 @@ void initializeMaterials(){
  * Creates all of the ball objects and the table.
 **/
 void initializeGame(){
-    for (int i = 0; i < 16; i++){
-        global.balls.push_back(new Ball(i));
+    for (int ballNum = 0; ballNum < 16; ballNum++){
+        global.balls.push_back(new Ball(ballNum));
     }
     global.table = new Table();
 }
@@ -99,9 +95,9 @@ void init(){
     glLoadIdentity();
 
     //glOrtho(-ORTHO_WIDTH, ORTHO_WIDTH, -ORTHO_HEIGHT, ORTHO_HEIGHT, -ORTHO_DEPTH, ORTHO_DEPTH);
-
+    
+	initializeWindow();
 	initializeLighting();
 	initializeMaterials();
-	initializeWindow();
     initializeGame();
 }
