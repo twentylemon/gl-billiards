@@ -33,7 +33,7 @@ private:
     int load3DS(char*);
     int loadTextureBitmap(char*);
 
-    int textureID;
+    int textureID, listID;
     std::vector<Array3*> verticies;
     std::vector<Array3*> normals;
     std::vector<std::array<unsigned short, 3>> polygons;

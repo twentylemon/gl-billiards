@@ -25,6 +25,9 @@ public:
 
     void draw();
 
+    double getRadius();
+    double getDiameter();
+
 private:
     const double RADIUS;
     const double DIAMETER;

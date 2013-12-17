@@ -39,15 +39,7 @@ Model::~Model(void){
 **/
 void Model::draw(){
     glBindTexture(GL_TEXTURE_2D, textureID);
-	glBegin(GL_TRIANGLES);
-        for (unsigned int i = 0; i < polygons.size(); i++){
-            for (int j = 0; j < 3; j++){
-                glNormal3dv(normals[polygons[i][j]]->data());
-                glTexCoord2fv(mapCoords[polygons[i][j]].data());
-                glVertex3dv(verticies[polygons[i][j]]->data());
-            }
-        }
-	glEnd();
+    glCallList(listID);
 }
 
 
@@ -61,6 +53,18 @@ void Model::loadObject(char* modelPath, char* texture){
 	load3DS(modelPath);
 	textureID = loadTextureBitmap(texture);
 	calculateNormals();
+    listID = glGenLists(1);
+    glNewList(listID, GL_COMPILE);
+	    glBegin(GL_TRIANGLES);
+            for (unsigned int i = 0; i < polygons.size(); i++){
+                for (int j = 0; j < 3; j++){
+                    glNormal3dv(normals[polygons[i][j]]->data());
+                    glTexCoord2fv(mapCoords[polygons[i][j]].data());
+                    glVertex3dv(verticies[polygons[i][j]]->data());
+                }
+            }
+	    glEnd();
+    glEndList();
 }
 
 

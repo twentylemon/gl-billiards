@@ -109,6 +109,10 @@ void displayFunc(){
     for (unsigned int i = 0; i < global.balls.size(); i++){
         global.balls[i]->draw();
     }
+    
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glutSolidSphere(5, 50, 50);
 	
     glPopMatrix();
 	glutSwapBuffers();
