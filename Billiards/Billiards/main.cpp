@@ -16,6 +16,7 @@ Model cueBall;
 /**
  *	Loads all the models required for the scene using 3dsloader.h
  */
+/*
 void loadModels(){
 	
 	tableEdges.loadObject("Objects/table_edges.3DS", "Objects/textures/crate.bmp");
@@ -40,13 +41,14 @@ void loadModels(){
 	cueBall.loadObject("Objects/ball.3DS", "Objects/textures/ball0.bmp");
 
 }
-
+*/
 
 /**
  *	Draws a loaded 3ds object
  *
  *	@param object the object to be drawn to the window
  */
+/*
 void drawObject(obj_type* object){
 
 	int j;
@@ -92,7 +94,7 @@ void drawObject(obj_type* object){
 		}
 	glEnd();
 }
-
+*/
 /**
  * Main glut redraw function.
 **/
@@ -101,17 +103,20 @@ void displayFunc(){
     glPushMatrix();
 	static double r = 0;
 	glRotated(r, 1, 0, 0);
-	r += 0.05;
+	r += 0.5;
 
 
-	drawObject(tableBed.getModel());
-	drawObject(tableEdges.getModel());
-
+	//drawObject(tableBed.getModel());
+	//drawObject(tableEdges.getModel());
+    /*
 	drawObject(balls[0].getModel());
-
 	glTranslatef(10, 10, 30);
 	drawObject(balls[13].getModel()); //ball 14
-
+    */
+    global.table->draw();
+    for (unsigned int i = 0; i < global.balls.size(); i++){
+        global.balls[i]->draw();
+    }
 	
     glPopMatrix();
 	glutSwapBuffers();
@@ -179,8 +184,6 @@ int main(int argc, char** argv){
     glutKeyboardFunc(keyboardFunc);
     glutMouseFunc(mouseFunc);
     glutMotionFunc(motionFunc);
-
-	loadModels();
 
     glutMainLoop();
     return 0;

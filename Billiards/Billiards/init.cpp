@@ -14,26 +14,20 @@
 void initializeLighting(){
 	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHTING);
 	glEnable(GL_NORMALIZE);
+	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 
-	GLfloat ambientLight[] = {0.3, 0.3, 0.3, 1.0};
-	GLfloat diffuseLight[] = {0.7, 0.7, 0.7, 1.0};
-	GLfloat specularLight[] = {0.5, 0.5, 0.5, 1.0};
-	GLfloat shininess[] = {50.0};
-	GLfloat position[] = {0, 0, 100, 1.0};
-	
-	glMaterialfv(GL_FRONT, GL_SPECULAR, specularLight);
-	glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
+	float ambientLight[] = { 0.3f, 0.3f, 0.3f, 1.0f };
+	float diffuseLight[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+	float specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	float shininess[] = { 50.0f };
+	float position[] = { 0, 0, 1, 1.0f };
 
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);	
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
 	glLightfv(GL_LIGHT0, GL_POSITION, position);
-		
-	glMaterialfv(GL_FRONT, GL_SPECULAR, specularLight);
-	glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
 }
 
 
@@ -65,15 +59,26 @@ void initializeWindow(){
  *	Initializes the materials used for objects
  */
 void initializeMaterials(){
-	GLfloat ambient[]= { 0.2f, 0.2f, 0.2f, 0.0f };
-	GLfloat diffuse[]= { 1.0f, 1.0f, 1.0f, 0.0f };
-	GLfloat specular[]= { 0.2f, 0.2f, 0.2f, 0.0f };
-	GLfloat shininess[]= { 1.0f };
+	float ambient[]= { 0.2f, 0.2f, 0.2f, 0.0f };
+	float diffuse[]= { 1.0f, 1.0f, 1.0f, 0.0f };
+	float specular[]= { 0.2f, 0.2f, 0.2f, 0.0f };
+	float shininess[]= { 1.0f };
 
 	glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, shininess); 
+}
+
+
+/**
+ * Creates all of the ball objects and the table.
+**/
+void initializeGame(){
+    for (int i = 0; i < 16; i++){
+        global.balls.push_back(new Ball(i));
+    }
+    global.table = new Table();
 }
 
 
@@ -98,4 +103,5 @@ void init(){
 	initializeLighting();
 	initializeMaterials();
 	initializeWindow();
+    initializeGame();
 }

@@ -15,8 +15,8 @@
  */
 
 //REMOVE THIS AND FIX
-#define _CRT_SECURE_NO_DEPRECATE
-#define _CRT_SECURE_NO_WARNINGS
+//#define _CRT_SECURE_NO_DEPRECATE
+//#define _CRT_SECURE_NO_WARNINGS
 /////////
 
 #include "ModelLoader.h"

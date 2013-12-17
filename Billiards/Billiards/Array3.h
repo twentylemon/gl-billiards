@@ -16,6 +16,7 @@ public:
     Array3(void);
     Array3(double, double, double);
     Array3(double*);
+    Array3(Array3*);
     ~Array3(void);
 
     static const int X = 0;

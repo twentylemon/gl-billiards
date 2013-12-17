@@ -5,16 +5,37 @@
  * @version 1.0
  * @since 2013-12-10
 **/
-
 #pragma once
-#include "ModelLoader.h"
+#include <string>
+#include <stdio.h>
+#include <io.h>
+#include <Windows.h>
+#include <array>
+#include <vector>
+#include "GL/glut.h"
 #include "Array3.h"
 
-class Model{
-
-	obj_type model;
-
+class Model {
 public:
+    static const int debug_mode = 0;
+
+    Model();
+    Model(std::string, std::string);
+    ~Model();
+
+    void draw();
+
 	void loadObject(char* model, char* texture);
-	obj_type* getModel();
+
+private:
+    
+    void calculateNormals();
+    int load3DS(char*);
+    int loadTextureBitmap(char*);
+
+    int textureID;
+    std::vector<Array3*> vecticies;
+    std::vector<Array3*> normals;
+    std::vector<std::array<unsigned short, 3>> polygons;
+    std::vector<std::array<float, 2>> mapCoords;
 };

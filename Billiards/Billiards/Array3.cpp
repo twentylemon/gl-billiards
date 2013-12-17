@@ -19,7 +19,7 @@ Array3::Array3(void){
  * Initializing constructor.
 **/
 Array3::Array3(double* data){
-    set(data[X], data[Y], data[Z]);
+    set(data);
 }
 
 
@@ -28,6 +28,14 @@ Array3::Array3(double* data){
 **/
 Array3::Array3(double x, double y, double z){
     set(x, y, z);
+}
+
+
+/**
+ * Yet another initializing constructor. Copies the other Array3.
+**/
+Array3::Array3(Array3* other){
+    set(other->data());
 }
 
 

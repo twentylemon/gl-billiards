@@ -10,9 +10,10 @@
 #include <vector>
 #include <new>
 #include <ctime>
-#include "glut.h"
+#include "GL/glut.h"
 #include "Model.h"
-#include "Particle.h"
+#include "Ball.h"
+#include "Table.h"
 
 #define ORTHO_WIDTH 100
 #define ORTHO_HEIGHT 100
@@ -24,6 +25,9 @@ typedef struct {
     int glutWindow;
 	int windowHeight;
 	int windowWidth;
+
+    std::vector<Ball*> balls;
+    Table* table;
 } Global;
 
 extern Global global;
