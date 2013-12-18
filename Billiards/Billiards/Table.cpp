@@ -21,8 +21,10 @@ Table::Table(void){
  * Draws the table.
 **/
 void Table::draw(){
+
     bed->draw();
     edges->draw();
+
 }
 
 

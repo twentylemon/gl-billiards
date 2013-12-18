@@ -100,33 +100,23 @@ void drawObject(obj_type* object){
 **/
 void displayFunc(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
-	static double r = 0;
+
+	/*static double r = 0;
 	glRotated(r, 1, 0, 0);
-	r += 0.5;
+	r += 0.005;*/
 
     global.table->draw();
     for (unsigned int i = 0; i < global.balls.size(); i++){
         global.balls[i]->draw();
     }
     
-    glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glutSolidSphere(5, 50, 50);
 	
     glPopMatrix();
 	glutSwapBuffers();
-}
-
-/**
- * Called when window is resized
- *
- * @param width new window width
- * @param height new window height
-**/
-void resizeFunc(int width, int height){
-	global.windowHeight = height;
-	global.windowWidth = width;
 }
 
 
@@ -180,6 +170,7 @@ int main(int argc, char** argv){
     glutKeyboardFunc(keyboardFunc);
     glutMouseFunc(mouseFunc);
     glutMotionFunc(motionFunc);
+	glutReshapeFunc(resizeWindow);
 
     glutMainLoop();
     return 0;

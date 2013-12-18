@@ -42,12 +42,36 @@ void initializeWindow(){
 
     glMatrixMode(GL_PROJECTION); 
     glLoadIdentity(); 
-	gluPerspective(45.0f, global.windowWidth/global.windowHeight, 10.0f, 10000.0f); 
-	gluLookAt(70, 0, 180, 0, 0, 30, 0, 0, 1);
+	gluPerspective(PERSPECTIVE_FIELD_OF_VIEW_ANGLE, global.windowWidth/global.windowHeight, MIN_CLIPPING, MAX_CLIPPING); 
+	gluLookAt(130, 0, 100, 0, 0, 30, 0, 0, 1);
    
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
+}
+
+
+/**
+ *	Sets window ratio when window is resized
+ *
+ *	@param width new window width
+ *	@param height new window height
+ */
+void resizeWindow(int width, int height){
+
+	global.windowWidth = width;
+	global.windowHeight = height;
+
+	glViewport(0, 0, global.windowWidth, global.windowHeight);
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+
+	GLdouble ratio = (GLdouble)width/height;
+	gluPerspective(PERSPECTIVE_FIELD_OF_VIEW_ANGLE, ratio, MIN_CLIPPING, MAX_CLIPPING); 
+
+	glPopMatrix();
 }
 
 

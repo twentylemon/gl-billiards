@@ -19,6 +19,11 @@
 #define ORTHO_HEIGHT 100
 #define ORTHO_DEPTH 100
 
+//gluPerspective constants
+#define MAX_CLIPPING 10000.0
+#define MIN_CLIPPING 1.0
+#define PERSPECTIVE_FIELD_OF_VIEW_ANGLE 45.0
+
 #define ESC 27
 
 typedef struct {
@@ -34,3 +39,4 @@ extern Global global;
 
 //init.cpp
 void init();
+void resizeWindow(int width, int height);

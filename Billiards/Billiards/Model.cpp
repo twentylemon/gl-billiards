@@ -107,6 +107,12 @@ int Model::load3DS(char* p_filename){
 		if(debug_mode)
 			printf("ChunkLenght: %x\n",l_chunk_lenght);
 
+		/*
+		 * DEBUGGING ONLY
+		 */
+		float max = 0.0f;
+		float min = 10000000.0f;
+
 		switch (l_chunk_id){
 		//----------------- MAIN3DS -----------------
 		// Description: Main chunk, contains all the other chunks
@@ -155,13 +161,27 @@ int Model::load3DS(char* p_filename){
 		//-------------------------------------------
 		case 0x4110: 
 			fread(&l_qty, sizeof (unsigned short), 1, l_file);
+
+
             for (i = 0; i < l_qty; i++){
                 float x, y, z;
 				fread(&x, sizeof(float), 1, l_file);
                 fread(&y, sizeof(float), 1, l_file);
 				fread(&z, sizeof(float), 1, l_file);
                 verticies.push_back(new Array3(x, y, z));
+
+				/*
+				 *	DEBUGGING ONLY
+				 */ if(x < min)
+						min = x;
+
+					if( x > max)
+						max = x;
 			}
+				/*
+				 *	DEBUGGING ONLY
+				 */ printf("Model::load3ds(), x-coordinates-> max: %f, min: %f\n", max, min);
+
 			break;
 
 		//--------------- TRI_FACEL1 ----------------
