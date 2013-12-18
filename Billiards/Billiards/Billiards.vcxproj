@@ -72,6 +72,7 @@
   <ItemGroup>
     <ClInclude Include="Array3.h" />
     <ClInclude Include="Ball.h" />
+    <ClInclude Include="Cue.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelLoader.h" />
@@ -81,6 +82,7 @@
   <ItemGroup>
     <ClCompile Include="Array3.cpp" />
     <ClCompile Include="Ball.cpp" />
+    <ClCompile Include="Cue.cpp" />
     <ClCompile Include="init.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />

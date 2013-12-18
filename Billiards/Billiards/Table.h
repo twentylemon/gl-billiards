@@ -24,5 +24,6 @@ public:
 private:
     Model* bed;
     Model* edges;
+	Model* rails;
 };
 
