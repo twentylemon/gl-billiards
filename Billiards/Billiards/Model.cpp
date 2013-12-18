@@ -336,6 +336,5 @@ void Model::calculateNormals(){
         if (numPolygons[i] > 1){
             normals[i]->divide(numPolygons[i]);
         }
-        normals[i]->normalize();
     }
 }

@@ -14,6 +14,7 @@
 #include "GL/glut.h"
 
 #define BALL_RADIUS 1.125
+#define BALL_MASS 6.0
 #define TABLE_WIDTH 9.0 * 12.0
 #define TABLE_HEIGHT 4.5 * 12.0
 
@@ -27,9 +28,13 @@ public:
 
     double getRadius();
     double getDiameter();
+    double getMass();
 
 private:
     const double RADIUS;
     const double DIAMETER;
+    const double MASS;
+
+    Array3* rollStart;
 };
 

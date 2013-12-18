@@ -11,7 +11,7 @@
 /**
  * Constructor. Loads the models for the pool table.
 **/
-Table::Table(void){
+Table::Table(void) : FRICTION(TABLE_FRICTION){
     bed = new Model("Objects/table_bed.3DS", "Objects/textures/felt.bmp");
     edges = new Model("Objects/table_edges.3DS", "Objects/textures/crate.bmp");
 }
@@ -21,10 +21,8 @@ Table::Table(void){
  * Draws the table.
 **/
 void Table::draw(){
-
     bed->draw();
     edges->draw();
-
 }
 
 

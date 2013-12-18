@@ -13,7 +13,7 @@
  *
  * @param number the number on the ball, 0 if the cue ball
 **/
-Ball::Ball(int number) : RADIUS(BALL_RADIUS), DIAMETER(2.0 * BALL_RADIUS), Particle(){
+Ball::Ball(int number) : RADIUS(BALL_RADIUS), DIAMETER(2.0 * BALL_RADIUS), MASS(BALL_MASS), Particle(){
     model = new Model("Objects/ball.3DS", "Objects/textures/ball" + std::to_string(number) + ".bmp");
     double offset = 2.0/9.0 * TABLE_WIDTH;
     switch (number){
@@ -49,6 +49,14 @@ void Ball::draw(){
     model->draw();
     glPopMatrix();
 }
+
+
+/**
+ * Getters/Setters.
+**/
+double Ball::getRadius(){ return RADIUS; }
+double Ball::getDiameter(){ return DIAMETER; }
+double Ball::getMass(){ return MASS; }
 
 
 /**

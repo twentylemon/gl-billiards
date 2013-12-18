@@ -9,6 +9,7 @@
 #pragma once
 #include <new>
 #include "Model.h"
+#define TABLE_FRICTION 0.95
 
 class Table
 {
@@ -17,6 +18,8 @@ public:
     ~Table(void);
 
     void draw();
+
+    const double FRICTION;
 
 private:
     Model* bed;
