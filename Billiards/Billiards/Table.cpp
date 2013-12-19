@@ -32,6 +32,5 @@ void Table::draw(){
  * Destructor.
 **/
 Table::~Table(void){
-    delete bed;
-    delete edges;
+    delete bed, edges, rails;
 }

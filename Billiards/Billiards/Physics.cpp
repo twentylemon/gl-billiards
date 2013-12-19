@@ -23,6 +23,7 @@ Physics::Physics(void){
     /** table properties **/
     tableWidth = 2.7432;        //9 ft (in m), along the x axis
     tableHeight = 1.3716;       //4.5 ft (in m), along the y axis
+    tableRailSize = 0;          //don't know this
 }
 
 

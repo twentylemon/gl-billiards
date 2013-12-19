@@ -35,5 +35,6 @@ private:
 
     double tableWidth;
     double tableHeight;
+    double tableRailSize;
 };
 
