@@ -14,13 +14,10 @@
 **/
 Cue::Cue(int playerNumber) : Particle() {
 
-	/*
-	Commented out until theres a model
-	
 	if(playerNumber == 1)
-		model = new Model("Objects/cue.3DS", "Objects/textures/cuePlayer1.bmp");
+		model = new Model("Objects/cue.3DS", "Objects/textures/cue1.bmp");
 	else
-		model = new Model("Objects/cue.3DS", "Objects/textures/cuePlayer2.bmp");*/
+		model = new Model("Objects/cue.3DS", "Objects/textures/cue1.bmp");
 }
 
 
@@ -30,3 +27,12 @@ Cue::Cue(int playerNumber) : Particle() {
 Cue::~Cue(){
 	delete model;
 }
+
+
+/**
+ * Draws the cue on the screen
+ */
+void Cue::draw(){
+	model->draw();
+}
+

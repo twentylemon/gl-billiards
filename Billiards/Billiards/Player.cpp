@@ -51,3 +51,12 @@ Cue* Player::getCue(){
 	return cue;
 }
 
+
+
+/**
+ * Draws this player's cue
+ */
+void Player::drawCue(){
+	cue->draw();
+}
+

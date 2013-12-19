@@ -99,6 +99,7 @@ void initializeGame(){
         global.balls.push_back(new Ball(ballNum));
     }
     global.table = new Table();
+	global.player1 = new Player(1);
 }
 
 

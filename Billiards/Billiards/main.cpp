@@ -111,6 +111,8 @@ void displayFunc(){
     for (unsigned int i = 0; i < global.balls.size(); i++){
         global.balls[i]->draw();
     }
+
+	global.player1->drawCue();
 	
     glPopMatrix();
 	glutSwapBuffers();

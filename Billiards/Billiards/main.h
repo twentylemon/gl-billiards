@@ -14,6 +14,7 @@
 #include "Model.h"
 #include "Ball.h"
 #include "Table.h"
+#include "Player.h"
 
 #define ORTHO_WIDTH 100
 #define ORTHO_HEIGHT 100
@@ -33,6 +34,8 @@ typedef struct {
 
     std::vector<Ball*> balls;
     Table* table;
+	Player* player1;
+
 } Global;
 
 extern Global global;

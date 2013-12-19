@@ -17,6 +17,7 @@ public:
 	int getPlayerNumber();
 	int getBallType();
 	Cue* getCue();
+	void drawCue();
 
 protected:
 	int playerNumber;
