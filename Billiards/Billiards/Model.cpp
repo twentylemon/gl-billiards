@@ -109,10 +109,10 @@ int Model::load3DS(char* p_filename){
 
 		/*
 		 * DEBUGGING ONLY
-		 */
+		 
 		float max = 0.0f;
 		float min = 10000000.0f;
-
+*/
 		switch (l_chunk_id){
 		//----------------- MAIN3DS -----------------
 		// Description: Main chunk, contains all the other chunks
@@ -172,15 +172,15 @@ int Model::load3DS(char* p_filename){
 
 				/*
 				 *	DEBUGGING ONLY
-				 */ if(x < min)
+				  if(x < min)
 						min = x;
 
 					if( x > max)
-						max = x;
+						max = x;*/
 			}
 				/*
 				 *	DEBUGGING ONLY
-				 */ printf("Model::load3ds(), x-coordinates-> max: %f, min: %f\n", max, min);
+				 printf("Model::load3ds(), x-coordinates-> max: %f, min: %f\n", max, min);*/ 
 
 			break;
 

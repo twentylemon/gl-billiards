@@ -12,6 +12,21 @@
 /**
  * Default constructor.
 **/
-Cue::Cue() : Particle() {
+Cue::Cue(int playerNumber) : Particle() {
 
+	/*
+	Commented out until theres a model
+	
+	if(playerNumber == 1)
+		model = new Model("Objects/cue.3DS", "Objects/textures/cuePlayer1.bmp");
+	else
+		model = new Model("Objects/cue.3DS", "Objects/textures/cuePlayer2.bmp");*/
+}
+
+
+/**
+ * Destructor
+ */
+Cue::~Cue(){
+	delete model;
 }

@@ -18,6 +18,9 @@
 #define TABLE_WIDTH 9.0 * 12.0
 #define TABLE_HEIGHT 4.5 * 12.0
 
+#define BALL_TYPE_SOLID 1
+#define BALL_TYPE_STRIPE 2
+
 class Ball : public Particle
 {
 public:
