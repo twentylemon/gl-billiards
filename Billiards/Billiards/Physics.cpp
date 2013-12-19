@@ -19,6 +19,10 @@ Physics::Physics(void){
     /** ball properties **/
     ballMass = 0.170079;        //6 oz (in kg)
     ballRadius = 0.028575;      //1.125in (in m)
+
+    /** table properties **/
+    tableWidth = 2.7432;        //9 ft (in m), along the x axis
+    tableHeight = 1.3716;       //4.5 ft (in m), along the y axis
 }
 
 
@@ -36,20 +40,31 @@ Physics* Physics::getInstance(){
 /**
  * Returns the hit spot on the ball sent, for { @see cueShot(Cue*, Ball*, Array3*) }
  *
+ * @param cue the cue
  * @param ball the ball to find the hit spot for
  * @param x the x offset from the center of the ball
  * @param y the y offset from the center of the ball
  * @see diagram below
 **/
-Array3* Physics::getHitSpot(Ball* ball, double x, double y){
+Array3* Physics::getHitSpot(Cue* cue, Ball* ball, double x, double y){
     /*  so we have a 2d circle to represent the hit spot for the UI
            ---
          /     \    C = center, no spin will be applied
         |   Cxx |   + = the spot the user will strike
          \  y +/    in this example, x = 2, y = -1
            ---
+        we can find the hit spot by using the equation of a sphere
+        x^2 + y^2 + z^2 = r^2
+        the only unknown is z, which will have two solutions, the point closer to the
+        cue is the hit point on the ball
     */
-    return new Array3();
+    double z = sqrt(ballRadius*ballRadius - x*x - y*y);
+    double negDist = cue->getPosition()->distance(x, y, -z);
+    double posDist = cue->getPosition()->distance(x, y, z);
+    if (negDist < posDist){
+        return Array3::add(cue->getPosition(), x, y, -z);
+    }
+    return Array3::add(cue->getPosition(), x, y, z);
 }
 
 
@@ -118,6 +133,25 @@ Array3* Physics::cueShot(Cue* cue, Ball* ball, Array3* hitSpot){
 
     Array3* omega = Array3::crossProduct(r, x);
     omega->multiply(5.0 * cueBallContactTime / ( 2.0 * ballMass * ballRadius * ballRadius));
+    delete r, x;
+    return omega;
+}
+
+
+/**
+ * Takes a shot with spin. (Wish I could return multiple values.)
+ * 
+ * @param cue the cue
+ * @param ball the ball being struck by the cue
+ * @param x the x offset from the center of the ball
+ * @param y the y offset from the center of the ball
+ * @return the rotational velocity that the ball with have after the shot
+ * @see Phyics::cueShot(Cue*, Ball*), Physics::getHitSpot(Cue*, Ball*, double, double)
+**/
+Array3* Physics::cueShot(Cue* cue, Ball* ball, double x, double y){
+    Array3* hitSpot = getHitSpot(cue, ball, x, y);
+    Array3* omega = cueShot(cue, ball, hitSpot);
+    delete hitSpot;
     return omega;
 }
 

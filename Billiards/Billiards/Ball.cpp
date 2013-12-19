@@ -17,6 +17,7 @@ Ball::Ball(int number) : RADIUS(BALL_RADIUS), DIAMETER(2.0 * BALL_RADIUS), MASS(
     model = new Model("Objects/ball.3DS", "Objects/textures/ball" + std::to_string(number) + ".bmp");
     double offset = 2.0/9.0 * TABLE_WIDTH;
     switch (number){
+        /*
     case 0: setPosition(0, -offset, 0); break;
     case 1: setPosition(0, offset, 0); break;
     case 2: setPosition(2.0 * RADIUS, offset + 4.0 * DIAMETER, 0); break;
@@ -33,6 +34,23 @@ Ball::Ball(int number) : RADIUS(BALL_RADIUS), DIAMETER(2.0 * BALL_RADIUS), MASS(
     case 13: setPosition(3.0 * RADIUS, offset + 3.0 * DIAMETER, 0); break;
     case 14: setPosition(-2.0 * RADIUS, offset + 2.0 * DIAMETER, 0); break;
     case 15: setPosition(RADIUS, offset + 3.0 * DIAMETER, 0); break;
+    */
+    case 0: setPosition(-offset, 0, 0); break;
+    case 1: setPosition(offset, 0, 0); break;
+    case 2: setPosition(offset + 4.0 * DIAMETER, 2.0 * RADIUS, 0); break;
+    case 3: setPosition(offset + DIAMETER, -RADIUS, 0); break;
+    case 4: setPosition(offset + 3.0 * DIAMETER, -RADIUS, 0); break;
+    case 5: setPosition(offset + 4.0 * DIAMETER, -2.0 * RADIUS, 0); break;
+    case 6: setPosition(offset + 2.0 * DIAMETER, 2.0 * RADIUS, 0); break;
+    case 7: setPosition(offset + 4.0 * DIAMETER, 4.0 * RADIUS, 0); break;
+    case 8: setPosition(offset + 2.0 * DIAMETER, 0, 0); break;
+    case 9: setPosition(offset + 3.0 * DIAMETER, -3.0 * RADIUS, 0); break;
+    case 10: setPosition(offset + 4.0 * DIAMETER, 0, 0); break;
+    case 11: setPosition(offset + DIAMETER, RADIUS, 0); break;
+    case 12: setPosition(offset + 4.0 * DIAMETER, -4.0 * RADIUS, 0); break;
+    case 13: setPosition(offset + 3.0 * DIAMETER, 3.0 * RADIUS, 0); break;
+    case 14: setPosition(offset + 2.0 * DIAMETER, -2.0 * RADIUS, 0); break;
+    case 15: setPosition(offset + 3.0 * DIAMETER, RADIUS, 0); break;
     }
 }
 

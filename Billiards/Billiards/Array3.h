@@ -31,11 +31,13 @@ public:
     void multiply(double);
     void divide(double);
     double distance(Array3*);
+    double distance(double, double, double);
     bool equals(Array3*);
     double dotProduct(Array3*);
     Array3* crossProduct(Array3*);
 
     static Array3* add(Array3*, Array3*);
+    static Array3* add(Array3*, double, double, double);
     static Array3* subtract(Array3*, Array3*);
     static double distance(Array3*, Array3*);
     static double dotProduct(Array3*, Array3*);

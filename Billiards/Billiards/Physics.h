@@ -10,6 +10,7 @@
 #include "Cue.h"
 #include "Ball.h"
 #include "Table.h"
+using std::auto_ptr;
 
 class Physics
 {
@@ -18,9 +19,10 @@ public:
 
     static Physics* getInstance();
 
-    Array3* getHitSpot(Ball*, double, double);
+    Array3* getHitSpot(Cue*, Ball*, double, double);
     Array3* cueShot(Cue*, Ball*);
     Array3* cueShot(Cue*, Ball*, Array3*);
+    Array3* cueShot(Cue*, Ball*, double, double);
     
 private:
     Physics(void);
@@ -30,5 +32,8 @@ private:
 
     double ballMass;
     double ballRadius;
+
+    double tableWidth;
+    double tableHeight;
 };
 

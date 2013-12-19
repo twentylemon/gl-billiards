@@ -170,6 +170,20 @@ double Array3::distance(Array3* other){
 
 
 /**
+ * Returns the distance squared between this and another Array3.
+ *
+ * @param (x,y,z) the point to get the distance to
+ * @return the squared euclidean distance
+**/
+double Array3::distance(double x, double y, double z){
+    double xx = vec[X] - x;
+    double yy = vec[Y] - y;
+    double zz = vec[Z] - z;
+    return xx*xx + yy*yy + zz*zz;
+}
+
+
+/**
  * Calculates the dot product between this Array3 and another.
  *
  * @param other the other Array3
@@ -230,6 +244,20 @@ std::string Array3::toString(){
 **/
 Array3* Array3::add(Array3* first, Array3* second){
     return new Array3(first->getX() + second->getX(), first->getY() + second->getY(), first->getZ() + second->getZ());
+}
+
+
+/**
+ * Adds the two Array3's together.
+ *
+ * @param first one of the Array3's
+ * @param x the value to add to the X field
+ * @param y the value to add to the Y field
+ * @param z the value to add to the Z field
+ * @return the result of first + (x,y,z)
+**/
+Array3* Array3::add(Array3* first, double x, double y, double z){
+    return new Array3(first->getX() + x, first->getY() + y, first->getZ() + z);
 }
 
 
