@@ -34,6 +34,8 @@ public:
     double getRotation(int);
     Array3* getRotation();
 
+    bool isMoving();
+
     std::string toString();
 
 protected:

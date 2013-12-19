@@ -38,6 +38,7 @@ void Particle::setRotation(Array3* val){ delete rotation; position = val; }
 double Particle::getRotation(int idx){ return rotation->get(idx); }
 Array3* Particle::getRotation(){ return rotation; }
 
+bool Particle::isMoving(){ return speed->lengthSq() > 0; }
 
 /**
  * Returns a string representation of this particle.

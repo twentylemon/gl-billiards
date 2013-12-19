@@ -39,6 +39,8 @@ public:
     static Array3* add(Array3*, Array3*);
     static Array3* add(Array3*, double, double, double);
     static Array3* subtract(Array3*, Array3*);
+    static Array3* multiply(Array3*, double);
+    static Array3* divide(Array3*, double);
     static double distance(Array3*, Array3*);
     static double dotProduct(Array3*, Array3*);
     static Array3* crossProduct(Array3*, Array3*);

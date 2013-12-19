@@ -274,6 +274,30 @@ Array3* Array3::subtract(Array3* first, Array3* second){
 
 
 /**
+ * Multiplies the Array3 by the scale and returns the new result.
+ *
+ * @param first the Array3 to scale
+ * @param scale the value to multiply by
+ * @return the result of scale * first
+**/
+Array3* Array3::multiply(Array3* first, double scale){
+    return new Array3(first->getX() * scale, first->getY() * scale, first->getZ() * scale);
+}
+
+
+/**
+ * Divides the Array3 by the scale and returns the new result.
+ *
+ * @param first the Array3 to scale
+ * @param scale the value to multiply by
+ * @return the result of first / scale
+**/
+Array3* Array3::divide(Array3* first, double scale){
+    return new Array3(first->getX() / scale, first->getY() / scale, first->getZ() / scale);
+}
+
+
+/**
  * Returns this squared distance between the two Array3's
  *
  * @param first one Array3

@@ -13,8 +13,9 @@
  *
  * @param number the number on the ball, 0 if the cue ball
 **/
-Ball::Ball(int number) : RADIUS(BALL_RADIUS), DIAMETER(2.0 * BALL_RADIUS), MASS(BALL_MASS), Particle(){
+Ball::Ball(int number) : RADIUS(BALL_RADIUS), DIAMETER(2.0 * BALL_RADIUS), Particle(){
     model = new Model("Objects/ball.3DS", "Objects/textures/ball" + std::to_string(number) + ".bmp");
+    sunk = false;
     double offset = 2.0/9.0 * TABLE_WIDTH;
     switch (number){
         /*
@@ -72,9 +73,10 @@ void Ball::draw(){
 /**
  * Getters/Setters.
 **/
+void Ball::setSunk(bool s){ sunk = s; }
 double Ball::getRadius(){ return RADIUS; }
 double Ball::getDiameter(){ return DIAMETER; }
-double Ball::getMass(){ return MASS; }
+bool Ball::isSunk(){ return sunk; }
 
 
 /**
