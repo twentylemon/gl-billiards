@@ -1,4 +1,5 @@
 /**
+ * Physics.cpp
  * Game master and physics handler.
  *
  * @author Taras Mychaskiw
@@ -6,7 +7,7 @@
  * @since 2013-12-18
 **/
 #include "Physics.h"
-#define SOME_STUPID_BIG_NUMBER 1000000.0
+#define WONT_HAPPEN_THIS_FRAME 3600.0
 static Physics* instance = NULL;
 
 /**
@@ -217,8 +218,9 @@ double Physics::calcCollisionTime(Ball* ball1, Ball* ball2){
         c = sqrt(c);
     }
     else {
-        c = SOME_STUPID_BIG_NUMBER;
+        c = WONT_HAPPEN_THIS_FRAME;
     }
+    delete dr, dv;
     return std::min(-b + c, -b - c);
 }
 
@@ -230,31 +232,9 @@ double Physics::calcCollisionTime(Ball* ball1, Ball* ball2){
  * @param axis which bank axis we are checking against, X axis or Y
  * @return the amount of time that will pass before ball hits the bank
 **/
-double Physics::calcBankTime(Ball* ball, BankAxis axis){
+double Physics::calcBankTime(Ball* ball, Event::BankAxis axis){
     // TODO
     return 0;
-}
-
-
-/**
- * Performs velocity updates after a ball-ball collision.
- *
- * @param ball1 one ball colliding
- * @param ball2 the other ball in the collision
-**/
-void Physics::collide(Ball* ball1, Ball* ball2){
-    // TODO
-}
-
-
-/**
- * Performs velocity update after a ball-edge collision, or a bank.
- *
- * @param ball the ball participating in the bank
- * @param axis the side we are banking off of
-**/
-void Physics::bank(Ball* ball, BankAxis axis){
-    // TODO
 }
 
 
@@ -267,62 +247,48 @@ void Physics::bank(Ball* ball, BankAxis axis){
  * @param dt the amount of time passed sicne the last frame
 **/
 void Physics::moveBalls(std::vector<Ball*> balls, double dt){
-    double step = dt;
-    unsigned int ball, ball1, ball2;
-    BankAxis bankAxis = Neither;
-    Event event = None;
+    Event* event = new Event(dt);
 
     //check if any balls will collide with each other or the rails within time dt
     //find the earliest event that will occur
     for (unsigned int i = 0; i < balls.size(); i++){
         if (!balls[i]->isSunk() && balls[i]->isMoving()){
-
             //check for collisions with other balls
             for (unsigned int j = 0; j < balls.size(); j++){
                 if (i != j){
                     double collisionTime = calcCollisionTime(balls[i], balls[j]);
-                    if (collisionTime >= 0 && collisionTime < step){
-                        ball1 = i;
-                        ball2 = j;
-                        event = Collision;
-                        step = collisionTime;
+                    if (collisionTime >= 0 && collisionTime < event->getTime()){
+                        delete event;
+                        event = new CollisionEvent(collisionTime, balls[i], balls[j]);
                     }
                 }
             }
 
             //check for a bank off the side
-            double bankTimeX = calcBankTime(balls[i], BankAxis::X);
-            double bankTimeY = calcBankTime(balls[i], BankAxis::Y);
-            if (bankTimeX >= 0 && bankTimeX < step){
-                ball = i;
-                bankAxis = BankAxis::X;
-                event = Bank;
-                step = bankTimeX;
+            double bankTimeX = calcBankTime(balls[i], Event::BankAxis::X);
+            double bankTimeY = calcBankTime(balls[i], Event::BankAxis::Y);
+            if (bankTimeX >= 0 && bankTimeX < event->getTime()){
+                delete event;
+                event = new BankEvent(bankTimeX, balls[i], Event::BankAxis::X);
             }
-            if (bankTimeY >= 0 && bankTimeY < step){
-                ball = i;
-                bankAxis = BankAxis::Y;
-                event = Bank;
-                step = bankTimeY;
+            if (bankTimeY >= 0 && bankTimeY < event->getTime()){
+                delete event;
+                event = new BankEvent(bankTimeY, balls[i], Event::BankAxis::Y);
             }
         }
     }
 
     //update the positions of all balls up until the event occurs, or until dt is reached if none
-    rollBalls(balls, step);
+    rollBalls(balls, event->getTime());
 
-    //check for events
-    if (event == Collision){
-        collide(balls[ball1], balls[ball2]);
-    }
-    else if (event == Bank){
-        bank(balls[ball], bankAxis);
-    }
+    //handle the event, if any
+    event->handle();
 
     //recurse if need be
-    if (step < dt){
-        moveBalls(balls, dt - step);
+    if (event->getTime() < dt){
+        moveBalls(balls, dt - event->getTime());
     }
+    delete event;
 }
 
 

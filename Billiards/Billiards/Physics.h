@@ -1,4 +1,5 @@
 /**
+ * Physics.h
  * Game master and physics handler.
  *
  * @author Taras Mychaskiw
@@ -8,10 +9,10 @@
 #pragma once
 #include <vector>
 #include <algorithm>
+#include "Event.h"
 #include "Vector.h"
 #include "Cue.h"
 #include "Ball.h"
-#include "Table.h"
 #undef min  //from Model.h -> stdio.h
 
 class Physics
@@ -20,9 +21,6 @@ public:
     ~Physics(void);
 
     static Physics* getInstance();
-
-    enum Event { None, Collision, Bank };
-    enum BankAxis { Neither, X, Y };
 
     Vector* getHitSpot(Cue*, Ball*, double, double);
     Vector* cueShot(Cue*, Ball*);
@@ -37,9 +35,7 @@ private:
     
     void rollBalls(std::vector<Ball*>, double);
     double calcCollisionTime(Ball*, Ball*);
-    double calcBankTime(Ball*, BankAxis);
-    void collide(Ball*, Ball*);
-    void bank(Ball*, BankAxis);
+    double calcBankTime(Ball*, Event::BankAxis);
     void moveBalls(std::vector<Ball*>, double);
 
     double cueBallContactTime;
@@ -55,4 +51,3 @@ private:
 
     double timeStep;
 };
-
