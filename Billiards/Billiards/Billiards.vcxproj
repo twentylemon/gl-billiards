@@ -70,7 +70,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Array3.h" />
+    <ClInclude Include="Vector.h" />
     <ClInclude Include="Ball.h" />
     <ClInclude Include="Cue.h" />
     <ClInclude Include="main.h" />
@@ -82,7 +82,7 @@
     <ClInclude Include="Table.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Array3.cpp" />
+    <ClCompile Include="Vector.cpp" />
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="Cue.cpp" />
     <ClCompile Include="init.cpp" />

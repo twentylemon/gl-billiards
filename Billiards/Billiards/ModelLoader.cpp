@@ -326,24 +326,24 @@ void disable3dsDebugMode()
 void calculateNormals(obj_type_ptr p_object)
 {
 	int i;
-	//Array3* l_vect1, l_vect2, l_vect3, l_vect_b1, l_vect_b2, l_normal;
+	//Vector* l_vect1, l_vect2, l_vect3, l_vect_b1, l_vect_b2, l_normal;
 	int l_connections_qty[MAX_VERTICES];
 
 	for (i=0; i < p_object->vertices_qty; i++)
 	{
-		p_object->normal[i] = new Array3();
+		p_object->normal[i] = new Vector();
 		l_connections_qty[i]=0;
 	}
 
 	for (i=0; i<p_object->polygons_qty; i++)
 	{
-		Array3* l_vect1 = new Array3(p_object->vertex[p_object->polygon[i].a].x,
+		Vector* l_vect1 = new Vector(p_object->vertex[p_object->polygon[i].a].x,
 									p_object->vertex[p_object->polygon[i].a].y,
 									p_object->vertex[p_object->polygon[i].a].z);
-		Array3* l_vect2 = new Array3(p_object->vertex[p_object->polygon[i].b].x,
+		Vector* l_vect2 = new Vector(p_object->vertex[p_object->polygon[i].b].x,
 									p_object->vertex[p_object->polygon[i].b].y,
 									p_object->vertex[p_object->polygon[i].b].z);
-		Array3* l_vect3 = new Array3(p_object->vertex[p_object->polygon[i].c].x,
+		Vector* l_vect3 = new Vector(p_object->vertex[p_object->polygon[i].c].x,
 									p_object->vertex[p_object->polygon[i].c].y,
 									p_object->vertex[p_object->polygon[i].c].z);
 
@@ -353,7 +353,7 @@ void calculateNormals(obj_type_ptr p_object)
 		l_vect3->subtract(l_vect1);
 
 		//VectDotProduct (&l_vect_b1, &l_vect_b2, &l_normal);
-		Array3* l_normal = l_vect2->crossProduct(l_vect3);
+		Vector* l_normal = l_vect2->crossProduct(l_vect3);
 
 		//VectNormalize (&l_normal);
 		//l_normal->normalize();

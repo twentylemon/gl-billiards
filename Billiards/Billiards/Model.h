@@ -13,7 +13,7 @@
 #include <array>
 #include <vector>
 #include "GL/glut.h"
-#include "Array3.h"
+#include "Vector.h"
 
 class Model {
 public:
@@ -34,8 +34,8 @@ private:
     int loadTextureBitmap(char*);
 
     int textureID, listID;
-    std::vector<Array3*> verticies;
-    std::vector<Array3*> normals;
+    std::vector<Vector*> verticies;
+    std::vector<Vector*> normals;
     std::vector<std::array<unsigned short, 3>> polygons;
     std::vector<std::array<float, 2>> mapCoords;
 };

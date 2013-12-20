@@ -168,7 +168,7 @@ int Model::load3DS(char* p_filename){
 				fread(&x, sizeof(float), 1, l_file);
                 fread(&y, sizeof(float), 1, l_file);
 				fread(&z, sizeof(float), 1, l_file);
-                verticies.push_back(new Array3(x, y, z));
+                verticies.push_back(new Vector(x, y, z));
 
 				/*
 				 *	DEBUGGING ONLY
@@ -314,15 +314,15 @@ int Model::loadTextureBitmap(char *filename){
 void Model::calculateNormals(){
     std::vector<int> numPolygons(verticies.size());
     for (unsigned int i = 0; i < verticies.size(); i++){
-        normals.push_back(new Array3());
+        normals.push_back(new Vector());
     }
 
     for (unsigned int i = 0; i < polygons.size(); i++){
         //make the two vectors on the polygon
-        Array3* vec1 = Array3::subtract(verticies[polygons[i][1]], verticies[polygons[i][0]]);
-        Array3* vec2 = Array3::subtract(verticies[polygons[i][2]], verticies[polygons[i][0]]);
+        Vector* vec1 = Vector::subtract(verticies[polygons[i][1]], verticies[polygons[i][0]]);
+        Vector* vec2 = Vector::subtract(verticies[polygons[i][2]], verticies[polygons[i][0]]);
         //their cross product is a normal vector to the polygon
-        Array3* normal = Array3::crossProduct(vec1, vec2);
+        Vector* normal = Vector::crossProduct(vec1, vec2);
         
         //add up all the polygon surface normals
         for (int j = 0; j < 3; j++){

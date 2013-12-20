@@ -8,7 +8,7 @@
 #pragma once
 #include <string>
 #include <new>
-#include "Array3.h"
+#include "Vector.h"
 #include "Model.h"
 
 class Particle {
@@ -18,29 +18,29 @@ public:
 
     void setPosition(double, double, double);
     void setPosition(int, double);
-    void setPosition(Array3*);
+    void setPosition(Vector*);
     double getPosition(int);
-    Array3* getPosition();
+    Vector* getPosition();
 
     void setSpeed(double, double, double);
     void setSpeed(int, double);
-    void setSpeed(Array3*);
+    void setSpeed(Vector*);
     double getSpeed(int);
-    Array3* getSpeed();
+    Vector* getSpeed();
 
     void setRotation(double, double, double);
     void setRotation(int, double);
-    void setRotation(Array3*);
+    void setRotation(Vector*);
     double getRotation(int);
-    Array3* getRotation();
+    Vector* getRotation();
 
     bool isMoving();
 
     std::string toString();
 
 protected:
-    Array3* position;
-    Array3* speed;
-    Array3* rotation;
+    Vector* position;
+    Vector* speed;
+    Vector* rotation;
     Model* model;
 };

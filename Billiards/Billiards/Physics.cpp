@@ -44,7 +44,7 @@ Physics* Physics::getInstance(){
 
 
 /**
- * Returns the hit spot on the ball sent, for { @see cueShot(Cue*, Ball*, Array3*) }
+ * Returns the hit spot on the ball sent, for { @see cueShot(Cue*, Ball*, Vector*) }
  *
  * @param cue the cue
  * @param ball the ball to find the hit spot for
@@ -52,7 +52,7 @@ Physics* Physics::getInstance(){
  * @param y the y offset from the center of the ball
  * @see diagram below
 **/
-Array3* Physics::getHitSpot(Cue* cue, Ball* ball, double x, double y){
+Vector* Physics::getHitSpot(Cue* cue, Ball* ball, double x, double y){
     /*  so we have a 2d circle to represent the hit spot for the UI
            ---
          /     \    C = center, no spin will be applied
@@ -68,9 +68,9 @@ Array3* Physics::getHitSpot(Cue* cue, Ball* ball, double x, double y){
     double negDist = cue->getPosition()->distance(x, y, -z);
     double posDist = cue->getPosition()->distance(x, y, z);
     if (negDist < posDist){
-        return Array3::add(cue->getPosition(), x, y, -z);
+        return Vector::add(cue->getPosition(), x, y, -z);
     }
-    return Array3::add(cue->getPosition(), x, y, z);
+    return Vector::add(cue->getPosition(), x, y, z);
 }
 
 
@@ -82,7 +82,7 @@ Array3* Physics::getHitSpot(Cue* cue, Ball* ball, double x, double y){
  * @param ball the ball being struck by the cue
  * @return the speed that the ball struck should be travelling
 **/
-Array3* Physics::cueShot(Cue* cue, Ball* ball){
+Vector* Physics::cueShot(Cue* cue, Ball* ball){
     /*  assume the Cue acts like a spring, and apply Hooke's law
         - k t
     v = ------  x
@@ -95,7 +95,7 @@ Array3* Physics::cueShot(Cue* cue, Ball* ball){
     */
 
     //get the vector between the cue and the ball
-    Array3* direction = Array3::subtract(ball->getPosition(), cue->getPosition());
+    Vector* direction = Vector::subtract(ball->getPosition(), cue->getPosition());
     direction->multiply(-cueSpringConstant * cueBallContactTime / ballMass);
     return direction;
 }
@@ -110,7 +110,7 @@ Array3* Physics::cueShot(Cue* cue, Ball* ball){
  * @return the rotational velocity that the ball with have after the shot
  * @see Phyics::cueShot(Cue*, Ball*)
 **/
-Array3* Physics::cueShot(Cue* cue, Ball* ball, Array3* hitSpot){
+Vector* Physics::cueShot(Cue* cue, Ball* ball, Vector* hitSpot){
     /* this one is more complex, hitting the ball off center applies torque
         torque needs to overcome the rotational interia of the ball
         dw              2
@@ -131,13 +131,13 @@ Array3* Physics::cueShot(Cue* cue, Ball* ball, Array3* hitSpot){
             2 m R^2
     */
     //get the vector from the center of the ball's rotation to the hitSpot
-    Array3* r = Array3::subtract(hitSpot, ball->getPosition());
+    Vector* r = Vector::subtract(hitSpot, ball->getPosition());
     
     //get the vector between the cue and the ball
-    Array3* x = Array3::subtract(ball->getPosition(), cue->getPosition());
+    Vector* x = Vector::subtract(ball->getPosition(), cue->getPosition());
     x->multiply(-cueSpringConstant);
 
-    Array3* omega = Array3::crossProduct(r, x);
+    Vector* omega = Vector::crossProduct(r, x);
     omega->multiply(5.0 * cueBallContactTime / (2.0 * ballMass * ballRadiusSq));
     delete r, x;
     return omega;
@@ -154,9 +154,9 @@ Array3* Physics::cueShot(Cue* cue, Ball* ball, Array3* hitSpot){
  * @return the rotational velocity that the ball with have after the shot
  * @see Phyics::cueShot(Cue*, Ball*), Physics::getHitSpot(Cue*, Ball*, double, double)
 **/
-Array3* Physics::cueShot(Cue* cue, Ball* ball, double x, double y){
-    Array3* hitSpot = getHitSpot(cue, ball, x, y);
-    Array3* omega = cueShot(cue, ball, hitSpot);
+Vector* Physics::cueShot(Cue* cue, Ball* ball, double x, double y){
+    Vector* hitSpot = getHitSpot(cue, ball, x, y);
+    Vector* omega = cueShot(cue, ball, hitSpot);
     delete hitSpot;
     return omega;
 }
@@ -173,7 +173,7 @@ void Physics::rollBalls(std::vector<Ball*> balls, double dt){
     for (unsigned int i = 0; i < balls.size(); i++){
         if (!balls[i]->isSunk() && balls[i]->isMoving()){
             //get how far they moved
-            Array3* dr = Array3::multiply(balls[i]->getSpeed(), dt);
+            Vector* dr = Vector::multiply(balls[i]->getSpeed(), dt);
             balls[i]->getPosition()->add(dr);
             delete dr;
 
@@ -204,12 +204,12 @@ double Physics::calcCollisionTime(Ball* ball1, Ball* ball2){
         solving for t gives a quadratic equation
     */
     //get their differences in position and velocity
-    Array3* dr = Array3::subtract(ball1->getPosition(), ball2->getPosition());  //s1 - s2
-    Array3* dv = Array3::subtract(ball1->getSpeed(), ball2->getSpeed());        //v1 - v2
+    Vector* dr = Vector::subtract(ball1->getPosition(), ball2->getPosition());  //s1 - s2
+    Vector* dv = Vector::subtract(ball1->getSpeed(), ball2->getSpeed());        //v1 - v2
 
-    double a = Array3::dotProduct(dv, dv);
-    double b = Array3::dotProduct(dr, dv) / a;
-    double c = (Array3::dotProduct(dr, dr) - 4.0 * ballRadiusSq) / a;
+    double a = Vector::dotProduct(dv, dv);
+    double b = Vector::dotProduct(dr, dv) / a;
+    double c = (Vector::dotProduct(dr, dr) - 4.0 * ballRadiusSq) / a;
     /* now t^2 + 2bt + c = 0; */
     //check for imaginary roots
     c = b*b - c;

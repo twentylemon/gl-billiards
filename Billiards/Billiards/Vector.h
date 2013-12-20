@@ -9,41 +9,41 @@
 #include <new>
 #include <array>
 #include <string>
-#define ARRAY3_DISTANCE_EQUALS 0.1
+#define VECTOR_DISTANCE_EQUALS 0.1
 
-class Array3 {
+class Vector {
 public:
-    Array3(void);
-    Array3(double, double, double);
-    Array3(double*);
-    Array3(Array3*);
-    ~Array3(void);
+    Vector(void);
+    Vector(double, double, double);
+    Vector(double*);
+    Vector(Vector*);
+    ~Vector(void);
 
     static const int X = 0;
     static const int Y = 1;
     static const int Z = 2;
 
     //operations
-    void add(Array3*);
+    void add(Vector*);
     void add(int, double);
     void add(double, double, double);
-    void subtract(Array3*);
+    void subtract(Vector*);
     void multiply(double);
     void divide(double);
-    double distance(Array3*);
+    double distance(Vector*);
     double distance(double, double, double);
-    bool equals(Array3*);
-    double dotProduct(Array3*);
-    Array3* crossProduct(Array3*);
+    bool equals(Vector*);
+    double dotProduct(Vector*);
+    Vector* crossProduct(Vector*);
 
-    static Array3* add(Array3*, Array3*);
-    static Array3* add(Array3*, double, double, double);
-    static Array3* subtract(Array3*, Array3*);
-    static Array3* multiply(Array3*, double);
-    static Array3* divide(Array3*, double);
-    static double distance(Array3*, Array3*);
-    static double dotProduct(Array3*, Array3*);
-    static Array3* crossProduct(Array3*, Array3*);
+    static Vector* add(Vector*, Vector*);
+    static Vector* add(Vector*, double, double, double);
+    static Vector* subtract(Vector*, Vector*);
+    static Vector* multiply(Vector*, double);
+    static Vector* divide(Vector*, double);
+    static double distance(Vector*, Vector*);
+    static double dotProduct(Vector*, Vector*);
+    static Vector* crossProduct(Vector*, Vector*);
 
     double length();
     double lengthSq();

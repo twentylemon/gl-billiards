@@ -11,9 +11,9 @@
  * Default constructor.
 **/
 Particle::Particle(void){
-    position = new Array3();
-    speed = new Array3();
-    rotation = new Array3();
+    position = new Vector();
+    speed = new Vector();
+    rotation = new Vector();
 }
 
 
@@ -22,21 +22,21 @@ Particle::Particle(void){
 **/
 void Particle::setPosition(double x, double y, double z){ position->set(x, y, z); }
 void Particle::setPosition(int idx, double val){ position->set(idx, val); }
-void Particle::setPosition(Array3* val){ delete position; position = val; }
+void Particle::setPosition(Vector* val){ delete position; position = val; }
 double Particle::getPosition(int idx){ return position->get(idx); }
-Array3* Particle::getPosition(){ return position; }
+Vector* Particle::getPosition(){ return position; }
 
 void Particle::setSpeed(double x, double y, double z){ speed->set(x, y, z); }
 void Particle::setSpeed(int idx, double val){ speed->set(idx, val); }
-void Particle::setSpeed(Array3* val){ delete speed; speed = val; }
+void Particle::setSpeed(Vector* val){ delete speed; speed = val; }
 double Particle::getSpeed(int idx){ return speed->get(idx); }
-Array3* Particle::getSpeed(){ return speed; }
+Vector* Particle::getSpeed(){ return speed; }
 
 void Particle::setRotation(double x, double y, double z){ rotation->set(x, y, z); }
 void Particle::setRotation(int idx, double val){ rotation->set(idx, val); }
-void Particle::setRotation(Array3* val){ delete rotation; position = val; }
+void Particle::setRotation(Vector* val){ delete rotation; position = val; }
 double Particle::getRotation(int idx){ return rotation->get(idx); }
-Array3* Particle::getRotation(){ return rotation; }
+Vector* Particle::getRotation(){ return rotation; }
 
 bool Particle::isMoving(){ return speed->lengthSq() > 0; }
 
