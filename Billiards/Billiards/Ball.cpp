@@ -16,7 +16,7 @@
 Ball::Ball(int number) : RADIUS(BALL_RADIUS), DIAMETER(2.0 * BALL_RADIUS), Particle(){
     model = new Model("Objects/ball.3DS", "Objects/textures/ball" + std::to_string(number) + ".bmp");
     sunk = false;
-    double offset = 2.0/9.0 * TABLE_WIDTH;
+    double offset = 1.0/4.0 * TABLE_WIDTH;
     switch (number){
         /*
     case 0: setPosition(0, -offset, 0); break;
@@ -36,7 +36,7 @@ Ball::Ball(int number) : RADIUS(BALL_RADIUS), DIAMETER(2.0 * BALL_RADIUS), Parti
     case 14: setPosition(-2.0 * RADIUS, offset + 2.0 * DIAMETER, 0); break;
     case 15: setPosition(RADIUS, offset + 3.0 * DIAMETER, 0); break;
     */
-    case 0: setPosition(-offset, 0, 0); break;
+    case 0: setPosition(-1.0/5.0, 0, 0); break;
     case 1: setPosition(offset, 0, 0); break;
     case 2: setPosition(offset + 4.0 * DIAMETER, 2.0 * RADIUS, 0); break;
     case 3: setPosition(offset + DIAMETER, -RADIUS, 0); break;

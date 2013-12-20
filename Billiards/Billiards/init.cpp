@@ -43,7 +43,7 @@ void initializeWindow(){
     glMatrixMode(GL_PROJECTION); 
     glLoadIdentity(); 
 	gluPerspective(PERSPECTIVE_FIELD_OF_VIEW_ANGLE, global.windowWidth/global.windowHeight, MIN_CLIPPING, MAX_CLIPPING); 
-	gluLookAt(130, 0, 100, 0, 0, 30, 0, 0, 1);
+	gluLookAt(130 * 0.0254, 0, 100 * 0.0254, 0, 0, 30 * 0.0254, 0, 0, 1);
    
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);

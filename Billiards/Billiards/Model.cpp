@@ -168,7 +168,8 @@ int Model::load3DS(char* p_filename){
 				fread(&x, sizeof(float), 1, l_file);
                 fread(&y, sizeof(float), 1, l_file);
 				fread(&z, sizeof(float), 1, l_file);
-                verticies.push_back(new Vector(x, y, z));
+                //convert the points from inches to meters
+                verticies.push_back(new Vector(0.0254*x, 0.0254*y, 0.0254*z));
 
 				/*
 				 *	DEBUGGING ONLY
