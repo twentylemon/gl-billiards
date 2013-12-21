@@ -89,4 +89,6 @@ void BankEvent::handle(){
     }
     velocity.scale(1.0 - CUSHION_FRICTION_LOSS);
     ball->setVelocity(velocity);
+
+    // TODO angular velocity
 }

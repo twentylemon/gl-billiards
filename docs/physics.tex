@@ -1,0 +1,158 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{scrextend}
+\addtolength{\textwidth}{1in}
+\addtolength{\textheight}{1in}
+\addtolength{\evensidemargin}{0.5in}
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\topmargin}{-0.5in}
+\title{gl-billiards}
+\author{Dan Lapp\\Taras Mychaskiw\\COSC 3P98 Project}
+\date{January 8th, 2014}
+
+\begin{document}
+\maketitle
+    \begin{abstract}
+    \end{abstract}
+
+    \thispagestyle{empty}
+    \tableofcontents
+    %\cleardoublepage
+    %\newpage
+    \thispagestyle{empty}
+    \mbox{}
+    \clearpage
+    \setcounter{page}{1}
+    
+    \section{Physics Engine}
+    
+        \subsection{Taking a Shot}
+        Once a ball is hit by the cue, there are two ways energy is transferred to the ball. First, and more noticeable of the two
+        is the transfer of linear momentum. This sends the ball moving around the table in straight lines. Second is the transfer
+        of angular momentum, which applies spin to the ball. Spin can cause the ball to stop in it's tracks after a collision,
+        bounce off cushions in strange (but predictable) ways and to any pool player, is just as if not more important an aspect
+        to the game as the linear momentum.
+            \subsubsection{Linear Momentum}
+            To simplify the shot making process, the pool cue is assuming to act like a spring. That is, the further you pull
+            the cue away from the cue you are going to hit, the more powerful your shot will be. Spring motion can be described
+            using Hooke's Law,
+            \begin{equation}
+                \vec F = -k \vec x
+                \label{equ:hookes_law}
+            \end{equation}
+            where, $\vec F$ is the force, $\vec x$ is how much the spring is stretched and $k$ is the spring constant, which
+            describes basically how powerful (springy) the spring is.
+            \\
+            Hooke's Law is equivalent to Newton's Second Law, which states
+            \begin{equation}
+                \vec F = m \vec a
+                \label{equ:newton}
+            \end{equation}
+            where, $\vec F$ is the force, $m$ is the mass of the object and $\vec a$ is the acceleration of the object. Setting
+            Equation~\ref{equ:hookes_law} equal to Equation~\ref{equ:newton} gives
+            \begin{eqnarray}
+                -k \vec x &=& m \vec a \nonumber \\
+                -k \vec x &=& m \frac{\Delta \vec v}{\Delta t} \nonumber \\
+                \Delta \vec v &=& \frac{-k \Delta t}{m}\vec x  \nonumber
+            \end{eqnarray}
+            where $\vec v$ is the velocity of the object, and $t$ is the time. For pool, the initial velocity of the ball being struck is
+            always zero, so we can simplify the above equation to
+            \begin{equation}
+                \vec v = \frac{-k t}{m}\vec x
+                \label{equ:shot_velocity}
+            \end{equation}
+            where $\vec x$ is the distance between the ball and the tip of the cue, $m$ is the mass of the ball, $t$ is how much time the
+            cue is in contact with the ball and $k$ is the spring constant of the cue. The values for $t$ and $k$ needed to be experimentally
+            found though trial and error, essentially trying values until what happened in the simulation closely represented real life. The
+            values for $t$ and $k$ were found to be $0.1$s and $10$N/m.
+            %\end{Linear Velocity}
+            
+            \subsubsection{Angular Momentum}
+            Angular momentum transfer is more complex. The starting point for this section is also Newton's Second Law, but written
+            in a form more usable to the problem at hand.
+            \begin{equation}
+                \vec \tau = I \vec \alpha
+                \label{equ:newton_rotation}
+            \end{equation}
+            where $\vec \tau$ is the torque applied to the object around it's center of rotation, $I$ is the moment of inertia of the
+            object and $\vec \alpha$ is the angular acceleration of the object.
+            \\
+            Torque is always given by the equation,
+            \begin{equation}
+                \vec \tau = \vec r \times \vec F
+                \label{equ:torque}
+            \end{equation}
+            where $\vec F$ is the force being applied, $\vec r$ is the vector between where the force is being applied and the center
+            of rotation of the object, and $\times$ is the vector cross product.
+            \\
+            An important note is the inertia for a solid sphere is given by,
+            \begin{equation}
+                I_{sphere} = \frac{2}{5} m R^2
+                \label{equ:inertia_sphere}
+            \end{equation}
+            where $R$ is the radius and $m$ is the mass of the sphere.
+            \\
+            Setting Equation~\ref{equ:newton_rotation} equal to Equation~\ref{equ:torque}, subbing in Equation~\ref{equ:inertia_sphere}
+            for $I$ and Equation~\ref{equ:hookes_law} for $\vec F$, and solving gives,
+            \begin{eqnarray}
+                \vec r \times -k \vec x &=& \frac{2}{5} m R^2 \frac{\Delta \vec \omega}{\Delta t} \nonumber \\
+                \Delta \vec \omega &=& \frac{5}{2} \left(\frac{\Delta t}{m R^2}\right) (\vec r \times -k \vec x) \nonumber
+            \end{eqnarray}
+            where $\vec \omega$ is the angular velocity of the ball, and $t$ $t$ is how much time the cue is in contact with the ball (the same $t$
+            as in the previous section). Again, for pool, when the ball is struck it is entirely at rest, so the initial angular velocity is zero.
+            The above equation then simplifies to
+            \begin{equation}
+                \vec \omega = \frac{5}{2} \left(\frac{\Delta t}{m R^2}\right) (\vec r \times -k \vec x)
+                \label{equ:shot_angular}
+            \end{equation}
+            where $\vec x$ is the distance between the ball and the tip of the cue, $m$ is the mass of the ball, $R$ is the radius of the ball,
+            $t$ is how much time the cue is in contact with the ball, $k$ is the spring constant of the cue and finally $\vec r$ is the vector
+            between the center of the ball and where the cue strikes the ball.
+            %\end{Angular Velocity}
+        %\end{Taking a Shot}
+        
+        \subsection{Event Detection}
+        For the purposes of this program, an event is a ball-ball collision, or a ball banking off of the cushion. The way gl-billiards works
+        is each time the screen is redisplayed, some physics updater function is called with a parameter $dt$, which is how much time has passed
+        since the last frame. The engine simulates the pool game up until a time $dt$ has passed. For example, if $1$s was passed, then it would
+        simulate $1$s of play before returning, then the screen would be updated as if $1$s had passed.
+        \\
+        So, the engine determines which events occur within time $dt$. Event detection then becomes \textit{when} do events happen instead
+        of \textit{if} they happened. The entire update function works as follows:\\
+        \texttt{
+            update($dt$)                                                        \\
+            \begin{addmargin}[1em]{0em}
+            find earliest event that occurs within time $dt$, call it $event$   \\
+            if no such event                                                    \\
+                \begin{addmargin}[1em]{0em}
+                roll balls until $dt$                                           \\
+                \end{addmargin}
+            otherwise                                                           \\
+                \begin{addmargin}[1em]{0em}
+                roll balls until $event$ occurs                                 \\
+                handle $event$                                                  \\
+                $dt$ <-- $dt$ - $event$.$getTime()$                             \\
+                call update($dt$) again                                         \\
+                \end{addmargin}
+            \end{addmargin}
+        }
+        In this manner, all events that happen within $dt$ and handled automatically before the frame updates and the balls slow
+        down due to friction. Note that "roll balls" simply means each ball moves at it's speed for some amount of time. Pocketing
+        detection needs to be done there, as it is not a standard event. That is, if a ball is pocketed, it cannot possible participate
+        in any events in time $dt$, since it would bank off the cushion or collide with another ball first.
+        
+        \subsubsection{Collision Detection}
+        %\end{Collision Detection}
+        
+        \subsubsection{Bank off the Cushion Detection}
+        %\end{Bank off the Cushion Detection}
+        
+        \subsubsection{Pocketing Detection}
+        %\end{Pocketing Detection}
+        %\end{Event Detection}
+    
+    %\end{Physics}
+
+\end{document}

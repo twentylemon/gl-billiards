@@ -24,9 +24,11 @@ Physics::Physics(void){
     ballRadiusSq = ballRadius * ballRadius;
 
     /** table properties **/
-    tableWidth = 2.7432;        //9 ft (in m), along the x axis
-    tableHeight = 1.3716;       //4.5 ft (in m), along the y axis
-    tableRailSize = 0;          //don't know this
+    tableWidth = 9.0 * 0.0254;          //9 ft (in m), along the x axis
+    tableHeight = 4.5 * 0.0254;         //4.5 ft (in m), along the y axis
+    tablePlayWidth = 100.0 * 0.0254;    //100in (in m)
+    tablePlayHeight = 50.0 * 0.0254;    //50in (in m)
+    tableRailSize = 0;                  //don't know this
 
     /** animation **/
     timeStep = 0.1;
@@ -213,11 +215,9 @@ double Physics::calcCollisionTime(Ball* ball1, Ball* ball2){
     c = b*b - c;
     if (c > 0){
         c = sqrt(c);
+        return std::min(-b + c, -b - c);
     }
-    else {
-        c = WONT_HAPPEN_THIS_FRAME;
-    }
-    return std::min(-b + c, -b - c);
+    return WONT_HAPPEN_THIS_FRAME;
 }
 
 
@@ -229,8 +229,23 @@ double Physics::calcCollisionTime(Ball* ball1, Ball* ball2){
  * @return the amount of time that will pass before ball hits the bank
 **/
 double Physics::calcBankTime(Ball* ball, Event::BankAxis axis){
-    // TODO
-    return 0;
+    double pos = 0, speed = 0;
+    double rail = 0;
+    //determne when the ball will hit (rail, 0, 0) or (0, rail, 0)
+    if (axis == Event::BankAxis::X){
+        pos = ball->getPosition(Vector::X);
+        speed = ball->getVelocity(Vector::X);
+        rail = tablePlayWidth / 2.0;    //divide by 2 since center of table is (0,0,0)
+    }
+    else if (axis == Event::BankAxis::Y){
+        pos = ball->getPosition(Vector::Y);
+        speed = ball->getVelocity(Vector::Y);
+        rail = tablePlayHeight / 2.0;
+    }
+    if (speed > 0){
+        return std::abs((rail - ballRadius) / speed);
+    }
+    return WONT_HAPPEN_THIS_FRAME;
 }
 
 

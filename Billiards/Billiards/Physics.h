@@ -48,6 +48,8 @@ private:
     double tableWidth;
     double tableHeight;
     double tableRailSize;
+    double tablePlayWidth;
+    double tablePlayHeight;
 
     double timeStep;
 };
