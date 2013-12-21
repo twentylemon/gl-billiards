@@ -58,9 +58,9 @@ void Model::loadObject(char* modelPath, char* texture){
 	    glBegin(GL_TRIANGLES);
             for (unsigned int i = 0; i < polygons.size(); i++){
                 for (int j = 0; j < 3; j++){
-                    glNormal3dv(normals[polygons[i][j]]->data());
+                    glNormal3dv(normals[polygons[i][j]].data());
                     glTexCoord2fv(mapCoords[polygons[i][j]].data());
-                    glVertex3dv(verticies[polygons[i][j]]->data());
+                    glVertex3dv(verticies[polygons[i][j]].data());
                 }
             }
 	    glEnd();
@@ -169,7 +169,7 @@ int Model::load3DS(char* p_filename){
                 fread(&y, sizeof(float), 1, l_file);
 				fread(&z, sizeof(float), 1, l_file);
                 //convert the points from inches to meters
-                verticies.push_back(new Vector(0.0254*x, 0.0254*y, 0.0254*z));
+                verticies.push_back(Vector(0.0254*x, 0.0254*y, 0.0254*z));
 
 				/*
 				 *	DEBUGGING ONLY
@@ -320,14 +320,14 @@ void Model::calculateNormals(){
 
     for (unsigned int i = 0; i < polygons.size(); i++){
         //make the two vectors on the polygon
-        Vector* vec1 = Vector::subtract(verticies[polygons[i][1]], verticies[polygons[i][0]]);
-        Vector* vec2 = Vector::subtract(verticies[polygons[i][2]], verticies[polygons[i][0]]);
+        Vector vec1 = Vector::subtract(verticies[polygons[i][1]], verticies[polygons[i][0]]);
+        Vector vec2 = Vector::subtract(verticies[polygons[i][2]], verticies[polygons[i][0]]);
         //their cross product is a normal vector to the polygon
-        Vector* normal = Vector::crossProduct(vec1, vec2);
+        Vector normal = Vector::crossProduct(vec1, vec2);
         
         //add up all the polygon surface normals
         for (int j = 0; j < 3; j++){
-            normals[polygons[i][j]]->add(normal);
+            normals[polygons[i][j]].add(normal);
             numPolygons[polygons[i][j]]++;
         }
     }
@@ -335,7 +335,7 @@ void Model::calculateNormals(){
     //now to get the vertex normals, just average the polygon normals
     for (unsigned int i = 0; i < verticies.size(); i++){
         if (numPolygons[i] > 1){
-            normals[i]->divide(numPolygons[i]);
+            normals[i].scale(1.0 / numPolygons[i]);
         }
     }
 }

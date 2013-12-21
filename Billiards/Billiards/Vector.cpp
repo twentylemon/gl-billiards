@@ -45,8 +45,8 @@ Vector::Vector(Vector* other){
  *
  * @param other the Vector to add to this one
 **/
-void Vector::add(Vector* other){
-    set(vec[X] + other->getX(), vec[Y] + other->getY(), vec[Z] + other->getZ());
+void Vector::add(Vector other){
+    set(vec[X] + other.getX(), vec[Y] + other.getY(), vec[Z] + other.getZ());
 }
 
 
@@ -79,28 +79,18 @@ void Vector::add(double x, double y, double z){
  *
  * @param other the Vector to subtract this one
 **/
-void Vector::subtract(Vector* other){
-    set(vec[X] - other->getX(), vec[Y] - other->getY(), vec[Z] - other->getZ());
+void Vector::subtract(Vector other){
+    set(vec[X] - other.getX(), vec[Y] - other.getY(), vec[Z] - other.getZ());
 }
 
 
 /**
  * Multiplies each element of this Vector by the value given.
  *
- * @param scale the value to multiply each element of this Vector by
+ * @param value the value to multiply each element of this Vector by
 **/
-void Vector::multiply(double scale){
-    set(vec[X] * scale, vec[Y] * scale, vec[Z] * scale);
-}
-
-
-/**
- * Divides each element of this Vector by the value given.
- *
- * @param scale the value to divide each element of this Vector by
-**/
-void Vector::divide(double scale){
-    set(vec[X] / scale, vec[Y] / scale, vec[Z] / scale);
+void Vector::scale(double value){
+    set(vec[X] * value, vec[Y] * value, vec[Z] * value);
 }
 
 
@@ -111,7 +101,7 @@ void Vector::divide(double scale){
  * @param other the other Vector to compare against
  * @return true if this and other are very close to each other
 **/
-bool Vector::equals(Vector* other){
+bool Vector::equals(Vector other){
     return distance(other) < VECTOR_DISTANCE_EQUALS;
 }
 
@@ -152,8 +142,7 @@ void Vector::normalize(){
 void Vector::normalize(double length){
     double l = this->length();
     if (l > 0){
-        divide(sqrt(l));
-        multiply(pow(length, 1.0/2.0));
+        scale(pow(length, 1.0/2.0) / sqrt(l));
     }
 }
 
@@ -164,8 +153,11 @@ void Vector::normalize(double length){
  * @param other the other Vector to get the distance from
  * @return the squared euclidean distance
 **/
-double Vector::distance(Vector* other){
-    return distance(this, other);
+double Vector::distance(Vector other){
+    double x = vec[X] - other.getX();
+    double y = vec[Y] - other.getY();
+    double z = vec[Z] - other.getZ();
+    return x*x + y*y + z*z;
 }
 
 
@@ -176,14 +168,7 @@ double Vector::distance(Vector* other){
  * @return the squared euclidean distance
 **/
 double Vector::distance(double x, double y, double z){
-    /*
-    double xx = vec[X] - x;
-    double yy = vec[Y] - y;
-    double zz = vec[Z] - z;
-    return xx*xx + yy*yy + zz*zz;
-    */
-    Vector other(x, y, z);
-    return distance(this, &other);
+    return distance(Vector(x, y, z));
 }
 
 
@@ -193,8 +178,8 @@ double Vector::distance(double x, double y, double z){
  * @param other the other Vector
  * @return the dot product between the two Vector's
 **/
-double Vector::dotProduct(Vector* other){
-    return vec[X] * other->getX() + vec[Y] * other->getY() + vec[Z] * other->getZ();
+double Vector::dotProduct(Vector other){
+    return vec[X] * other.getX() + vec[Y] * other.getY() + vec[Z] * other.getZ();
 }
 
 
@@ -204,11 +189,11 @@ double Vector::dotProduct(Vector* other){
  * @param other the other Vector
  * @return the cross product between the two Vector's
 **/
-Vector* Vector::crossProduct(Vector* other){
-    double x = vec[Y] * other->getZ() - vec[Z] * other->getY();
-    double y = vec[Z] * other->getX() - vec[X] * other->getZ();
-    double z = vec[X] * other->getY() - vec[Y] * other->getX();
-    return new Vector(x, y, z);
+Vector Vector::crossProduct(Vector other){
+    double x = vec[Y] * other.getZ() - vec[Z] * other.getY();
+    double y = vec[Z] * other.getX() - vec[X] * other.getZ();
+    double z = vec[X] * other.getY() - vec[Y] * other.getX();
+    return Vector(x, y, z);
 }
 
 
@@ -216,7 +201,6 @@ Vector* Vector::crossProduct(Vector* other){
  * Getters/Setters.
 **/
 double Vector::get(int idx){ return vec[idx]; }
-double* Vector::get(){ return vec.data(); }
 double Vector::getX(){ return vec[X]; }
 double Vector::getY(){ return vec[Y]; }
 double Vector::getZ(){ return vec[Z]; }
@@ -246,8 +230,8 @@ std::string Vector::toString(){
  * @param second the other Vector
  * @return the result of first + second
 **/
-Vector* Vector::add(Vector* first, Vector* second){
-    return new Vector(first->getX() + second->getX(), first->getY() + second->getY(), first->getZ() + second->getZ());
+Vector Vector::add(Vector first, Vector second){
+    return Vector(first.getX() + second.getX(), first.getY() + second.getY(), first.getZ() + second.getZ());
 }
 
 
@@ -260,8 +244,8 @@ Vector* Vector::add(Vector* first, Vector* second){
  * @param z the value to add to the Z field
  * @return the result of first + (x,y,z)
 **/
-Vector* Vector::add(Vector* first, double x, double y, double z){
-    return new Vector(first->getX() + x, first->getY() + y, first->getZ() + z);
+Vector Vector::add(Vector first, double x, double y, double z){
+    return Vector(first.getX() + x, first.getY() + y, first.getZ() + z);
 }
 
 
@@ -272,8 +256,8 @@ Vector* Vector::add(Vector* first, double x, double y, double z){
  * @param second the other Vector
  * @return the result of first - second
 **/
-Vector* Vector::subtract(Vector* first, Vector* second){
-    return new Vector(first->getX() - second->getX(), first->getY() - second->getY(), first->getZ() - second->getZ());
+Vector Vector::subtract(Vector first, Vector second){
+    return Vector(first.getX() - second.getX(), first.getY() - second.getY(), first.getZ() - second.getZ());
 }
 
 
@@ -282,22 +266,10 @@ Vector* Vector::subtract(Vector* first, Vector* second){
  *
  * @param first the Vector to scale
  * @param scale the value to multiply by
- * @return the result of scale * first
+ * @return the result of value * first
 **/
-Vector* Vector::multiply(Vector* first, double scale){
-    return new Vector(first->getX() * scale, first->getY() * scale, first->getZ() * scale);
-}
-
-
-/**
- * Divides the Vector by the scale and returns the new result.
- *
- * @param first the Vector to scale
- * @param scale the value to multiply by
- * @return the result of first / scale
-**/
-Vector* Vector::divide(Vector* first, double scale){
-    return new Vector(first->getX() / scale, first->getY() / scale, first->getZ() / scale);
+Vector Vector::scale(Vector first, double value){
+    return new Vector(first.getX() * value, first.getY() * value, first.getZ() * value);
 }
 
 
@@ -308,11 +280,8 @@ Vector* Vector::divide(Vector* first, double scale){
  * @param second the other Vector
  * @return the squared euclidean distance between first and second
 **/
-double Vector::distance(Vector* first, Vector* second){
-    double x = first->getX() - second->getX();
-    double y = first->getY() - second->getY();
-    double z = first->getZ() - second->getZ();
-    return x*x + y*y + z*z;
+double Vector::distance(Vector first, Vector second){
+    return first.distance(second);
 }
 
 
@@ -323,8 +292,8 @@ double Vector::distance(Vector* first, Vector* second){
  * @param second the other Vector
  * @return the dot product between the two Vector's
 **/
-double Vector::dotProduct(Vector* first, Vector* second){
-    return first->getX() * second->getX() + first->getY() * second->getY() + first->getZ() * second->getZ();
+double Vector::dotProduct(Vector first, Vector second){
+    return first.getX() * second.getX() + first.getY() * second.getY() + first.getZ() * second.getZ();
 }
 
 
@@ -335,11 +304,11 @@ double Vector::dotProduct(Vector* first, Vector* second){
  * @param second the other Vector
  * @return the cross product between the two Vector's
 **/
-Vector* Vector::crossProduct(Vector* first, Vector* second){
-    double x = first->getY() * second->getZ() - first->getZ() * second->getY();
-    double y = first->getZ() * second->getX() - first->getX() * second->getZ();
-    double z = first->getX() * second->getY() - first->getY() * second->getX();
-    return new Vector(x, y, z);
+Vector Vector::crossProduct(Vector first, Vector second){
+    double x = first.getY() * second.getZ() - first.getZ() * second.getY();
+    double y = first.getZ() * second.getX() - first.getX() * second.getZ();
+    double z = first.getX() * second.getY() - first.getY() * second.getX();
+    return Vector(x, y, z);
 }
 
 

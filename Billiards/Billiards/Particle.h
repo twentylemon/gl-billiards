@@ -18,29 +18,29 @@ public:
 
     void setPosition(double, double, double);
     void setPosition(int, double);
-    void setPosition(Vector*);
+    void setPosition(Vector);
     double getPosition(int);
-    Vector* getPosition();
+    Vector getPosition();
 
-    void setSpeed(double, double, double);
-    void setSpeed(int, double);
-    void setSpeed(Vector*);
-    double getSpeed(int);
-    Vector* getSpeed();
+    void setVelocity(double, double, double);
+    void setVelocity(int, double);
+    void setVelocity(Vector);
+    double getVelocity(int);
+    Vector getVelocity();
 
     void setRotation(double, double, double);
     void setRotation(int, double);
-    void setRotation(Vector*);
+    void setRotation(Vector);
     double getRotation(int);
-    Vector* getRotation();
+    Vector getRotation();
 
     bool isMoving();
 
     std::string toString();
 
 protected:
-    Vector* position;
-    Vector* speed;
-    Vector* rotation;
-    Model* model;
+    Vector position;
+    Vector velocity;
+    Vector rotation;
+    Model model;
 };

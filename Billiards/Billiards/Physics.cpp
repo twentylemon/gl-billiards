@@ -53,7 +53,7 @@ Physics* Physics::getInstance(){
  * @param y the y offset from the center of the ball
  * @see diagram below
 **/
-Vector* Physics::getHitSpot(Cue* cue, Ball* ball, double x, double y){
+Vector Physics::getHitSpot(Cue* cue, Ball* ball, double x, double y){
     /*  so we have a 2d circle to represent the hit spot for the UI
            ---
          /     \    C = center, no spin will be applied
@@ -66,12 +66,14 @@ Vector* Physics::getHitSpot(Cue* cue, Ball* ball, double x, double y){
         cue is the hit point on the ball
     */
     double z = sqrt(ballRadiusSq - x*x - y*y);
-    double negDist = cue->getPosition()->distance(x, y, -z);
-    double posDist = cue->getPosition()->distance(x, y, z);
-    if (negDist < posDist){
-        return Vector::add(cue->getPosition(), x, y, -z);
+    Vector neg = Vector(x, y, -z);
+    Vector pos = Vector(x, y, z);
+    double negDist = cue->getPosition().distance(x, y, -z);
+    double posDist = cue->getPosition().distance(x, y, z);
+    if (cue->getPosition().distance(neg) < cue->getPosition().distance(pos)){
+        return Vector::add(cue->getPosition(), neg);
     }
-    return Vector::add(cue->getPosition(), x, y, z);
+    return Vector::add(cue->getPosition(), pos);
 }
 
 
@@ -83,7 +85,7 @@ Vector* Physics::getHitSpot(Cue* cue, Ball* ball, double x, double y){
  * @param ball the ball being struck by the cue
  * @return the speed that the ball struck should be travelling
 **/
-Vector* Physics::cueShot(Cue* cue, Ball* ball){
+Vector Physics::cueShot(Cue* cue, Ball* ball){
     /*  assume the Cue acts like a spring, and apply Hooke's law
         - k t
     v = ------  x
@@ -96,8 +98,8 @@ Vector* Physics::cueShot(Cue* cue, Ball* ball){
     */
 
     //get the vector between the cue and the ball
-    Vector* direction = Vector::subtract(ball->getPosition(), cue->getPosition());
-    direction->multiply(-cueSpringConstant * cueBallContactTime / ballMass);
+    Vector direction = Vector::subtract(ball->getPosition(), cue->getPosition());
+    direction.scale(-cueSpringConstant * cueBallContactTime / ballMass);
     return direction;
 }
 
@@ -111,7 +113,7 @@ Vector* Physics::cueShot(Cue* cue, Ball* ball){
  * @return the rotational velocity that the ball with have after the shot
  * @see Phyics::cueShot(Cue*, Ball*)
 **/
-Vector* Physics::cueShot(Cue* cue, Ball* ball, Vector* hitSpot){
+Vector Physics::cueShot(Cue* cue, Ball* ball, Vector hitSpot){
     /* this one is more complex, hitting the ball off center applies torque
         torque needs to overcome the rotational interia of the ball
         dw              2
@@ -132,15 +134,14 @@ Vector* Physics::cueShot(Cue* cue, Ball* ball, Vector* hitSpot){
             2 m R^2
     */
     //get the vector from the center of the ball's rotation to the hitSpot
-    Vector* r = Vector::subtract(hitSpot, ball->getPosition());
+    Vector r = Vector::subtract(hitSpot, ball->getPosition());
     
     //get the vector between the cue and the ball
-    Vector* x = Vector::subtract(ball->getPosition(), cue->getPosition());
-    x->multiply(-cueSpringConstant);
+    Vector x = Vector::subtract(ball->getPosition(), cue->getPosition());
+    x.scale(-cueSpringConstant);
 
-    Vector* omega = Vector::crossProduct(r, x);
-    omega->multiply(5.0 * cueBallContactTime / (2.0 * ballMass * ballRadiusSq));
-    delete r, x;
+    Vector omega = Vector::crossProduct(r, x);
+    omega.scale(5.0 * cueBallContactTime / (2.0 * ballMass * ballRadiusSq));
     return omega;
 }
 
@@ -155,11 +156,8 @@ Vector* Physics::cueShot(Cue* cue, Ball* ball, Vector* hitSpot){
  * @return the rotational velocity that the ball with have after the shot
  * @see Phyics::cueShot(Cue*, Ball*), Physics::getHitSpot(Cue*, Ball*, double, double)
 **/
-Vector* Physics::cueShot(Cue* cue, Ball* ball, double x, double y){
-    Vector* hitSpot = getHitSpot(cue, ball, x, y);
-    Vector* omega = cueShot(cue, ball, hitSpot);
-    delete hitSpot;
-    return omega;
+Vector Physics::cueShot(Cue* cue, Ball* ball, double x, double y){
+    return cueShot(cue, ball, getHitSpot(cue, ball, x, y));
 }
 
 
@@ -174,9 +172,8 @@ void Physics::rollBalls(std::vector<Ball*> balls, double dt){
     for (unsigned int i = 0; i < balls.size(); i++){
         if (!balls[i]->isSunk() && balls[i]->isMoving()){
             //get how far they moved
-            Vector* dr = Vector::multiply(balls[i]->getSpeed(), dt);
-            balls[i]->getPosition()->add(dr);
-            delete dr;
+            Vector dr = Vector::scale(balls[i]->getVelocity(), dt);
+            balls[i]->setPosition(Vector::add(balls[i]->getPosition(), dr));
 
             // TODO check if they sunk into pockets
         }
@@ -205,8 +202,8 @@ double Physics::calcCollisionTime(Ball* ball1, Ball* ball2){
         solving for t gives a quadratic equation
     */
     //get their differences in position and velocity
-    Vector* dr = Vector::subtract(ball1->getPosition(), ball2->getPosition());  //s1 - s2
-    Vector* dv = Vector::subtract(ball1->getSpeed(), ball2->getSpeed());        //v1 - v2
+    Vector dr = Vector::subtract(ball1->getPosition(), ball2->getPosition());   //s1 - s2
+    Vector dv = Vector::subtract(ball1->getVelocity(), ball2->getVelocity());   //v1 - v2
 
     double a = Vector::dotProduct(dv, dv);
     double b = Vector::dotProduct(dr, dv) / a;
@@ -220,7 +217,6 @@ double Physics::calcCollisionTime(Ball* ball1, Ball* ball2){
     else {
         c = WONT_HAPPEN_THIS_FRAME;
     }
-    delete dr, dv;
     return std::min(-b + c, -b - c);
 }
 
@@ -247,7 +243,7 @@ double Physics::calcBankTime(Ball* ball, Event::BankAxis axis){
  * @param dt the amount of time passed sicne the last frame
 **/
 void Physics::moveBalls(std::vector<Ball*> balls, double dt){
-    Event* event = new Event(dt);
+    Event event = Event(dt);
 
     //check if any balls will collide with each other or the rails within time dt
     //find the earliest event that will occur
@@ -257,9 +253,8 @@ void Physics::moveBalls(std::vector<Ball*> balls, double dt){
             for (unsigned int j = 0; j < balls.size(); j++){
                 if (i != j){
                     double collisionTime = calcCollisionTime(balls[i], balls[j]);
-                    if (collisionTime >= 0 && collisionTime < event->getTime()){
-                        delete event;
-                        event = new CollisionEvent(collisionTime, balls[i], balls[j]);
+                    if (collisionTime >= 0 && collisionTime < event.getTime()){
+                        event = CollisionEvent(collisionTime, balls[i], balls[j]);
                     }
                 }
             }
@@ -267,28 +262,25 @@ void Physics::moveBalls(std::vector<Ball*> balls, double dt){
             //check for a bank off the side
             double bankTimeX = calcBankTime(balls[i], Event::BankAxis::X);
             double bankTimeY = calcBankTime(balls[i], Event::BankAxis::Y);
-            if (bankTimeX >= 0 && bankTimeX < event->getTime()){
-                delete event;
-                event = new BankEvent(bankTimeX, balls[i], Event::BankAxis::X);
+            if (bankTimeX >= 0 && bankTimeX < event.getTime()){
+                event = BankEvent(bankTimeX, balls[i], Event::BankAxis::X);
             }
-            if (bankTimeY >= 0 && bankTimeY < event->getTime()){
-                delete event;
-                event = new BankEvent(bankTimeY, balls[i], Event::BankAxis::Y);
+            if (bankTimeY >= 0 && bankTimeY < event.getTime()){
+                event = BankEvent(bankTimeY, balls[i], Event::BankAxis::Y);
             }
         }
     }
 
     //update the positions of all balls up until the event occurs, or until dt is reached if none
-    rollBalls(balls, event->getTime());
+    rollBalls(balls, event.getTime());
 
     //handle the event, if any
-    event->handle();
+    event.handle();
 
     //recurse if need be
-    if (event->getTime() < dt){
-        moveBalls(balls, dt - event->getTime());
+    if (event.getTime() < dt){
+        moveBalls(balls, dt - event.getTime());
     }
-    delete event;
 }
 
 

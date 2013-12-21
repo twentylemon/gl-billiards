@@ -353,7 +353,7 @@ void calculateNormals(obj_type_ptr p_object)
 		l_vect3->subtract(l_vect1);
 
 		//VectDotProduct (&l_vect_b1, &l_vect_b2, &l_normal);
-		Vector* l_normal = l_vect2->crossProduct(l_vect3);
+		Vector* l_normal = &(l_vect2->crossProduct(l_vect3));
 
 		//VectNormalize (&l_normal);
 		//l_normal->normalize();
@@ -365,7 +365,7 @@ void calculateNormals(obj_type_ptr p_object)
 		//p_object->normal[p_object->polygon[i].a]->add(l_normal);
 		//p_object->normal[p_object->polygon[i].b]->add(l_normal);
 		//p_object->normal[p_object->polygon[i].c]->add(l_normal);
-		p_object->normal[i] = l_vect2->crossProduct(l_vect3);
+		p_object->normal[i] = &(l_vect2->crossProduct(l_vect3));
 	} 
 	/*
 	for (i=0; i<p_object->vertices_qty; i++)

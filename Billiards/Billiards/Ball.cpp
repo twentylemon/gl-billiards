@@ -14,7 +14,7 @@
  * @param number the number on the ball, 0 if the cue ball
 **/
 Ball::Ball(int number) : RADIUS(BALL_RADIUS), DIAMETER(2.0 * BALL_RADIUS), Particle(){
-    model = new Model("Objects/ball.3DS", "Objects/textures/ball" + std::to_string(number) + ".bmp");
+    model = Model("Objects/ball.3DS", "Objects/textures/ball" + std::to_string(number) + ".bmp");
     sunk = false;
     double offset = 1.0/4.0 * TABLE_WIDTH;
     switch (number){
@@ -43,11 +43,11 @@ Ball::Ball(int number) : RADIUS(BALL_RADIUS), DIAMETER(2.0 * BALL_RADIUS), Parti
 **/
 void Ball::draw(){
     glPushMatrix();
-    glTranslated(position->getX(), position->getY(), position->getZ());
-    glRotated(rotation->getX(), 1, 0, 0);
-    glRotated(rotation->getY(), 0, 1, 0);
-    glRotated(rotation->getZ(), 0, 0, 1);
-    model->draw();
+    glTranslated(position.getX(), position.getY(), position.getZ());
+    glRotated(rotation.getX(), 1, 0, 0);
+    glRotated(rotation.getY(), 0, 1, 0);
+    glRotated(rotation.getZ(), 0, 0, 1);
+    model.draw();
     glPopMatrix();
 }
 
@@ -65,5 +65,4 @@ bool Ball::isSunk(){ return sunk; }
  * Destructor.
 **/
 Ball::~Ball(void){
-    delete model;
 }

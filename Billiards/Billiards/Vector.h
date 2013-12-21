@@ -24,26 +24,24 @@ public:
     static const int Z = 2;
 
     //operations
-    void add(Vector*);
+    void add(Vector);
     void add(int, double);
     void add(double, double, double);
-    void subtract(Vector*);
-    void multiply(double);
-    void divide(double);
-    double distance(Vector*);
+    void subtract(Vector);
+    void scale(double);
+    double distance(Vector);
     double distance(double, double, double);
-    bool equals(Vector*);
-    double dotProduct(Vector*);
-    Vector* crossProduct(Vector*);
+    bool equals(Vector);
+    double dotProduct(Vector);
+    Vector crossProduct(Vector);
 
-    static Vector* add(Vector*, Vector*);
-    static Vector* add(Vector*, double, double, double);
-    static Vector* subtract(Vector*, Vector*);
-    static Vector* multiply(Vector*, double);
-    static Vector* divide(Vector*, double);
-    static double distance(Vector*, Vector*);
-    static double dotProduct(Vector*, Vector*);
-    static Vector* crossProduct(Vector*, Vector*);
+    static Vector add(Vector, Vector);
+    static Vector add(Vector, double, double, double);
+    static Vector subtract(Vector, Vector);
+    static Vector scale(Vector, double);
+    static double distance(Vector, Vector);
+    static double dotProduct(Vector, Vector);
+    static Vector crossProduct(Vector, Vector);
 
     double length();
     double lengthSq();
@@ -51,7 +49,6 @@ public:
     void normalize(double);
 
     //getters/setters
-    double* get();           //pointer to data
     double get(int);         //get single element
     double getX();
     double getY();

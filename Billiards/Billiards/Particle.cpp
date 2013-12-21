@@ -11,34 +11,34 @@
  * Default constructor.
 **/
 Particle::Particle(void){
-    position = new Vector();
-    speed = new Vector();
-    rotation = new Vector();
+    position = Vector();
+    velocity = Vector();
+    rotation = Vector();
 }
 
 
 /**
  * Getters/Setters.
 **/
-void Particle::setPosition(double x, double y, double z){ position->set(x, y, z); }
-void Particle::setPosition(int idx, double val){ position->set(idx, val); }
-void Particle::setPosition(Vector* val){ delete position; position = val; }
-double Particle::getPosition(int idx){ return position->get(idx); }
-Vector* Particle::getPosition(){ return position; }
+void Particle::setPosition(double x, double y, double z){ position.set(x, y, z); }
+void Particle::setPosition(int idx, double val){ position.set(idx, val); }
+void Particle::setPosition(Vector val){ position.set(val.data()); }
+double Particle::getPosition(int idx){ return position.get(idx); }
+Vector Particle::getPosition(){ return position; }
 
-void Particle::setSpeed(double x, double y, double z){ speed->set(x, y, z); }
-void Particle::setSpeed(int idx, double val){ speed->set(idx, val); }
-void Particle::setSpeed(Vector* val){ delete speed; speed = val; }
-double Particle::getSpeed(int idx){ return speed->get(idx); }
-Vector* Particle::getSpeed(){ return speed; }
+void Particle::setVelocity(double x, double y, double z){ velocity.set(x, y, z); }
+void Particle::setVelocity(int idx, double val){ velocity.set(idx, val); }
+void Particle::setVelocity(Vector val){ velocity.set(val.data()); }
+double Particle::getVelocity(int idx){ return velocity.get(idx); }
+Vector Particle::getVelocity(){ return velocity; }
 
-void Particle::setRotation(double x, double y, double z){ rotation->set(x, y, z); }
-void Particle::setRotation(int idx, double val){ rotation->set(idx, val); }
-void Particle::setRotation(Vector* val){ delete rotation; position = val; }
-double Particle::getRotation(int idx){ return rotation->get(idx); }
-Vector* Particle::getRotation(){ return rotation; }
+void Particle::setRotation(double x, double y, double z){ rotation.set(x, y, z); }
+void Particle::setRotation(int idx, double val){ rotation.set(idx, val); }
+void Particle::setRotation(Vector val){ rotation.set(val.data()); }
+double Particle::getRotation(int idx){ return rotation.get(idx); }
+Vector Particle::getRotation(){ return rotation; }
 
-bool Particle::isMoving(){ return speed->lengthSq() > 0; }
+bool Particle::isMoving(){ return velocity.lengthSq() > 0; }
 
 /**
  * Returns a string representation of this particle.
@@ -46,9 +46,9 @@ bool Particle::isMoving(){ return speed->lengthSq() > 0; }
  * @return string of the values in this particle
 **/
 std::string Particle::toString(){
-    return  "position: " + position->toString() + "\n" +
-            "speed:    " + speed->toString() + "\n" +
-            "rotation: " + rotation->toString() + "\n";
+    return  "position: " + position.toString() + "\n" +
+            "velocity: " + velocity.toString() + "\n" +
+            "rotation: " + rotation.toString() + "\n";
 }
 
 

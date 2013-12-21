@@ -22,8 +22,8 @@ public:
     const double FRICTION;
 
 private:
-    Model* bed;
-    Model* edges;
-	Model* rails;
+    Model bed;
+    Model edges;
+	Model rails;
 };
 

@@ -22,10 +22,10 @@ public:
 
     static Physics* getInstance();
 
-    Vector* getHitSpot(Cue*, Ball*, double, double);
-    Vector* cueShot(Cue*, Ball*);
-    Vector* cueShot(Cue*, Ball*, Vector*);
-    Vector* cueShot(Cue*, Ball*, double, double);
+    Vector getHitSpot(Cue*, Ball*, double, double);
+    Vector cueShot(Cue*, Ball*);
+    Vector cueShot(Cue*, Ball*, Vector);
+    Vector cueShot(Cue*, Ball*, double, double);
 
     bool update(std::vector<Ball*>);
     bool update(std::vector<Ball*>, double);
