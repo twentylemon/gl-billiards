@@ -10,6 +10,7 @@
 #include "Vector.h"
 #include "Ball.h"
 #define IMPULSE_TIME 0.05
+#define CUSHION_FRICTION_LOSS 0.2
 
 /**
  * Event superclass. Provides general behaviour.

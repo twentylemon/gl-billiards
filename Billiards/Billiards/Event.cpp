@@ -39,10 +39,6 @@ CollisionEvent::CollisionEvent(double time, Ball* ball1, Ball* ball2) : Event(ti
  * Handles speed updates of the collision event.
 **/
 void CollisionEvent::handle(){
-    // TODO
-    double ballRadius = ball1->getRadius();
-    double impulseTime = IMPULSE_TIME;
-
     //got the normal to the collision plane
     Vector normal = Vector::subtract(ball1->getPosition(), ball2->getPosition());
     normal.normalize();
@@ -50,6 +46,17 @@ void CollisionEvent::handle(){
 
     //find the normal/tangential components for each of the balls velocities
     Vector norm1 = Vector::scale(negNormal, Vector::dotProduct(ball1->getVelocity(), negNormal));
+    Vector tan1 = Vector::subtract(ball1->getVelocity(), norm1);
+    Vector norm2 = Vector::scale(normal, Vector::dotProduct(ball2->getVelocity(), normal));
+    Vector tan2 = Vector::subtract(ball2->getVelocity(), norm2);
+
+    //conservation of linear momentum, assume the collision is 100% elastic
+    ball1->setVelocity(Vector::add(tan1, norm2));
+    ball2->setVelocity(Vector::add(tan2, norm1));
+
+    // TODO angular velocity
+    //double ballRadius = ball1->getRadius();
+    //double impulseTime = IMPULSE_TIME;
 }
 
 
@@ -70,5 +77,16 @@ BankEvent::BankEvent(double time, Ball* ball, BankAxis axis) : Event(time){
  * Handles the velocity update after a bank event.
 **/
 void BankEvent::handle(){
-    // TODO
+    Vector velocity = ball->getVelocity();
+
+    //get the normal and tangential components of the velocity
+    Vector norm(0, 0, 0);
+    if (axis == BankAxis::X){
+        velocity.setX(-velocity.getX());
+    }
+    else if (axis == BankAxis::Y){
+        velocity.setY(-velocity.getY());
+    }
+    velocity.scale(1.0 - CUSHION_FRICTION_LOSS);
+    ball->setVelocity(velocity);
 }
