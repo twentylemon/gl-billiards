@@ -32,6 +32,12 @@ void Particle::setVelocity(Vector val){ velocity.set(val.data()); }
 double Particle::getVelocity(int idx){ return velocity.get(idx); }
 Vector Particle::getVelocity(){ return velocity; }
 
+void Particle::setAngular(double x, double y, double z){ angular.set(x, y, z); }
+void Particle::setAngular(int idx, double val){ angular.set(idx, val); }
+void Particle::setAngular(Vector val){ angular.set(val.data()); }
+double Particle::getAngular(int idx){ return angular.get(idx); }
+Vector Particle::getAngular(){ return angular; }
+
 void Particle::setRotation(double x, double y, double z){ rotation.set(x, y, z); }
 void Particle::setRotation(int idx, double val){ rotation.set(idx, val); }
 void Particle::setRotation(Vector val){ rotation.set(val.data()); }

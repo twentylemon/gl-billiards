@@ -9,6 +9,7 @@
 #pragma once
 #include "Vector.h"
 #include "Ball.h"
+#define IMPULSE_TIME 0.05
 
 /**
  * Event superclass. Provides general behaviour.

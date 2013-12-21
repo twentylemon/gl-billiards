@@ -40,6 +40,16 @@ CollisionEvent::CollisionEvent(double time, Ball* ball1, Ball* ball2) : Event(ti
 **/
 void CollisionEvent::handle(){
     // TODO
+    double ballRadius = ball1->getRadius();
+    double impulseTime = IMPULSE_TIME;
+
+    //got the normal to the collision plane
+    Vector normal = Vector::subtract(ball1->getPosition(), ball2->getPosition());
+    normal.normalize();
+    Vector negNormal = Vector::scale(normal, -1.0);
+
+    //find the normal/tangential components for each of the balls velocities
+    Vector norm1 = Vector::scale(negNormal, Vector::dotProduct(ball1->getVelocity(), negNormal));
 }
 
 

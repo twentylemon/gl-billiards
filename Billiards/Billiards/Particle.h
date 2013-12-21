@@ -28,6 +28,12 @@ public:
     double getVelocity(int);
     Vector getVelocity();
 
+    void setAngular(double, double, double);
+    void setAngular(int, double);
+    void setAngular(Vector);
+    double getAngular(int);
+    Vector getAngular();
+
     void setRotation(double, double, double);
     void setRotation(int, double);
     void setRotation(Vector);
@@ -39,8 +45,9 @@ public:
     std::string toString();
 
 protected:
-    Vector position;
-    Vector velocity;
-    Vector rotation;
+    Vector position;    //position in (x,y,z)
+    Vector velocity;    //speed in (x,y,z)
+    Vector angular;     //angular velocity
+    Vector rotation;    //yaw, pitch, roll
     Model model;
 };
