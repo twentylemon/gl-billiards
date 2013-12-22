@@ -23,7 +23,10 @@ public:
 
     static Physics* getInstance();
 
+    Vector getHitSpot(Cue*, Ball*, double, double);
     Vector cueShot(Cue*, Ball*);
+    Vector cueShot(Cue*, Ball*, Vector);
+    Vector cueShot(Cue*, Ball*, double, double);
 
     bool update(std::vector<Ball*>);
     bool update(std::vector<Ball*>, double);
@@ -31,6 +34,8 @@ public:
 private:
     Physics(void);
     
+    void rotate(Ball*, Vector, Vector);
+    void rotate(Ball*, double);
     void rollBalls(std::vector<Ball*>, double);
     double calcCollisionTime(Ball*, Ball*);
     double calcBankTime(Ball*, Event::BankAxis);
@@ -46,7 +51,6 @@ private:
 
     double tableWidth;      //size of entire table
     double tableHeight;
-    double tableRailSize;
     double tablePlayWidth;  //size of where the balls lay
     double tablePlayHeight;
 

@@ -35,27 +35,36 @@ Physics::Physics(void){
     /** table properties **/
     tableWidth = 9.0 * 0.0254;          //9 ft (in m), along the x axis
     tableHeight = 4.5 * 0.0254;         //4.5 ft (in m), along the y axis
+    tableRailSize = 4 * 0.0254 / 2.0;   //4in (in m), divided by 2
     tablePlayWidth = 100.0 * 0.0254;    //100in (in m)
     tablePlayHeight = 50.0 * 0.0254;    //50in (in m)
 
     /** pockets **/
     numPockets = 6;
     pocketSize = 4.8 * 0.0254 / 2.0;    //actually corner = 4.5, side = 5 in, close enough
+    pockets[0] = Vector(tablePlayWidth / 2.0 + tableRailSize, tablePlayHeight / 2.0 + tableRailSize, 0);
+    pockets[1] = Vector(tablePlayWidth / 2.0 + tableRailSize, -tablePlayHeight / 2.0 - tableRailSize, 0);
+    pockets[2] = Vector(0, -tablePlayHeight / 2.0 - tableRailSize, 0);
+    pockets[3] = Vector(-tablePlayWidth / 2.0 - tableRailSize, -tablePlayHeight / 2.0 - tableRailSize, 0);
+    pockets[4] = Vector(-tablePlayWidth / 2.0 - tableRailSize, tablePlayHeight / 2.0 + tableRailSize, 0);
+    pockets[5] = Vector(0, tablePlayHeight / 2.0 + tableRailSize, 0);
+    /*
     pockets[0] = Vector(tablePlayWidth / 2.0, tablePlayHeight / 2.0, 0);    //top left
     pockets[1] = Vector(tablePlayWidth / 2.0, -tablePlayHeight / 2.0, 0);   //bottom left
     pockets[2] = Vector(0, -tablePlayHeight / 2.0, 0);                      //bottom middle
     pockets[3] = Vector(-tablePlayWidth / 2.0, -tablePlayHeight / 2.0, 0);  //bottom right
     pockets[4] = Vector(-tablePlayWidth / 2.0, tablePlayHeight / 2.0, 0);   //top right
     pockets[5] = Vector(0, tablePlayHeight / 2.0, 0);                       //top middle
+    */
 
     /** friction **/
-    clothFriction = 0.02;
-    velocityStop = 0.05;
+    clothFriction = 0.005;
+    velocityStop = 0.01 * 0.01; //use squared value so we can use squared length
     angularStop = 0.05;
     gravity = 9.8;
 
     /** animation **/
-    timeStep = 0.05;
+    timeStep = 0.1;
 }
 
 
@@ -67,39 +76,6 @@ Physics* Physics::getInstance(){
         instance = new Physics();
     }
     return instance;
-}
-
-
-/**
- * Returns the hit spot on the ball sent, for { @see cueShot(Cue*, Ball*, Vector*) }
- *
- * @param cue the cue
- * @param ball the ball to find the hit spot for
- * @param x the x offset from the center of the ball
- * @param y the y offset from the center of the ball
- * @see diagram below
-**/
-Vector Physics::getHitSpot(Cue* cue, Ball* ball, double x, double y){
-    /*  so we have a 2d circle to represent the hit spot for the UI
-           ---
-         /     \    C = center, no spin will be applied
-        |   Cxx |   + = the spot the user will strike
-         \  y +/    in this example, x = 2, y = -1
-           ---
-        we can find the hit spot by using the equation of a sphere
-        x^2 + y^2 + z^2 = r^2
-        the only unknown is z, which will have two solutions, the point closer to the
-        cue is the hit point on the ball
-    */
-    double z = sqrt(ballRadiusSq - x*x - y*y);
-    Vector neg = Vector(x, y, -z);
-    Vector pos = Vector(x, y, z);
-    double negDist = cue->getPosition().distance(x, y, -z);
-    double posDist = cue->getPosition().distance(x, y, z);
-    if (cue->getPosition().distance(neg) < cue->getPosition().distance(pos)){
-        return Vector::add(cue->getPosition(), neg);
-    }
-    return Vector::add(cue->getPosition(), pos);
 }
 
 
@@ -131,130 +107,6 @@ Vector Physics::cueShot(Cue* cue, Ball* ball){
 
 
 /**
- * Takes a shot with spin. (Wish I could return multiple values.)
- * 
- * @param cue the cue
- * @param ball the ball being struck by the cue
- * @param hitSpot where the ball will be struck by the cue
- * @return the rotational velocity that the ball with have after the shot
- * @see Phyics::cueShot(Cue*, Ball*)
-**/
-Vector Physics::cueShot(Cue* cue, Ball* ball, Vector hitSpot){
-    /* this one is more complex, hitting the ball off center applies torque
-        torque needs to overcome the rotational interia of the ball
-        dw              2
-        -- = I_sphere = - m R^2
-        dt              5
-        where m is the mass of the sphere (ball)
-              R is the radius of the sphere
-              w is the rotational velocity
-
-        torque:
-        T = r x F  = r x (-kx)
-        where r is the vector between the point of rotation and where the force is applied
-              F is the force applied, in our case is Hooke's Law, so F = -kx { @see cueShot(Cue*, Ball*) }
-
-        so setting them equal to each other, and assuming the initial rotation velocity is zero, we get
-              5 t
-        w = ------- r x -kx
-            2 m R^2
-    */
-    //get the vector from the center of the ball's rotation to the hitSpot
-    Vector r = Vector::subtract(hitSpot, ball->getPosition());
-    
-    //get the vector between the cue and the ball
-    Vector x = Vector::subtract(ball->getPosition(), cue->getPosition());
-    x.scale(-cueSpringConstant);
-
-    Vector omega = Vector::crossProduct(r, x);
-    omega.scale(5.0 * cueBallContactTime / (2.0 * ballMass * ballRadiusSq));
-    return omega;
-}
-
-
-/**
- * Takes a shot with spin. (Wish I could return multiple values.)
- * 
- * @param cue the cue
- * @param ball the ball being struck by the cue
- * @param x the x offset from the center of the ball
- * @param y the y offset from the center of the ball
- * @return the rotational velocity that the ball with have after the shot
- * @see Phyics::cueShot(Cue*, Ball*), Physics::getHitSpot(Cue*, Ball*, double, double)
-**/
-Vector Physics::cueShot(Cue* cue, Ball* ball, double x, double y){
-    return cueShot(cue, ball, getHitSpot(cue, ball, x, y));
-}
-
-
-/**
- * Performs rotation of the ball sent by angle theta.
- *
- * @param ball the ball to rotate
- * @param theta how much the ball will rotate
-**/
-void Physics::rotate(Ball* ball, double theta){
-    Vector normal = Vector();
-    Vector z = ball->getAngular();
-    z.normalize();
-    Vector absz = Vector(std::abs(z.getX()), std::abs(z.getY()), std::abs(z.getZ()));
-    if (absz.getX() <= absz.getY() && absz.getX() <= z.getZ()){
-        normal.setX(1.0);
-    }
-    if (absz.getY() <= absz.getZ() && absz.getY() <= z.getX()){
-        normal.setY(1.0);
-    }
-    if (absz.getZ() <= absz.getX() && absz.getZ() <= absz.getY()){
-        normal.setZ(1.0);
-    }
-    Vector x = Vector::subtract(normal, Vector::scale(z, Vector::dotProduct(normal, z)));
-    Vector y = Vector::crossProduct(z, x);
-
-    double sinTheta = sin(theta);
-    double cosTheta = cos(theta);
-
-    Vector yaw = ball->getYaw(), pitch = ball->getPitch(), roll = ball->getRoll();
-
-    Vector dy = Vector(yaw.dotProduct(x), yaw.dotProduct(y), yaw.dotProduct(z));
-    Vector dp = Vector(pitch.dotProduct(x), pitch.dotProduct(y), pitch.dotProduct(z));
-    Vector dr = Vector(roll.dotProduct(x), roll.dotProduct(y), roll.dotProduct(z));
-    
-    Vector dy2 = Vector(dy.getX() * cosTheta - dy.getY() * sinTheta, dy.getY() * cosTheta - dy.getX() * sinTheta, dy.getZ());
-    Vector dp2 = Vector(dp.getX() * cosTheta - dp.getY() * sinTheta, dp.getY() * cosTheta - dp.getX() * sinTheta, dp.getZ());
-    Vector dr2 = Vector(dr.getX() * cosTheta - dr.getY() * sinTheta, dr.getY() * cosTheta - dr.getX() * sinTheta, dr.getZ());
-    
-    yaw.setX(dy2.getX()*x.getX() + dy2.getY()*y.getX() + dy2.getZ()*z.getX());
-    yaw.setY(dy2.getX()*x.getY() + dy2.getY()*y.getY() + dy2.getZ()*z.getY());
-    yaw.setZ(dy2.getX()*x.getZ() + dy2.getY()*y.getZ() + dy2.getZ()*z.getZ());
-    pitch.setX(dp2.getX()*x.getX() + dp2.getY()*y.getX() + dp2.getZ()*z.getX());
-    pitch.setY(dp2.getX()*x.getY() + dp2.getY()*y.getY() + dp2.getZ()*z.getY());
-    pitch.setZ(dp2.getX()*x.getZ() + dp2.getY()*y.getZ() + dp2.getZ()*z.getZ());
-    roll.setX(dr2.getX()*x.getX() + dr2.getY()*y.getX() + dr2.getZ()*z.getX());
-    roll.setY(dr2.getX()*x.getY() + dr2.getY()*y.getY() + dr2.getZ()*z.getY());
-    roll.setZ(dr2.getX()*x.getZ() + dr2.getY()*y.getZ() + dr2.getZ()*z.getZ());
-
-    ball->setYaw(yaw);
-    ball->setPitch(pitch);
-    ball->setRoll(roll);
-}
-
-
-/**
- * Updates the rotation that this ball underwent.
- *
- * @param ball the ball to update
- * @param dr how much the ball translated
- * @param dw how much the ball spun
-**/
-void Physics::rotate(Ball* ball, Vector dr, Vector dw){
-    double angle = 360 * dr.length() / ballCircumference;
-    Vector rotation = Vector(angle, angle, 0);
-    rotation.add(dw);
-    ball->setRotation(Vector::add(ball->getRotation(), rotation));
-}
-
-
-/**
  * Does the actual movement of the pool balls. No events will occur within dt, so we can just roll
  * them happily along. We do have to check for pocketed balls though.
  *
@@ -268,21 +120,11 @@ void Physics::rollBalls(std::vector<Ball*> balls, double dt){
             Vector dr = Vector::scale(balls[i]->getVelocity(), dt);
             balls[i]->setPosition(Vector::add(balls[i]->getPosition(), dr));
 
-            //perform rotations
-            //get down much they spun
-            rotate(balls[i], dr, Vector::scale(balls[i]->getAngular(), dt));
-            /*
-            double theta = balls[i]->getAngular().length() * dt;
-            if (theta > 0){
-                rotate(balls[i], theta);
-            }
-            */
-
-
             //check for pocketing
             for (int p = 0; p < numPockets; p++){
-                if (pockets[p].distance(balls[i]->getPosition()) < pocketSize){
-                    std::cerr << "Ball " << i << " has been pocketed. " << balls[i]->getPosition().toString() << std::endl;
+                if (pockets[p].distance(balls[i]->getPosition()) < 4.0 * ballRadiusSq){
+                    std::cerr << "Ball " << i << " has been pocketed." << std::endl << balls[i]->getPosition().toString() << std::endl
+                        << pockets[p].toString() << std::endl;
                     balls[i]->sink();
                 }
             }
@@ -337,21 +179,21 @@ double Physics::calcCollisionTime(Ball* ball1, Ball* ball2){
  * @return the amount of time that will pass before ball hits the bank
 **/
 double Physics::calcBankTime(Ball* ball, Event::BankAxis axis){
-    double pos = 0, speed = 0;
-    double rail = 0;
+    // TODO check pocket locations, make sure the bank point is not in a pocket
+    double pos = 0, speed = 0, railPos = 0;
     //determne when the ball will hit (rail, 0, 0) or (0, rail, 0)
     if (axis == Event::BankAxis::X){
         pos = ball->getPosition(Vector::X);
         speed = ball->getVelocity(Vector::X);
-        rail = tablePlayWidth / 2.0;    //divide by 2 since center of table is (0,0,0)
+        railPos = tablePlayWidth / 2.0;     //divide by 2 since center of table is (0,0,0)
     }
     else if (axis == Event::BankAxis::Y){
         pos = ball->getPosition(Vector::Y);
         speed = ball->getVelocity(Vector::Y);
-        rail = tablePlayHeight / 2.0;
+        railPos = tablePlayHeight / 2.0;
     }
-    if (speed > 0){
-        return std::abs((rail - ballRadius) / speed);
+    if (speed != 0){
+        return ((speed/std::abs(speed)) * (railPos - ballRadius) - pos) / speed;
     }
     return WONT_HAPPEN_THIS_FRAME;
 }
@@ -366,7 +208,7 @@ double Physics::calcBankTime(Ball* ball, Event::BankAxis axis){
  * @param dt the amount of time passed sicne the last frame
 **/
 void Physics::moveBalls(std::vector<Ball*> balls, double dt){
-    Event event = Event(dt);
+    Event* event = new Event(dt);
 
     //check if any balls will collide with each other or the rails within time dt
     //find the earliest event that will occur
@@ -376,8 +218,9 @@ void Physics::moveBalls(std::vector<Ball*> balls, double dt){
             for (unsigned int j = 0; j < balls.size(); j++){
                 if (i != j){
                     double collisionTime = calcCollisionTime(balls[i], balls[j]);
-                    if (collisionTime >= 0 && collisionTime < event.getTime()){
-                        event = CollisionEvent(collisionTime, balls[i], balls[j]);
+                    if (collisionTime >= 0 && collisionTime < event->getTime()){
+                        delete event;
+                        event = new CollisionEvent(collisionTime, balls[i], balls[j]);
                     }
                 }
             }
@@ -385,24 +228,26 @@ void Physics::moveBalls(std::vector<Ball*> balls, double dt){
             //check for a bank off the side
             double bankTimeX = calcBankTime(balls[i], Event::BankAxis::X);
             double bankTimeY = calcBankTime(balls[i], Event::BankAxis::Y);
-            if (bankTimeX >= 0 && bankTimeX < event.getTime()){
-                event = BankEvent(bankTimeX, balls[i], Event::BankAxis::X);
+            if (bankTimeX >= 0 && bankTimeX < event->getTime()){
+                delete event;
+                event = new BankEvent(bankTimeX, balls[i], Event::BankAxis::X);
             }
-            if (bankTimeY >= 0 && bankTimeY < event.getTime()){
-                event = BankEvent(bankTimeY, balls[i], Event::BankAxis::Y);
+            if (bankTimeY >= 0 && bankTimeY < event->getTime()){
+                delete event;
+                event = new BankEvent(bankTimeY, balls[i], Event::BankAxis::Y);
             }
         }
     }
 
     //update the positions of all balls up until the event occurs, or until dt is reached if none
-    rollBalls(balls, event.getTime());
+    rollBalls(balls, event->getTime());
 
     //handle the event, if any
-    event.handle();
+    event->handle();
 
     //recurse if need be
-    if (event.getTime() < dt){
-        moveBalls(balls, dt - event.getTime());
+    if (event->getTime() < dt){
+        moveBalls(balls, dt - event->getTime());
     }
 }
 
@@ -428,26 +273,19 @@ bool Physics::update(std::vector<Ball*> balls){
 **/
 bool Physics::update(std::vector<Ball*> balls, double dt){
     moveBalls(balls, dt);
-
     bool ballsMoving = false;
+
     /** calculate new velocities **/
     for (unsigned int i = 0; i < balls.size(); i++){
         if (!balls[i]->isSunk() && balls[i]->isMoving()){
             ballsMoving = true;
 
-            //get the speed the perimeter of the ball is travelling, apply friction to that
-            Vector up = Vector(0, 0, ballRadius);
-            Vector down = Vector(0, 0, -ballRadius);
-            Vector friction = balls[i]->getAngular().crossProduct(down);
-            friction.normalize();
-            friction.scale(clothFriction * ballMass * gravity);
+            Vector friction = Vector::scale(balls[i]->getVelocity(), clothFriction);
+            balls[i]->setVelocity(Vector::subtract(balls[i]->getVelocity(), friction));
 
-            Vector accel = Vector::scale(down.crossProduct(friction), 5.0 / (2.0 * ballMass * ballRadiusSq));
-            accel.scale(dt);
-            balls[i]->setAngular(Vector::add(balls[i]->getAngular(), accel));
-            balls[i]->setVelocity(balls[i]->getAngular().crossProduct(up));
-
-            if (balls[i]->getAngular().lengthSq() < angularStop && balls[i]->getVelocity().lengthSq() < velocityStop){
+            
+            if (balls[i]->getVelocity().lengthSq() < velocityStop){
+                std::cerr << balls[i]->getVelocity().toString() << std::endl;
                 balls[i]->stopMoving();
             }
         }

@@ -101,6 +101,7 @@ void initializeGame(){
     global.table = new Table();
 	global.player1 = new Player(1);
     global.physics = Physics::getInstance();
+    global.clock = std::clock();
 }
 
 

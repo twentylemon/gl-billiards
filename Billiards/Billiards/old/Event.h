@@ -34,7 +34,7 @@ class CollisionEvent : public Event
 {
 public:
     CollisionEvent(double, Ball*, Ball*);
-    virtual void handle();
+    void handle();
 
 private:
     Ball* ball1;
@@ -46,7 +46,7 @@ class BankEvent : public Event
 {
 public:
     BankEvent(double, Ball*, BankAxis);
-    virtual void handle();
+    void handle();
 
 private:
     Ball* ball;

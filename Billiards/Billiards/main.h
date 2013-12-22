@@ -38,6 +38,7 @@ typedef struct {
 	Player* player1;
 
     Physics* physics;
+    std::clock_t clock;
 } Global;
 
 extern Global global;
