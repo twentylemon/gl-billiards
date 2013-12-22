@@ -14,6 +14,14 @@ Particle::Particle(void){
     position = Vector();
     velocity = Vector();
     rotation = Vector();
+
+    yaw = Vector();
+    pitch = Vector();
+    roll = Vector();
+    for (int i = 0; i < 15; i++){
+        rotationMatrix[i] = 0;
+    }
+    rotationMatrix[15] = 1.0;
 }
 
 
@@ -44,7 +52,45 @@ void Particle::setRotation(Vector val){ rotation.set(val.data()); }
 double Particle::getRotation(int idx){ return rotation.get(idx); }
 Vector Particle::getRotation(){ return rotation; }
 
-bool Particle::isMoving(){ return velocity.lengthSq() > 0; }
+void Particle::setYaw(double x, double y, double z){ yaw.set(x, y, z); }
+void Particle::setYaw(int idx, double val){ yaw.set(idx, val); }
+void Particle::setYaw(Vector val){ yaw.set(val.data()); }
+double Particle::getYaw(int idx){ return yaw.get(idx); }
+Vector Particle::getYaw(){ return yaw; }
+
+void Particle::setPitch(double x, double y, double z){ pitch.set(x, y, z); }
+void Particle::setPitch(int idx, double val){ pitch.set(idx, val); }
+void Particle::setPitch(Vector val){ pitch.set(val.data()); }
+double Particle::getPitch(int idx){ return pitch.get(idx); }
+Vector Particle::getPitch(){ return pitch; }
+
+void Particle::setRoll(double x, double y, double z){ roll.set(x, y, z); }
+void Particle::setRoll(int idx, double val){ roll.set(idx, val); }
+void Particle::setRoll(Vector val){ roll.set(val.data()); }
+double Particle::getRoll(int idx){ return roll.get(idx); }
+Vector Particle::getRoll(){ return roll; }
+
+void Particle::updateRotationMatrix(){
+    yaw.normalize();
+    rotationMatrix[0] = yaw.getX();
+    rotationMatrix[1] = yaw.getY();
+    rotationMatrix[2] = yaw.getZ();
+    pitch.normalize();
+    rotationMatrix[3] = pitch.getX();
+    rotationMatrix[4] = pitch.getY();
+    rotationMatrix[5] = pitch.getZ();
+    roll.normalize();
+    rotationMatrix[6] = roll.getX();
+    rotationMatrix[7] = roll.getY();
+    rotationMatrix[8] = roll.getZ();
+}
+double* Particle::getRotationMatrix(){ return rotationMatrix; }
+
+bool Particle::isMoving(){ return velocity.lengthSq() > 0 || angular.lengthSq() > 0; }
+void Particle::stopMoving(){
+    velocity.set(0, 0, 0);
+    angular.set(0, 0, 0);
+}
 
 /**
  * Returns a string representation of this particle.
@@ -54,7 +100,9 @@ bool Particle::isMoving(){ return velocity.lengthSq() > 0; }
 std::string Particle::toString(){
     return  "position: " + position.toString() + "\n" +
             "velocity: " + velocity.toString() + "\n" +
-            "rotation: " + rotation.toString() + "\n";
+            "yaw     : " + yaw.toString() + "\n" +
+            "pitch   : " + pitch.toString() + "\n" +
+            "roll    : " + roll.toString() + "\n";
 }
 
 

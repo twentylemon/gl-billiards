@@ -9,7 +9,7 @@
 #pragma once
 #include "Vector.h"
 #include "Ball.h"
-#define IMPULSE_TIME 0.05
+#define BALL_FRICTION_LOSS 0.1  //only applies to angular
 #define CUSHION_FRICTION_LOSS 0.2
 
 /**

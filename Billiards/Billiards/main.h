@@ -15,6 +15,7 @@
 #include "Ball.h"
 #include "Table.h"
 #include "Player.h"
+#include "Physics.h"
 
 #define ORTHO_WIDTH 100
 #define ORTHO_HEIGHT 100
@@ -36,6 +37,7 @@ typedef struct {
     Table* table;
 	Player* player1;
 
+    Physics* physics;
 } Global;
 
 extern Global global;

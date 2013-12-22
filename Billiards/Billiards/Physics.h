@@ -13,6 +13,7 @@
 #include "Vector.h"
 #include "Cue.h"
 #include "Ball.h"
+#define PI 3.14159
 #undef min  //from Model.h -> stdio.h
 
 class Physics
@@ -33,6 +34,8 @@ public:
 private:
     Physics(void);
     
+    void rotate(Ball*, Vector, Vector);
+    void rotate(Ball*, double);
     void rollBalls(std::vector<Ball*>, double);
     double calcCollisionTime(Ball*, Ball*);
     double calcBankTime(Ball*, Event::BankAxis);
@@ -44,12 +47,21 @@ private:
     double ballMass;
     double ballRadius;
     double ballRadiusSq;
+    double ballCircumference;
 
-    double tableWidth;
+    double tableWidth;      //size of entire table
     double tableHeight;
-    double tableRailSize;
-    double tablePlayWidth;
+    double tablePlayWidth;  //size of where the balls lay
     double tablePlayHeight;
+
+    int numPockets;
+    double pocketSize;
+    Vector pockets[6];  //positions of the pockets
+
+    double clothFriction;
+    double velocityStop;
+    double angularStop;
+    double gravity;
 
     double timeStep;
 };

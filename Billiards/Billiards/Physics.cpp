@@ -22,16 +22,40 @@ Physics::Physics(void){
     ballMass = 0.170079;        //6 oz (in kg)
     ballRadius = 0.028575;      //1.125in (in m)
     ballRadiusSq = ballRadius * ballRadius;
+    ballCircumference = 2 * PI * ballRadius;
 
+    /*     width                 ^
+     4--------5--------0 h     y |
+     |                 | e
+     |                 | i     x
+     |                 | g     ->
+     3--------2--------1 h
+   pocket nums labelled  t
+    */
     /** table properties **/
     tableWidth = 9.0 * 0.0254;          //9 ft (in m), along the x axis
     tableHeight = 4.5 * 0.0254;         //4.5 ft (in m), along the y axis
     tablePlayWidth = 100.0 * 0.0254;    //100in (in m)
     tablePlayHeight = 50.0 * 0.0254;    //50in (in m)
-    tableRailSize = 0;                  //don't know this
+
+    /** pockets **/
+    numPockets = 6;
+    pocketSize = 4.8 * 0.0254 / 2.0;    //actually corner = 4.5, side = 5 in, close enough
+    pockets[0] = Vector(tablePlayWidth / 2.0, tablePlayHeight / 2.0, 0);    //top left
+    pockets[1] = Vector(tablePlayWidth / 2.0, -tablePlayHeight / 2.0, 0);   //bottom left
+    pockets[2] = Vector(0, -tablePlayHeight / 2.0, 0);                      //bottom middle
+    pockets[3] = Vector(-tablePlayWidth / 2.0, -tablePlayHeight / 2.0, 0);  //bottom right
+    pockets[4] = Vector(-tablePlayWidth / 2.0, tablePlayHeight / 2.0, 0);   //top right
+    pockets[5] = Vector(0, tablePlayHeight / 2.0, 0);                       //top middle
+
+    /** friction **/
+    clothFriction = 0.02;
+    velocityStop = 0.05;
+    angularStop = 0.05;
+    gravity = 9.8;
 
     /** animation **/
-    timeStep = 0.1;
+    timeStep = 0.05;
 }
 
 
@@ -164,6 +188,73 @@ Vector Physics::cueShot(Cue* cue, Ball* ball, double x, double y){
 
 
 /**
+ * Performs rotation of the ball sent by angle theta.
+ *
+ * @param ball the ball to rotate
+ * @param theta how much the ball will rotate
+**/
+void Physics::rotate(Ball* ball, double theta){
+    Vector normal = Vector();
+    Vector z = ball->getAngular();
+    z.normalize();
+    Vector absz = Vector(std::abs(z.getX()), std::abs(z.getY()), std::abs(z.getZ()));
+    if (absz.getX() <= absz.getY() && absz.getX() <= z.getZ()){
+        normal.setX(1.0);
+    }
+    if (absz.getY() <= absz.getZ() && absz.getY() <= z.getX()){
+        normal.setY(1.0);
+    }
+    if (absz.getZ() <= absz.getX() && absz.getZ() <= absz.getY()){
+        normal.setZ(1.0);
+    }
+    Vector x = Vector::subtract(normal, Vector::scale(z, Vector::dotProduct(normal, z)));
+    Vector y = Vector::crossProduct(z, x);
+
+    double sinTheta = sin(theta);
+    double cosTheta = cos(theta);
+
+    Vector yaw = ball->getYaw(), pitch = ball->getPitch(), roll = ball->getRoll();
+
+    Vector dy = Vector(yaw.dotProduct(x), yaw.dotProduct(y), yaw.dotProduct(z));
+    Vector dp = Vector(pitch.dotProduct(x), pitch.dotProduct(y), pitch.dotProduct(z));
+    Vector dr = Vector(roll.dotProduct(x), roll.dotProduct(y), roll.dotProduct(z));
+    
+    Vector dy2 = Vector(dy.getX() * cosTheta - dy.getY() * sinTheta, dy.getY() * cosTheta - dy.getX() * sinTheta, dy.getZ());
+    Vector dp2 = Vector(dp.getX() * cosTheta - dp.getY() * sinTheta, dp.getY() * cosTheta - dp.getX() * sinTheta, dp.getZ());
+    Vector dr2 = Vector(dr.getX() * cosTheta - dr.getY() * sinTheta, dr.getY() * cosTheta - dr.getX() * sinTheta, dr.getZ());
+    
+    yaw.setX(dy2.getX()*x.getX() + dy2.getY()*y.getX() + dy2.getZ()*z.getX());
+    yaw.setY(dy2.getX()*x.getY() + dy2.getY()*y.getY() + dy2.getZ()*z.getY());
+    yaw.setZ(dy2.getX()*x.getZ() + dy2.getY()*y.getZ() + dy2.getZ()*z.getZ());
+    pitch.setX(dp2.getX()*x.getX() + dp2.getY()*y.getX() + dp2.getZ()*z.getX());
+    pitch.setY(dp2.getX()*x.getY() + dp2.getY()*y.getY() + dp2.getZ()*z.getY());
+    pitch.setZ(dp2.getX()*x.getZ() + dp2.getY()*y.getZ() + dp2.getZ()*z.getZ());
+    roll.setX(dr2.getX()*x.getX() + dr2.getY()*y.getX() + dr2.getZ()*z.getX());
+    roll.setY(dr2.getX()*x.getY() + dr2.getY()*y.getY() + dr2.getZ()*z.getY());
+    roll.setZ(dr2.getX()*x.getZ() + dr2.getY()*y.getZ() + dr2.getZ()*z.getZ());
+
+    ball->setYaw(yaw);
+    ball->setPitch(pitch);
+    ball->setRoll(roll);
+}
+
+
+/**
+ * Updates the rotation that this ball underwent.
+ *
+ * @param ball the ball to update
+ * @param dr how much the ball translated
+ * @param dw how much the ball spun
+**/
+void Physics::rotate(Ball* ball, Vector dr, Vector dw){
+    double angle = 360 * dr.length() / ballCircumference;
+    Vector rotation = Vector(angle, angle, 0);
+    rotation.add(dw);
+    ball->setRotation(Vector::add(ball->getRotation(), rotation));
+}
+
+
+/**
  * Does the actual movement of the pool balls. No events will occur within dt, so we can just roll
  * them happily along. We do have to check for pocketed balls though.
  *
@@ -177,7 +268,24 @@ void Physics::rollBalls(std::vector<Ball*> balls, double dt){
             Vector dr = Vector::scale(balls[i]->getVelocity(), dt);
             balls[i]->setPosition(Vector::add(balls[i]->getPosition(), dr));
 
-            // TODO check if they sunk into pockets
+            //perform rotations
+            //get down much they spun
+            rotate(balls[i], dr, Vector::scale(balls[i]->getAngular(), dt));
+            /*
+            double theta = balls[i]->getAngular().length() * dt;
+            if (theta > 0){
+                rotate(balls[i], theta);
+            }
+            */
+
+
+            //check for pocketing
+            for (int p = 0; p < numPockets; p++){
+                if (pockets[p].distance(balls[i]->getPosition()) < pocketSize){
+                    std::cerr << "Ball " << i << " has been pocketed. " << balls[i]->getPosition().toString() << std::endl;
+                    balls[i]->sink();
+                }
+            }
         }
     }
 }
@@ -210,7 +318,7 @@ double Physics::calcCollisionTime(Ball* ball1, Ball* ball2){
     double a = Vector::dotProduct(dv, dv);
     double b = Vector::dotProduct(dr, dv) / a;
     double c = (Vector::dotProduct(dr, dr) - 4.0 * ballRadiusSq) / a;
-    /* now t^2 + 2bt + c = 0; */
+    //now t^2 + 2bt + c = 0;
     //check for imaginary roots
     c = b*b - c;
     if (c > 0){
@@ -320,7 +428,32 @@ bool Physics::update(std::vector<Ball*> balls){
 **/
 bool Physics::update(std::vector<Ball*> balls, double dt){
     moveBalls(balls, dt);
-    return true;
+
+    bool ballsMoving = false;
+    /** calculate new velocities **/
+    for (unsigned int i = 0; i < balls.size(); i++){
+        if (!balls[i]->isSunk() && balls[i]->isMoving()){
+            ballsMoving = true;
+
+            //get the speed the perimeter of the ball is travelling, apply friction to that
+            Vector up = Vector(0, 0, ballRadius);
+            Vector down = Vector(0, 0, -ballRadius);
+            Vector friction = balls[i]->getAngular().crossProduct(down);
+            friction.normalize();
+            friction.scale(clothFriction * ballMass * gravity);
+
+            Vector accel = Vector::scale(down.crossProduct(friction), 5.0 / (2.0 * ballMass * ballRadiusSq));
+            accel.scale(dt);
+            balls[i]->setAngular(Vector::add(balls[i]->getAngular(), accel));
+            balls[i]->setVelocity(balls[i]->getAngular().crossProduct(up));
+
+            if (balls[i]->getAngular().lengthSq() < angularStop && balls[i]->getVelocity().lengthSq() < velocityStop){
+                balls[i]->stopMoving();
+            }
+        }
+    }
+
+    return ballsMoving;
 }
 
 

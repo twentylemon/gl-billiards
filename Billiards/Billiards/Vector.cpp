@@ -142,7 +142,7 @@ void Vector::normalize(){
 void Vector::normalize(double length){
     double l = this->length();
     if (l > 0){
-        scale(pow(length, 1.0/2.0) / sqrt(l));
+        scale(pow(length, 1.0/2.0) / l);
     }
 }
 
@@ -309,6 +309,22 @@ Vector Vector::crossProduct(Vector first, Vector second){
     double y = first.getZ() * second.getX() - first.getX() * second.getZ();
     double z = first.getX() * second.getY() - first.getY() * second.getX();
     return Vector(x, y, z);
+}
+
+
+/**
+ * Projects first onto second and returns the resultant Vector.
+ *
+ * @param first the Vector to project from
+ * @param second the Vector to project onto
+ * @return first projected onto second
+**/
+Vector Vector::project(Vector first, Vector second){
+    double length = second.lengthSq();
+    if (length > 0){
+        return Vector::scale(second, dotProduct(first, second) / length);
+    }
+    return first;
 }
 
 

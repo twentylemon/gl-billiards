@@ -100,12 +100,14 @@ void drawObject(obj_type* object){
 **/
 void displayFunc(){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
-
-	/*static double r = 0;
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    /*
+    static double r = 0;
 	glRotated(r, 1, 0, 0);
-	r += 0.005;*/
+	r += 0.5;
+    */
 
     global.table->draw();
     for (unsigned int i = 0; i < global.balls.size(); i++){
@@ -113,6 +115,12 @@ void displayFunc(){
     }
 
 	global.player1->drawCue();
+
+    static bool f = true;
+    if (f){
+        global.balls[0]->setVelocity(0.05, 0, 0);
+    }
+    global.physics->update(global.balls);
 	
     glPopMatrix();
 	glutSwapBuffers();

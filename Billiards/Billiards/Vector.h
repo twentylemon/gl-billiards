@@ -42,6 +42,7 @@ public:
     static double distance(Vector, Vector);
     static double dotProduct(Vector, Vector);
     static Vector crossProduct(Vector, Vector);
+    static Vector project(Vector, Vector);
 
     double length();
     double lengthSq();

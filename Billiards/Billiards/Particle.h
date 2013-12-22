@@ -8,6 +8,7 @@
 #pragma once
 #include <string>
 #include <new>
+#include <iostream>
 #include "Vector.h"
 #include "Model.h"
 
@@ -40,14 +41,38 @@ public:
     double getRotation(int);
     Vector getRotation();
 
+    void setYaw(double, double, double);
+    void setYaw(int, double);
+    void setYaw(Vector);
+    double getYaw(int);
+    Vector getYaw();
+
+    void setPitch(double, double, double);
+    void setPitch(int, double);
+    void setPitch(Vector);
+    double getPitch(int);
+    Vector getPitch();
+
+    void setRoll(double, double, double);
+    void setRoll(int, double);
+    void setRoll(Vector);
+    double getRoll(int);
+    Vector getRoll();
+
+    void updateRotationMatrix();
+    double* getRotationMatrix();
+
     bool isMoving();
+    void stopMoving();
 
     std::string toString();
-
+    
 protected:
     Vector position;    //position in (x,y,z)
     Vector velocity;    //speed in (x,y,z)
     Vector angular;     //angular velocity
-    Vector rotation;    //yaw, pitch, roll
+    Vector rotation;
+    Vector yaw, pitch, roll;
+    double rotationMatrix[16];
     Model model;
 };
