@@ -117,6 +117,16 @@ void motionFunc(int x, int y){
 void mouseFunc(int button, int state, int x, int y){
 }
 
+/**
+ *
+**/
+void glutIdleFunc( void )
+{
+	if (glutGetWindow() != global.glutWindow) 
+		glutSetWindow(global.glutWindow);  
+
+	glutPostRedisplay();
+}
 
 /**
  * Entry point to the application. Defines the main window etc.
@@ -127,11 +137,20 @@ int main(int argc, char** argv){
     init();
 
     glutDisplayFunc(displayFunc);
-    glutIdleFunc(displayFunc);
-    GLUI_Master.set_glutKeyboardFunc(keyboardFunc);
+    //glutIdleFunc(displayFunc);
+    glutKeyboardFunc(keyboardFunc);
     glutMouseFunc(mouseFunc);
     glutMotionFunc(motionFunc);
 	glutReshapeFunc(resizeWindow);
+
+
+	
+	GLUI* glui = GLUI_Master.create_glui_subwindow(global.glutWindow, GLUI_SUBWINDOW_RIGHT);
+	GLUI_Panel* uiPanel = new GLUI_Rollout(glui, "Billiards");
+
+	new GLUI_Rotation(glui, "Cue");
+
+	GLUI_Master.set_glutIdleFunc(glutIdleFunc);
 
     glutMainLoop();
     return 0;

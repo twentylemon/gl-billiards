@@ -16,6 +16,7 @@
 #include "Table.h"
 #include "Player.h"
 #include "Physics.h"
+#include "UserInterface.h"
 
 #define ORTHO_WIDTH 100
 #define ORTHO_HEIGHT 100
@@ -32,6 +33,7 @@ typedef struct {
     int glutWindow;
 	int windowHeight;
 	int windowWidth;
+	UserInterface* userInterface;
 
     std::vector<Ball*> balls;
     Table* table;
@@ -46,3 +48,4 @@ extern Global global;
 //init.cpp
 void init();
 void resizeWindow(int width, int height);
+void keyboardFunc(unsigned char key, int x, int y);

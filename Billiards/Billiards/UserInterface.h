@@ -8,11 +8,17 @@
 class UserInterface{
 
 public:
-	UserInterface();
-	//void keyboardFunc(unsigned char key, int x, int y);
+	int mainWindowHandle;
+	float cueRotationMatrix[16];
+
+	UserInterface(int glutMainWindow);
+	void startWindow();
 
 protected:
 	GLUI* glui;
+	GLUI_Panel* uiPanel;
+
+	GLUI_Rotation* cueRotation;
 
 };
 
