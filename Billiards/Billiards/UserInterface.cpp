@@ -11,6 +11,10 @@ UserInterface::UserInterface(int mainWindowHandle){
 
 	this->mainWindowHandle = mainWindowHandle;
 
+	glui = GLUI_Master.create_glui_subwindow(mainWindowHandle, GLUI_SUBWINDOW_RIGHT);
+	uiPanel = new GLUI_Rollout(glui, "Billiards");
+
+	new GLUI_Rotation(glui, "Cue", cueRotationMatrix);
 
 };
 

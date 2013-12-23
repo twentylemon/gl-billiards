@@ -10,7 +10,7 @@
 #include <vector>
 #include <new>
 #include <ctime>
-#include "GL/glut.h"
+#include "GL\freeglut.h"
 #include "Model.h"
 #include "Ball.h"
 #include "Table.h"
@@ -30,10 +30,16 @@
 #define ESC 27
 
 typedef struct {
-    int glutWindow;
+	Vector* tableRotation;
+	float tableZoom;
+
+	int glutWindow;
 	int windowHeight;
 	int windowWidth;
 	UserInterface* userInterface;
+
+	int mousePositionX;
+	int mousePositionY;
 
     std::vector<Ball*> balls;
     Table* table;

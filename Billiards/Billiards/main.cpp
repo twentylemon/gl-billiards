@@ -29,11 +29,13 @@ void displayFunc(){
     glPushMatrix();
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    /*
-    static double r = 0;
-	glRotated(r, 1, 0, 0);
-	r += 0.5;
-    */
+    
+	//Translates for rotation and zoom of camera
+	glTranslatef(global.tableZoom, 0, 0);
+	glRotatef(global.tableRotation->getX(), 1, 0, 0);
+	glRotatef(global.tableRotation->getY(), 0, 1, 0);
+	glRotatef(global.tableRotation->getZ(), 0, 0, 1);
+
 
     global.table->draw();
     for (unsigned int i = 0; i < global.balls.size(); i++){
@@ -53,28 +55,28 @@ void displayFunc(){
     global.physics->update(global.balls, getTimeDiff(global.clock, now));
     global.clock = now;
     
-    /*
-    //below draws spheres in the pockets
-    double tableRailSize = 4 * 0.0254 / 2.0;
-    double tablePlayWidth = 100.0 * 0.0254;    //100in (in m)
-    double tablePlayHeight = 50.0 * 0.0254;    //50in (in m)
-    double pocketSize = 4.8 * 0.0254 / 2.0;    //actually corner = 4.5, side = 5 in, close enough
-    Vector pockets[6];
-    pockets[0] = Vector(tablePlayWidth / 2.0 + tableRailSize, tablePlayHeight / 2.0 + tableRailSize, 0);    //top left
-    pockets[1] = Vector(tablePlayWidth / 2.0 + tableRailSize, -tablePlayHeight / 2.0 - tableRailSize, 0);   //bottom left
-    pockets[2] = Vector(0, -tablePlayHeight / 2.0 - tableRailSize, 0);                      //bottom middle
-    pockets[3] = Vector(-tablePlayWidth / 2.0 - tableRailSize, -tablePlayHeight / 2.0 - tableRailSize, 0);  //bottom right
-    pockets[4] = Vector(-tablePlayWidth / 2.0 - tableRailSize, tablePlayHeight / 2.0 + tableRailSize, 0);   //top right
-    pockets[5] = Vector(0, tablePlayHeight / 2.0 + tableRailSize, 0);                       //top middle
-    for (int i = 0; i < 6; i++){
-        glPushMatrix();
-        glTranslated(pockets[i].getX(), pockets[i].getY(), pockets[i].getZ() + 0.8);
-        glutSolidSphere(pocketSize, 10, 10);
-        glPopMatrix();
-    }
-    */
+	/*
+	//below draws spheres in the pockets
+	double tableRailSize = 4 * 0.0254 / 2.0;
+	double tablePlayWidth = 100.0 * 0.0254;    //100in (in m)
+	double tablePlayHeight = 50.0 * 0.0254;    //50in (in m)
+	double pocketSize = 4.8 * 0.0254 / 2.0;    //actually corner = 4.5, side = 5 in, close enough
+	Vector pockets[6];
+	pockets[0] = Vector(tablePlayWidth / 2.0 + tableRailSize, tablePlayHeight / 2.0 + tableRailSize, 0);    //top left
+	pockets[1] = Vector(tablePlayWidth / 2.0 + tableRailSize, -tablePlayHeight / 2.0 - tableRailSize, 0);   //bottom left
+	pockets[2] = Vector(0, -tablePlayHeight / 2.0 - tableRailSize, 0);                      //bottom middle
+	pockets[3] = Vector(-tablePlayWidth / 2.0 - tableRailSize, -tablePlayHeight / 2.0 - tableRailSize, 0);  //bottom right
+	pockets[4] = Vector(-tablePlayWidth / 2.0 - tableRailSize, tablePlayHeight / 2.0 + tableRailSize, 0);   //top right
+	pockets[5] = Vector(0, tablePlayHeight / 2.0 + tableRailSize, 0);                       //top middle
+	for (int i = 0; i < 6; i++){
+		glPushMatrix();
+		glTranslated(pockets[i].getX(), pockets[i].getY(), pockets[i].getZ() + 0.8);
+		glutSolidSphere(pocketSize, 10, 10);
+		glPopMatrix();
+	}
+	*/
 
-    //Sleep(100);
+	//Sleep(100);
 	
     glPopMatrix();
 	glutSwapBuffers();
@@ -103,6 +105,10 @@ void keyboardFunc(unsigned char key, int x, int y){
  * @param y the y coord of where the mouse event occurred
 **/
 void motionFunc(int x, int y){
+
+	global.tableRotation->add(0, global.mousePositionY - y, global.mousePositionX - x);
+	global.mousePositionX = x;
+	global.mousePositionY = y;
 }
 
 
@@ -115,12 +121,37 @@ void motionFunc(int x, int y){
  * @param y the y coord of where the mouse event occurred
 **/
 void mouseFunc(int button, int state, int x, int y){
+
+	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
+		
+	}
 }
 
 /**
+ *	Freeglut mouse wheel callback function. Called when user scrolls
+ *	the mouse wheel. Zooms in and out on the table
  *
+ *	@param wheel mouse wheel number
+ *	@param direction +/- 1 depending on direction of scroll
+ *	@param int x mouse pointer x coord
+ *	@param int y mouse pointer y coord
+ */
+void mouseWheelFunc(int wheel, int direction, int x, int y){
+
+	if(direction > 0){
+		//zoom in
+		global.tableZoom += 0.25;
+	} else {
+		//zoom out
+		global.tableZoom -= 0.25;
+	}
+}
+
+
+/**
+ *	Idle function for GLUI. Sets the main window if needed
 **/
-void glutIdleFunc( void )
+void glutIdleFunc()
 {
 	if (glutGetWindow() != global.glutWindow) 
 		glutSetWindow(global.glutWindow);  
@@ -134,23 +165,18 @@ void glutIdleFunc( void )
 int main(int argc, char** argv){
     glutInit(&argc, argv);
 
+	//GLUI_Master.set_glutIdleFunc(glutIdleFunc);
+
     init();
 
     glutDisplayFunc(displayFunc);
-    //glutIdleFunc(displayFunc);
+    glutIdleFunc(displayFunc);
     glutKeyboardFunc(keyboardFunc);
     glutMouseFunc(mouseFunc);
     glutMotionFunc(motionFunc);
 	glutReshapeFunc(resizeWindow);
+	glutMouseWheelFunc(mouseWheelFunc);
 
-
-	
-	GLUI* glui = GLUI_Master.create_glui_subwindow(global.glutWindow, GLUI_SUBWINDOW_RIGHT);
-	GLUI_Panel* uiPanel = new GLUI_Rollout(glui, "Billiards");
-
-	new GLUI_Rotation(glui, "Cue");
-
-	GLUI_Master.set_glutIdleFunc(glutIdleFunc);
 
     glutMainLoop();
     return 0;

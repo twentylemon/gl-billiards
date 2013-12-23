@@ -49,7 +49,7 @@ void initializeWindow(){
     glEnable(GL_TEXTURE_2D);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
 
-	global.userInterface = new UserInterface(global.glutWindow);
+	//global.userInterface = new UserInterface(global.glutWindow);
 }
 
 
@@ -104,6 +104,9 @@ void initializeGame(){
 	global.player1 = new Player(1);
     global.physics = Physics::getInstance();
     global.clock = std::clock();
+
+	global.tableZoom = 0;
+	global.tableRotation = new Vector(0, 0, 0);
 }
 
 
