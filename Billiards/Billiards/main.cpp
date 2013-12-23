@@ -106,7 +106,24 @@ void keyboardFunc(unsigned char key, int x, int y){
 **/
 void motionFunc(int x, int y){
 
+	if(global.tableRotation->getY() >= 360)
+		global.tableRotation->setY(global.tableRotation->getY() - 360);
+
+	if(global.tableRotation->getY() < 0)
+		global.tableRotation->setY(global.tableRotation->getY() + 360);
+
+	if(global.tableRotation->getZ() >= 360)
+		global.tableRotation->setZ(global.tableRotation->getZ() - 360);
+
+	if(global.tableRotation->getZ() < 0)
+		global.tableRotation->setZ(global.tableRotation->getZ() + 360);
+	
+	// >340 && <158
+
+	printf("%f, %f\n", global.tableRotation->getY(), global.tableRotation->getZ());
+
 	global.tableRotation->add(0, global.mousePositionY - y, global.mousePositionX - x);
+	
 	global.mousePositionX = x;
 	global.mousePositionY = y;
 }
