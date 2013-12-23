@@ -6,6 +6,7 @@
  * @since 2013-12-10
 **/
 #include "main.h"
+#include "GL\glui.h"
 Global global;
 
 /**
@@ -127,7 +128,7 @@ int main(int argc, char** argv){
 
     glutDisplayFunc(displayFunc);
     glutIdleFunc(displayFunc);
-    glutKeyboardFunc(keyboardFunc);
+    GLUI_Master.set_glutKeyboardFunc(keyboardFunc);
     glutMouseFunc(mouseFunc);
     glutMotionFunc(motionFunc);
 	glutReshapeFunc(resizeWindow);
