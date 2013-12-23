@@ -29,6 +29,11 @@ void displayFunc(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     /*
+    glColor3f(1, 0, 0);
+    glutWireSphere(1, 50, 50);
+    glColor3f(0, 0, 0);
+    */
+    /*
     static double r = 0;
 	glRotated(r, 1, 0, 0);
 	r += 0.5;

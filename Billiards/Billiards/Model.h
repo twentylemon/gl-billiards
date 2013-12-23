@@ -27,8 +27,9 @@ public:
 
 	void loadObject(char* model, char* texture);
 
+    std::vector<Vector> getVerticies();
+
 private:
-    
     void calculateNormals();
     int load3DS(char*);
     int loadTextureBitmap(char*);

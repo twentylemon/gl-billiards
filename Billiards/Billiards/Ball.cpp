@@ -35,15 +35,8 @@ Ball::Ball(int number) : RADIUS(BALL_RADIUS), DIAMETER(2.0 * BALL_RADIUS), MASS(
     case 14: setPosition(offset + 2.0 * DIAMETER, -2.0 * RADIUS, 0); break;
     case 15: setPosition(offset + 3.0 * DIAMETER, RADIUS, 0); break;
     }
-    yaw = Vector(rand(), rand(), rand());
-    yaw.normalize();
 
-    Vector random = Vector(rand(), rand(), rand());
-    pitch = Vector::subtract(random, Vector::project(random, yaw));
-    pitch.normalize();
-
-    roll = yaw.crossProduct(pitch);
-    roll.normalize();
+    rotation = Vector(rand(), rand(), rand());
 }
 
 
@@ -53,12 +46,14 @@ Ball::Ball(int number) : RADIUS(BALL_RADIUS), DIAMETER(2.0 * BALL_RADIUS), MASS(
 void Ball::draw(){
     glPushMatrix();
     glMatrixMode(GL_MODELVIEW);
+    //glTranslated(center.getX(), center.getY(), center.getZ());
     glTranslated(position.getX(), position.getY(), position.getZ());
-    //glRotated(90, 1, 0, 0);
-    //glRotated(0, 0, 1, 0);
+    glRotated(rotation.getX(), 1, 0, 0);
+    glRotated(rotation.getY(), 0, 1, 0);
+    glRotated(rotation.getZ(), 0, 0, 1);
+    rotation.add(Vector(1, 1, 1));
     model.draw();
     glPopMatrix();
-    rotation.setX(rotation.getX() + 1);
 }
 
 

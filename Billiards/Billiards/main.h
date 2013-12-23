@@ -17,9 +17,9 @@
 #include "Player.h"
 #include "Physics.h"
 
-#define ORTHO_WIDTH 100
-#define ORTHO_HEIGHT 100
-#define ORTHO_DEPTH 100
+#define ORTHO_WIDTH 2
+#define ORTHO_HEIGHT 2
+#define ORTHO_DEPTH 2
 
 //gluPerspective constants
 #define MAX_CLIPPING 10000.0
