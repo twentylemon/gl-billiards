@@ -41,6 +41,27 @@ public:
     double getRotation(int);
     Vector getRotation();
 
+    void setYaw(double, double, double);
+    void setYaw(int, double);
+    void setYaw(Vector);
+    double getYaw(int);
+    Vector getYaw();
+
+    void setPitch(double, double, double);
+    void setPitch(int, double);
+    void setPitch(Vector);
+    double getPitch(int);
+    Vector getPitch();
+
+    void setRoll(double, double, double);
+    void setRoll(int, double);
+    void setRoll(Vector);
+    double getRoll(int);
+    Vector getRoll();
+
+    void updateRotationMatrix();
+    double* getRotationMatrix();
+
     bool isMoving();
     void stopMoving();
 
@@ -51,5 +72,7 @@ protected:
     Vector velocity;    //speed in (x,y,z)
     Vector angular;     //angular velocity
     Vector rotation;
+    Vector yaw, pitch, roll;
+    double rotationMatrix[16];
     Model model;
 };
