@@ -54,7 +54,7 @@ private:
     double pocketSize;
     Vector pockets[6];  //positions of the pockets
 
-    double clothFriction;
+    double feltFriction;
     double velocityStop;
     double angularStop;
     double gravity;

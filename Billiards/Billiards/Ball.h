@@ -9,6 +9,8 @@
 #pragma once
 #include <new>
 #include <string>
+#include <deque>
+#include <utility>
 #include "Particle.h"
 #include "Model.h"
 #include "GL/glut.h"
@@ -28,6 +30,8 @@ public:
     ~Ball(void);
 
     void draw();
+    void pushRotation(Vector, double);
+    void consolidateRotation();
     void sink();
 
     double getRadius();
@@ -41,6 +45,10 @@ private:
     const double RADIUS;
     const double DIAMETER;
     const double MASS;
+
+    double rotMatrix[16];
+    std::deque<std::pair<Vector, double>> rotList;
+    void doRotate();
 
     bool sunk;
 };

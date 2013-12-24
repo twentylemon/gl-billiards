@@ -77,6 +77,8 @@ void BankEvent::handle(){
     std::cerr << "handling bank event" << std::endl;
     Vector velocity = ball->getVelocity();
 
+    // TODO part of angular momentum is converted to linear momentum
+
     //get the normal and tangential components of the velocity
     Vector norm = Vector();
     if (axis == BankAxis::X){

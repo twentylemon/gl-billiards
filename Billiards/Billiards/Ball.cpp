@@ -37,6 +37,9 @@ Ball::Ball(int number) : RADIUS(BALL_RADIUS), DIAMETER(2.0 * BALL_RADIUS), MASS(
     }
 
     rotation = Vector(rand(), rand(), rand());
+    for (int i = 0; i < 16; i++){
+        rotMatrix[i] = (i % 5 == 0) ? 1 : 0;
+    }
 }
 
 
@@ -47,12 +50,50 @@ void Ball::draw(){
     glPushMatrix();
     glMatrixMode(GL_MODELVIEW);
     glTranslated(position.getX(), position.getY(), position.getZ());
-    glRotated(rotation.getX(), 1, 0, 0);
-    glRotated(rotation.getY(), 0, 1, 0);
-    glRotated(rotation.getZ(), 0, 0, 1);
+    doRotate();
     model.draw();
     glPopMatrix();
-    rotation.add(Vector(1, 1, 1));
+}
+
+
+/**
+ * Pushes a new rotation into the list of rotations.
+ *
+ * @param axis the axis through which the rotation occurs
+ * @param angle how much to rotate
+**/
+void Ball::pushRotation(Vector axis, double angle){
+    rotList.push_front(std::make_pair(axis, angle));
+}
+
+
+/**
+ * Clears the rotation list and updates the rotation matrix.
+**/
+void Ball::consolidateRotation(){
+    if (rotList.size() > 0){
+        std::cerr << "consolidating " << rotList.size() << " rotations." << std::endl;
+        glPushMatrix();
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        doRotate();
+        //copy the rotation matrix into our system
+        glGetDoublev(GL_MODELVIEW_MATRIX, rotMatrix);
+        rotList.clear();    //and finally, clear the list
+        glPopMatrix();
+    }
+}
+
+
+/**
+ * Rotates the ball.
+**/
+void Ball::doRotate(){
+    //starting from the most recent rotation, rotate the ball
+    for (unsigned int i = 0; i < rotList.size(); i++){
+        glRotated(rotList[i].second, rotList[i].first.getX(), rotList[i].first.getY(), rotList[i].first.getY());
+    }
+    glMultMatrixd(rotMatrix);   //add in the previous rotations
 }
 
 
@@ -60,7 +101,7 @@ void Ball::draw(){
  * Sinks this ball into a pocket.
 **/
 void Ball::sink(){
-    setPosition(Vector::add(position, Vector(0, 0, -8.0 * 0.0254)));
+    addPosition(Vector(0, 0, -8.0 * 0.0254));
     setVelocity(0, 0, 0);
     setAngular(0, 0, 0);
     setSunk(true);

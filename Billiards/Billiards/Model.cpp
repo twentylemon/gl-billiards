@@ -315,7 +315,7 @@ int Model::loadTextureBitmap(char *filename){
 void Model::calculateNormals(){
     std::vector<int> numPolygons(verticies.size());
     for (unsigned int i = 0; i < verticies.size(); i++){
-        normals.push_back(new Vector());
+        normals.push_back(Vector());
     }
 
     for (unsigned int i = 0; i < polygons.size(); i++){

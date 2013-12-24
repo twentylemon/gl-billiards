@@ -22,7 +22,7 @@ Physics::Physics(void){
     ballMass = 0.170079;        //6 oz (in kg)
     ballRadius = 0.028575;      //1.125in (in m)
     ballRadiusSq = ballRadius * ballRadius;
-    ballCircumference = 2 * PI * ballRadius;
+    ballCircumference = 2.0 * PI * ballRadius;
 
     /*     width                 ^
      4--------5--------0 h     y |
@@ -58,7 +58,7 @@ Physics::Physics(void){
     */
 
     /** friction **/
-    clothFriction = 0.005;
+    feltFriction = 0.005;
     velocityStop = 0.01 * 0.01; //use squared value so we can use squared length
     angularStop = 0.05;
     gravity = 9.8;
@@ -118,7 +118,13 @@ void Physics::rollBalls(std::vector<Ball*> balls, double dt){
         if (!balls[i]->isSunk() && balls[i]->isMoving()){
             //get how far they moved
             Vector dr = Vector::scale(balls[i]->getVelocity(), dt);
-            balls[i]->setPosition(Vector::add(balls[i]->getPosition(), dr));
+            balls[i]->addPosition(dr);
+
+            //rotate each ball
+            Vector angle = Vector();
+            double theta = 360.0 * dr.length() / ballCircumference;
+            Vector axis = dr.crossProduct(Vector(0, 0, -1));
+            balls[i]->pushRotation(axis, theta);
 
             //check for pocketing
             for (int p = 0; p < numPockets; p++){
@@ -280,14 +286,16 @@ bool Physics::update(std::vector<Ball*> balls, double dt){
         if (!balls[i]->isSunk() && balls[i]->isMoving()){
             ballsMoving = true;
 
-            Vector friction = Vector::scale(balls[i]->getVelocity(), clothFriction);
-            balls[i]->setVelocity(Vector::subtract(balls[i]->getVelocity(), friction));
-
+            //scale by negative friction so it slows down
+            Vector friction = Vector::scale(balls[i]->getVelocity(), -feltFriction);
+            balls[i]->addVelocity(friction);
             
             if (balls[i]->getVelocity().lengthSq() < velocityStop){
-                std::cerr << balls[i]->getVelocity().toString() << std::endl;
                 balls[i]->stopMoving();
             }
+        }
+        else {
+            balls[i]->consolidateRotation();
         }
     }
 
