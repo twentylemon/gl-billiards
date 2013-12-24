@@ -96,7 +96,9 @@ void displayFunc(){
     }
 
     std::clock_t now = std::clock();
-    global.physics->update(global.balls, getTimeDiff(global.clock, now));
+    if (!global.physics->update(global.balls, getTimeDiff(global.clock, now))){
+        global.balls[0]->setVelocity(rand() % 4, rand() % 4, 0);
+    }
     global.clock = now;
     
 	/*
