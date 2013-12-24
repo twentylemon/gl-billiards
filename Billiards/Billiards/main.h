@@ -55,3 +55,4 @@ extern Global global;
 void init();
 void resizeWindow(int width, int height);
 void keyboardFunc(unsigned char key, int x, int y);
+void glTranslatefv(Vector translate);

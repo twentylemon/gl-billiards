@@ -22,6 +22,30 @@ double getTimeDiff(std::clock_t before, std::clock_t after){
 
 
 /**
+ * Takes in a vector and does a glTranslatef
+ */
+void glTranslatefv(Vector translate){
+	glTranslatef(translate.getX(), translate.getY(), translate.getZ());
+}
+
+/**
+ * Checks to see if balls are moving
+ *
+ * @returns true if balls are moving, false otherwise
+ */
+bool ballsMoving(){
+
+	for(int i = 0; i <= 15; i++){
+		if(global.balls[i]->isMoving()){
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+/**
  * Main glut redraw function.
 **/
 void displayFunc(){
@@ -30,19 +54,39 @@ void displayFunc(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-	//Translates for rotation and zoom of camera
-	glTranslatef(global.tableZoom, 0, 0);
+	/* Translates for rotation and zoom of camera and draws table */
+	if(global.tableZoom > 0.7)
+		glTranslatef(global.tableZoom, 0, 0.7);
+	else
+		glTranslatef(global.tableZoom, 0, global.tableZoom);
+
 	glRotatef(global.tableRotation->getX(), 1, 0, 0);
 	glRotatef(global.tableRotation->getY(), 0, 1, 0);
 	glRotatef(global.tableRotation->getZ(), 0, 0, 1);
-
 
     global.table->draw();
     for (unsigned int i = 0; i < global.balls.size(); i++){
         global.balls[i]->draw();
     }
+	/* */
 
+
+	/* Position the cue behind the cue ball */
+	glPushMatrix();
+
+	if(ballsMoving() == false){
+		//if( player 1's turn )
+			global.player1->getCue()->setPosition(global.balls[0]->getPosition());
+
+		//else
+		//	global.player2->getCue()->setPosition(global.balls[0]->getPosition());
+	}
+		
+	glTranslatefv(global.player1->getCue()->getPosition());
 	global.player1->drawCue();
+	glPopMatrix();
+	/* */
+
 
     static bool f = true;
     if (f){
@@ -120,7 +164,7 @@ void motionFunc(int x, int y){
 	
 	// >340 && <158
 
-	printf("%f, %f\n", global.tableRotation->getY(), global.tableRotation->getZ());
+	//printf("%f, %f\n", global.tableRotation->getY(), global.tableRotation->getZ());
 
 	global.tableRotation->add(0, global.mousePositionY - y, global.mousePositionX - x);
 	
@@ -155,12 +199,14 @@ void mouseFunc(int button, int state, int x, int y){
  */
 void mouseWheelFunc(int wheel, int direction, int x, int y){
 
+	printf("%f\n", global.tableZoom);
+
 	if(direction > 0){
 		//zoom in
-		global.tableZoom += 0.25;
+		global.tableZoom += 0.10;
 	} else {
 		//zoom out
-		global.tableZoom -= 0.25;
+		global.tableZoom -= 0.10;
 	}
 }
 
