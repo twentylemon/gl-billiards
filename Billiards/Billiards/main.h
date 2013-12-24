@@ -30,9 +30,6 @@
 #define ESC 27
 
 typedef struct {
-	Vector* tableRotation;
-	float tableZoom;
-
 	int glutWindow;
 	int windowHeight;
 	int windowWidth;
@@ -42,8 +39,16 @@ typedef struct {
 	int mousePositionY;
 
     std::vector<Ball*> balls;
-    Table* table;
-	Player* player1;
+
+    Table table;
+	Vector tableRotation;
+	float tableZoom;
+
+	Player players[2];
+    int numPlayers;
+    int turn, other;
+    bool ballsMoving;
+    bool shooting;
 
     Physics* physics;
     std::clock_t clock;

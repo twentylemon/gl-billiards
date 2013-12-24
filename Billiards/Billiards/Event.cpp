@@ -39,7 +39,6 @@ CollisionEvent::CollisionEvent(double time, Ball* ball1, Ball* ball2) : Event(ti
  * Handles speed updates of the collision event.
 **/
 void CollisionEvent::handle(){
-    std::cerr << "handling collision event" << std::endl;
     //got the normal to the collision plane
     Vector normal = Vector::subtract(ball1->getPosition(), ball2->getPosition());
     normal.normalize();
@@ -74,7 +73,6 @@ BankEvent::BankEvent(double time, Ball* ball, BankAxis axis) : Event(time){
  * Handles the velocity update after a bank event.
 **/
 void BankEvent::handle(){
-    std::cerr << "handling bank event" << std::endl;
     Vector velocity = ball->getVelocity();
 
     // TODO part of angular momentum is converted to linear momentum

@@ -17,29 +17,34 @@ Ball::Ball(int number) : RADIUS(BALL_RADIUS), DIAMETER(2.0 * BALL_RADIUS), MASS(
     model = Model("Objects/ball.3DS", "Objects/textures/ball" + std::to_string(number) + ".bmp");
     sunk = false;
     double offset = 1.0/4.0 * TABLE_WIDTH;
+    double o = 0.01 * RADIUS;   //leave tiny bit of extra space
+    double radius = RADIUS + o;
+    double diameter = DIAMETER + 2.0*o;
     switch (number){
     case 0: setPosition(-1.5/5.0 * TABLE_WIDTH, 0, 0); break;
     case 1: setPosition(offset, 0, 0); break;
-    case 2: setPosition(offset + 4.0 * DIAMETER, 2.0 * RADIUS, 0); break;
-    case 3: setPosition(offset + DIAMETER, -RADIUS, 0); break;
-    case 4: setPosition(offset + 3.0 * DIAMETER, -RADIUS, 0); break;
-    case 5: setPosition(offset + 4.0 * DIAMETER, -2.0 * RADIUS, 0); break;
-    case 6: setPosition(offset + 2.0 * DIAMETER, 2.0 * RADIUS, 0); break;
-    case 7: setPosition(offset + 4.0 * DIAMETER, 4.0 * RADIUS, 0); break;
-    case 8: setPosition(offset + 2.0 * DIAMETER, 0, 0); break;
-    case 9: setPosition(offset + 3.0 * DIAMETER, -3.0 * RADIUS, 0); break;
-    case 10: setPosition(offset + 4.0 * DIAMETER, 0, 0); break;
-    case 11: setPosition(offset + DIAMETER, RADIUS, 0); break;
-    case 12: setPosition(offset + 4.0 * DIAMETER, -4.0 * RADIUS, 0); break;
-    case 13: setPosition(offset + 3.0 * DIAMETER, 3.0 * RADIUS, 0); break;
-    case 14: setPosition(offset + 2.0 * DIAMETER, -2.0 * RADIUS, 0); break;
-    case 15: setPosition(offset + 3.0 * DIAMETER, RADIUS, 0); break;
+    case 2: setPosition(offset + 4.0 * diameter, 2.0 * radius, 0); break;
+    case 3: setPosition(offset + diameter, -radius, 0); break;
+    case 4: setPosition(offset + 3.0 * diameter, -radius, 0); break;
+    case 5: setPosition(offset + 4.0 * diameter, -2.0 * radius, 0); break;
+    case 6: setPosition(offset + 2.0 * diameter, 2.0 * radius, 0); break;
+    case 7: setPosition(offset + 4.0 * diameter, 4.0 * radius, 0); break;
+    case 8: setPosition(offset + 2.0 * diameter, 0, 0); break;
+    case 9: setPosition(offset + 3.0 * diameter, -3.0 * radius, 0); break;
+    case 10: setPosition(offset + 4.0 * diameter, 0, 0); break;
+    case 11: setPosition(offset + diameter, radius, 0); break;
+    case 12: setPosition(offset + 4.0 * diameter, -4.0 * radius, 0); break;
+    case 13: setPosition(offset + 3.0 * diameter, 3.0 * radius, 0); break;
+    case 14: setPosition(offset + 2.0 * diameter, -2.0 * radius, 0); break;
+    case 15: setPosition(offset + 3.0 * diameter, radius, 0); break;
     }
 
-    rotation = Vector(rand(), rand(), rand());
+    //initialize a random rotation
     for (int i = 0; i < 16; i++){
-        rotMatrix[i] = (i % 5 == 0) ? 1 : 0;
+        rotMatrix[i] = (i % 5 == 0) ? 1 : 0;    //makes 4x4 identity matrix
     }
+    pushRotation(Vector(rand(), rand(), rand()), rand() % 360);
+    consolidateRotation();
 }
 
 
@@ -69,10 +74,12 @@ void Ball::pushRotation(Vector axis, double angle){
 
 /**
  * Clears the rotation list and updates the rotation matrix.
+ * We have a list of all the rotations this ball underwent this frame, and we
+ * also have the rotation history from { @code rotMatrix }. What this does
+ * is combine the list of new rotations with the rotation history.
 **/
 void Ball::consolidateRotation(){
     if (rotList.size() > 0){
-        std::cerr << "consolidating " << rotList.size() << " rotations." << std::endl;
         glPushMatrix();
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
@@ -86,7 +93,8 @@ void Ball::consolidateRotation(){
 
 
 /**
- * Rotates the ball.
+ * Rotates the ball. Uses the list of all rotations to perform, then
+ * adds on all the previous rotations the ball underwent. Context-sensitivity, ho!
 **/
 void Ball::doRotate(){
     //starting from the most recent rotation, rotate the ball

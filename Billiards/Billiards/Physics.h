@@ -23,7 +23,7 @@ public:
 
     static Physics* getInstance();
 
-    Vector cueShot(Cue*, Ball*);
+    Vector cueShot(Cue, Ball*);
 
     bool update(std::vector<Ball*>);
     bool update(std::vector<Ball*>, double);

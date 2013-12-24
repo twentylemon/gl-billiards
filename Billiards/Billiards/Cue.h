@@ -6,19 +6,18 @@
  * @version 1.0
  * @since 2013-12-16
 **/
-
 #pragma once
 #include <new>
 #include <string>
 #include "Particle.h"
 #include "Model.h"
-#include "GL/glut.h"
 
-class Cue : public Particle{
-	public:
+class Cue : public Particle
+{
+public:
+    Cue(void){}
     Cue(int playerNumber);
     ~Cue(void);
 
     void draw();
-
 };

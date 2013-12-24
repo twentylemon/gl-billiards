@@ -12,8 +12,8 @@
 #include <Windows.h>
 #include <array>
 #include <vector>
-#include "GL/glut.h"
 #include "Vector.h"
+#include "GL/glut.h"
 
 class Model {
 public:

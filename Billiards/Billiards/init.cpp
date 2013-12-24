@@ -100,13 +100,21 @@ void initializeGame(){
     for (int ballNum = 0; ballNum < 16; ballNum++){
         global.balls.push_back(new Ball(ballNum));
     }
-    global.table = new Table();
-	global.player1 = new Player(1);
+	global.players[0] = Player(1);
+    global.players[1] = Player(2);
+    global.numPlayers = 2;
+    global.turn = 0;
+    global.other = 1;
+    global.ballsMoving = false;
+    global.shooting = true;
+    global.players[global.turn].setCuePosition(global.balls[0]->getPosition());
+
     global.physics = Physics::getInstance();
     global.clock = std::clock();
-
+    
+    global.table = Table();
 	global.tableZoom = 0;
-	global.tableRotation = new Vector(0, 0, 0);
+	global.tableRotation = Vector();
 }
 
 

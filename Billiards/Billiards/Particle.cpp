@@ -55,6 +55,7 @@ void Particle::stopMoving(){
     angular.set(0, 0, 0);
 }
 
+
 /**
  * Returns a string representation of this particle.
  *

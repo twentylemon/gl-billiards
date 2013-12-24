@@ -16,7 +16,7 @@ static Physics* instance = NULL;
 Physics::Physics(void){
     /** cue to ball collision **/
     cueBallContactTime = 0.01;  //10ms
-    cueSpringConstant = 10;     //10 kg m/s^2
+    cueSpringConstant = 100;     //10 kg m/s^2
 
     /** ball properties **/
     ballMass = 0.170079;        //6 oz (in kg)
@@ -48,14 +48,6 @@ Physics::Physics(void){
     pockets[3] = Vector(-tablePlayWidth / 2.0 - tableRailSize, -tablePlayHeight / 2.0 - tableRailSize, 0);
     pockets[4] = Vector(-tablePlayWidth / 2.0 - tableRailSize, tablePlayHeight / 2.0 + tableRailSize, 0);
     pockets[5] = Vector(0, tablePlayHeight / 2.0 + tableRailSize, 0);
-    /*
-    pockets[0] = Vector(tablePlayWidth / 2.0, tablePlayHeight / 2.0, 0);    //top left
-    pockets[1] = Vector(tablePlayWidth / 2.0, -tablePlayHeight / 2.0, 0);   //bottom left
-    pockets[2] = Vector(0, -tablePlayHeight / 2.0, 0);                      //bottom middle
-    pockets[3] = Vector(-tablePlayWidth / 2.0, -tablePlayHeight / 2.0, 0);  //bottom right
-    pockets[4] = Vector(-tablePlayWidth / 2.0, tablePlayHeight / 2.0, 0);   //top right
-    pockets[5] = Vector(0, tablePlayHeight / 2.0, 0);                       //top middle
-    */
 
     /** friction **/
     feltFriction = 0.005;
@@ -87,7 +79,7 @@ Physics* Physics::getInstance(){
  * @param ball the ball being struck by the cue
  * @return the speed that the ball struck should be travelling
 **/
-Vector Physics::cueShot(Cue* cue, Ball* ball){
+Vector Physics::cueShot(Cue cue, Ball* ball){
     /*  assume the Cue acts like a spring, and apply Hooke's law
         - k t
     v = ------  x
@@ -100,8 +92,8 @@ Vector Physics::cueShot(Cue* cue, Ball* ball){
     */
 
     //get the vector between the cue and the ball
-    Vector direction = Vector::subtract(ball->getPosition(), cue->getPosition());
-    direction.scale(-cueSpringConstant * cueBallContactTime / ballMass);
+    Vector direction = Vector::subtract(ball->getPosition(), cue.getPosition());
+    direction.scale(cueSpringConstant * cueBallContactTime / ballMass);
     return direction;
 }
 

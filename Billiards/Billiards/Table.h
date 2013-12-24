@@ -7,9 +7,7 @@
  * @since 2013-12-17
 **/
 #pragma once
-#include <new>
 #include "Model.h"
-#define TABLE_FRICTION 0.95
 
 class Table
 {
@@ -19,11 +17,8 @@ public:
 
     void draw();
 
-    const double FRICTION;
-
 private:
     Model bed;
     Model edges;
 	Model rails;
 };
-
