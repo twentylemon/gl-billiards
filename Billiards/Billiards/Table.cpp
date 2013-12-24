@@ -13,7 +13,7 @@
 **/
 Table::Table(void) : FRICTION(TABLE_FRICTION){
     bed = Model("Objects/table_bed.3DS", "Objects/textures/tabletop.bmp");
-    edges = Model("Objects/table_edges.3DS", "Objects/textures/crate.bmp");
+    edges = Model("Objects/table_edges.3DS", "Objects/textures/tablesides.bmp");
 	rails = Model("Objects/table_rails.3DS", "Objects/textures/felt.bmp");
 }
 

@@ -230,7 +230,7 @@ void glutIdleFunc()
 int main(int argc, char** argv){
     glutInit(&argc, argv);
 
-	//GLUI_Master.set_glutIdleFunc(glutIdleFunc);
+	GLUI_Master.set_glutIdleFunc(glutIdleFunc);
 
     init();
 
