@@ -13,7 +13,7 @@
 #include <array>
 #include <vector>
 #include "Vector.h"
-#include "GL/glut.h"
+#include "glut.h"
 
 class Model {
 public:

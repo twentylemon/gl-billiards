@@ -30,7 +30,7 @@
 #include <Windows.h>
 #include <new>
 
-#include "GL/glut.h"
+#include "glut.h"
 #include "Vector.h"
 
 /**********************************************************

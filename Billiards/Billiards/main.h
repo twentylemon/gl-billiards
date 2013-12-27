@@ -10,7 +10,8 @@
 #include <vector>
 #include <new>
 #include <ctime>
-#include "GL\freeglut.h"
+#include "glut.h"
+#include "glui.h"
 #include "Model.h"
 #include "Ball.h"
 #include "Table.h"
@@ -30,10 +31,19 @@
 #define ESC 27
 
 typedef struct {
+
+	//glui objects
+	int objectType;
+	GLUI* glui;
+	GLUI_Panel* cuePanel;
+	GLUI_Panel* cameraPanel;
+	GLUI_Rotation* cueRotation;
+	GLUI_StaticText* playerTextField;
+	GLUI_Spinner* shotPowerSpinner;
+
 	int glutWindow;
 	int windowHeight;
 	int windowWidth;
-	UserInterface* userInterface;
 
 	int mousePositionX;
 	int mousePositionY;
@@ -58,6 +68,9 @@ extern Global global;
 
 //init.cpp
 void init();
+
 void resizeWindow(int width, int height);
 void keyboardFunc(unsigned char key, int x, int y);
+void idleFunc();
 void glTranslatefv(Vector translate);
+void takeShot();

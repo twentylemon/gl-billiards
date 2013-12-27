@@ -48,8 +48,6 @@ void initializeWindow(){
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
-
-	//global.userInterface = new UserInterface(global.glutWindow);
 }
 
 
@@ -61,10 +59,7 @@ void initializeWindow(){
  */
 void resizeWindow(int width, int height){
 
-	global.windowWidth = width;
-	global.windowHeight = height;
-
-	glViewport(0, 0, global.windowWidth, global.windowHeight);
+	GLUI_Master.auto_set_viewport();
 
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
@@ -97,6 +92,7 @@ void initializeMaterials(){
  * Creates all of the ball objects and the table.
 **/
 void initializeGame(){
+
     for (int ballNum = 0; ballNum < 16; ballNum++){
         global.balls.push_back(new Ball(ballNum));
     }

@@ -6,8 +6,8 @@
  * @since 2013-12-10
 **/
 #include "main.h"
-#include "GL\glui.h"
 Global global;
+
 
 /**
  * Returns the amount of time in seconds between the two clocks.
@@ -53,6 +53,17 @@ void swapTurns(){
 void takeShot(){
     global.balls[0]->setVelocity(global.physics->cueShot(global.players[global.turn].getCue(), global.balls[0]));
     global.shooting = false;
+}
+
+
+/**
+ * Explicitly define the main window if it loses focus
+ */
+void idleFunc(){
+	if (glutGetWindow() != global.glutWindow) 
+		glutSetWindow(global.glutWindow);  
+
+	glutPostRedisplay();
 }
 
 
@@ -146,7 +157,6 @@ void motionFunc(int x, int y){
     }
 	// >340 && <158
 
-    //std::cerr << global.tableRotation.toString() << std::endl;
 	global.tableRotation.add(0, global.mousePositionY - y, global.mousePositionX - x);
 	
 	global.mousePositionX = x;
@@ -163,11 +173,14 @@ void motionFunc(int x, int y){
  * @param y the y coord of where the mouse event occurred
 **/
 void mouseFunc(int button, int state, int x, int y){
+
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
+
 	}
 }
 
-/**
+
+/**	
  *	Freeglut mouse wheel callback function. Called when user scrolls
  *	the mouse wheel. Zooms in and out on the table
  *
@@ -189,33 +202,22 @@ void mouseWheelFunc(int wheel, int direction, int x, int y){
 
 
 /**
- *	Idle function for GLUI. Sets the main window if needed
-**/
-void gluiIdleFunc(){
-	if (glutGetWindow() != global.glutWindow){
-		glutSetWindow(global.glutWindow);
-    }
-
-	glutPostRedisplay();
-}
-
-/**
  * Entry point to the application. Defines the main window etc.
 **/
 int main(int argc, char** argv){
     glutInit(&argc, argv);
-
-	//GLUI_Master.set_glutIdleFunc(gluiIdleFunc);
-
+	
     init();
 
     glutDisplayFunc(displayFunc);
     glutIdleFunc(displayFunc);
     glutKeyboardFunc(keyboardFunc);
     glutMouseFunc(mouseFunc);
+	//glutMouseWheelFunc(mouseWheelFunc);
     glutMotionFunc(motionFunc);
-	glutReshapeFunc(resizeWindow);
-	glutMouseWheelFunc(mouseWheelFunc);
+	GLUI_Master.set_glutReshapeFunc(resizeWindow);
+
+	initializeGlui();
 
     glutMainLoop();
     return 0;

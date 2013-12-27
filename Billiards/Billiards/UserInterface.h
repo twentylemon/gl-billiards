@@ -1,25 +1,15 @@
 
 
-
-#include "GL\glui.h"
+#include "glui.h"
 
 #define ESC 27
 
-class UserInterface{
+//glui callbacks
+void initializeGlui();
+void zoomIn();
+void zoomOut();
+void resetZoom();
 
-public:
-	int mainWindowHandle;
-	float cueRotationMatrix[16];
 
-	UserInterface(int glutMainWindow);
-	void startWindow();
-
-protected:
-	GLUI* glui;
-	GLUI_Panel* uiPanel;
-
-	GLUI_Rotation* cueRotation;
-
-};
 
 

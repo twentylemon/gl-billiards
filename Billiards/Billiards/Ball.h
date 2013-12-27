@@ -13,7 +13,7 @@
 #include <utility>
 #include "Particle.h"
 #include "Model.h"
-#include "GL/glut.h"
+#include "glut.h"
 
 #define BALL_RADIUS 1.125 * 0.0254
 #define TABLE_WIDTH 9.0 * 12.0 * 0.0254
