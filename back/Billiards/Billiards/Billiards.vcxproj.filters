@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\GL">
+      <UniqueIdentifier>{e4b070df-0ea6-447c-a590-3798796f56f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\models">
+      <UniqueIdentifier>{04c74bed-cb6b-475f-a2a6-8b3a5ae8cacf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\textures">
+      <UniqueIdentifier>{c5ea4b22-e4dd-4990-9ce2-272a86d142ca}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Particle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ball.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Table.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UserInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GL\freeglut.h">
+      <Filter>Header Files\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="GL\freeglut_ext.h">
+      <Filter>Header Files\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="GL\freeglut_std.h">
+      <Filter>Header Files\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="GL\glui.h">
+      <Filter>Header Files\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="GL\glut.h">
+      <Filter>Header Files\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="Cushion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="init.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ball.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Cue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UserInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Cushion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Objects\table_rails.3DS">
+      <Filter>Resource Files\models</Filter>
+    </None>
+    <None Include="Objects\ball.3DS">
+      <Filter>Resource Files\models</Filter>
+    </None>
+    <None Include="Objects\crate.3DS">
+      <Filter>Resource Files\models</Filter>
+    </None>
+    <None Include="Objects\cue.3DS">
+      <Filter>Resource Files\models</Filter>
+    </None>
+    <None Include="Objects\pool_table.3DS">
+      <Filter>Resource Files\models</Filter>
+    </None>
+    <None Include="Objects\table_bed.3DS">
+      <Filter>Resource Files\models</Filter>
+    </None>
+    <None Include="Objects\table_edges.3DS">
+      <Filter>Resource Files\models</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Objects\textures\ball13.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\ball14.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\ball15.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\crate.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\cue1.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\felt.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\felt_lg.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\table.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\tabletop.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\ball0.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\ball1.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\ball2.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\ball3.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\ball4.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\ball5.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\ball6.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\ball7.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\ball8.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\ball9.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\ball10.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\ball11.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+    <Image Include="Objects\textures\ball12.bmp">
+      <Filter>Resource Files\textures</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
