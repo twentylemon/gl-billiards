@@ -37,6 +37,7 @@ private:
     int detectPocket(Vector);
     void rollBalls(std::vector<Ball*>, double);
     double calcCollisionTime(Ball*, Ball*);
+    double distance(Ball*, Cushion);
     double calcBankTime(Ball*, Cushion, double);
     void moveBalls(std::vector<Ball*>, double);
 

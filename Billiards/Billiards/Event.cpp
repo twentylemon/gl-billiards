@@ -83,5 +83,10 @@ void BankEvent::handle(){
     //loss some speed due to friction
     velocity.scale(1.0 - CUSHION_FRICTION_LOSS);
     ball->setVelocity(velocity);
+
+    if (getTime() == 0){
+        //if it happened at 0 seconds, add a larger bounce
+        ball->addPosition(Vector::scale(cushion.getNormal(), 0.002));
+    }
     ball->addPosition(Vector::scale(cushion.getNormal(), 0.001));   //add a little bounce
 }

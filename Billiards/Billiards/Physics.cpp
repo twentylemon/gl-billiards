@@ -80,99 +80,68 @@ Physics* Physics::getInstance(){
 **/
 void Physics::makeCushions(){
     double scale = 0.0254;
-    Vector start, finish;
+    //corner to corner, corner to side coords
+    double ctcx[3], ctcy[3], ctsx[5], ctsy[5];
+
+    //push cushions further into pockets so there's something to bounce off of
+    //ctcx[0] = 52 + 17.0/32.0;   ctcy[0] = 24 + 3.0/32.0;
+    ctcx[0] = 53 + 19.0/32.0;   ctcy[0] = 25 + 6.0/32.0;
+    ctcx[1] = 51 + 15.0/32.0;   ctcy[1] = 23;
+    ctcx[2] = 50;               ctcy[2] = 20 + 16.0/32.0;
+    
+    //ctsx[0] = 48 + 30.0/32.0;   ctsy[0] = 27 + 16.0/32.0;
+    ctsx[0] = 49 + 29.0/32.0;   ctsy[0] = 28 + 16.0/32.0;
+    ctsx[1] = 47 + 31.0/32.0;   ctsy[1] = 26 + 16.0/32.0;
+    ctsx[2] = 45 + 19.0/32.0;   ctsy[2] = 24 + 31.0/32.0;
+    ctsx[3] = 3 + 3.0/32.0;     ctsy[3] = 25;
+    ctsx[4] = 2 + 12.0/32.0;    ctsy[4] = 27 + 16.0/32.0;
+
+    for (int i = 0; i < 5; i++){
+        if (i < 3){
+            ctcx[i] *= scale;   ctcy[i] *= scale;
+        }
+        ctsx[i] *= scale;   ctsy[i] *= scale;
+    }
 
     numCushions = 26;
 
     /** from pocket 0 to pocket 1 **/
-    start = Vector::scale(Vector(52.0 + 17.0/32.0, 24 + 3.0/32.0, 0), scale);
-    finish = Vector::scale(Vector(51 + 15.0/32.0, 23, 0), scale);
-    cushions[0] = Cushion(start, finish);
-
-    finish = Vector::scale(Vector(50, 20 + 16.0/32.0, 0), scale);
-    cushions[1] = Cushion(cushions[0].getFinish(), finish);
-
-    finish = Vector::scale(Vector(50, -20 - 16.0/32.0, 0), scale);
-    cushions[2] = Cushion(cushions[1].getFinish(), finish);
-
-    finish = Vector::scale(Vector(51 + 15.0/32.0, -23, 0), scale);
-    cushions[3] = Cushion(cushions[2].getFinish(), finish);
-
-    finish = Vector::scale(Vector(52 + 17.0/32.0, -24 - 3.0/32.0, 0), scale);
-    cushions[4] = Cushion(cushions[3].getFinish(), finish);
+    cushions[0] = Cushion(Vector(ctcx[0], ctcy[0], 0), Vector(ctcx[1], ctcy[1], 0));
+    cushions[1] = Cushion(Vector(ctcx[1], ctcy[1], 0), Vector(ctcx[2], ctcy[2], 0));
+    cushions[2] = Cushion(Vector(ctcx[2], ctcy[2], 0), Vector(ctcx[2], -ctcy[2], 0));
+    cushions[3] = Cushion(Vector(ctcx[2], -ctcy[2], 0), Vector(ctcx[1], -ctcy[1], 0));
+    cushions[4] = Cushion(Vector(ctcx[1], -ctcy[1], 0), Vector(ctcx[0], -ctcy[0], 0));
 
     /** from pocket 1 to pocket 2 **/
-    start = Vector::scale(Vector(48 + 30.0/32.0, -27 - 16.0/32.0, 0), scale);
-    finish = Vector::scale(Vector(47 + 31.0/32.0, -26 - 16.0/32.0, 0), scale);
-    cushions[5] = Cushion(start, finish);
-
-    finish = Vector::scale(Vector(45 + 19.0/32.0, -24 - 31.0/32.0, 0), scale);
-    cushions[6] = Cushion(cushions[5].getFinish(), finish);
-
-    finish = Vector::scale(Vector(3 + 3.0/32.0, -25, 0), scale);
-    cushions[7] = Cushion(cushions[6].getFinish(), finish);
-
-    finish = Vector::scale(Vector(2 + 12.0/32.0, -27 - 16.0/32.0, 0), scale);
-    cushions[8] = Cushion(cushions[7].getFinish(), finish);
+    cushions[5] = Cushion(Vector(ctsx[0], -ctsy[0], 0), Vector(ctsx[1], -ctsy[1], 0));
+    cushions[6] = Cushion(Vector(ctsx[1], -ctsy[1], 0), Vector(ctsx[2], -ctsy[2], 0));
+    cushions[7] = Cushion(Vector(ctsx[2], -ctsy[2], 0), Vector(ctsx[3], -ctsy[3], 0));
+    cushions[8] = Cushion(Vector(ctsx[3], -ctsy[3], 0), Vector(ctsx[4], -ctsy[4], 0));
 
     /** pocket 2 to pocket 3 **/
-    start = Vector::scale(Vector(-2 - 12.0/32.0, -27 - 16.0/32.0, 0), scale);
-    finish = Vector::scale(Vector(-3 - 3.0/32.0, -25, 0), scale);
-    cushions[9] = Cushion(start, finish);
-
-    finish = Vector::scale(Vector(-45 - 19.0/32.0, -24 - 31.0/32.0, 0), scale);
-    cushions[10] = Cushion(cushions[9].getFinish(), finish);
-
-    finish = Vector::scale(Vector(-47 - 31.0/32.0, -26 - 16.0/32.0, 0), scale);
-    cushions[11] = Cushion(cushions[10].getFinish(), finish);
-
-    finish = Vector::scale(Vector(-48 - 30.0/32.0, -27 - 16.0/32.0, 0), scale);
-    cushions[12] = Cushion(cushions[11].getFinish(), finish);
+    cushions[9] = Cushion(Vector(-ctsx[4], -ctsy[4], 0), Vector(-ctsx[3], -ctsy[3], 0));
+    cushions[10] = Cushion(Vector(-ctsx[3], -ctsy[3], 0), Vector(-ctsx[2], -ctsy[2], 0));
+    cushions[11] = Cushion(Vector(-ctsx[2], -ctsy[2], 0), Vector(-ctsx[1], -ctsy[1], 0));
+    cushions[12] = Cushion(Vector(-ctsx[1], -ctsy[1], 0), Vector(-ctsx[0], -ctsy[0], 0));
 
     /** pocket 3 to pocket 4 **/
-    start = Vector::scale(Vector(-52 - 17.0/32.0, -24 - 3.0/32.0, 0), scale);
-    finish = Vector::scale(Vector(-51 - 15.0/32.0, -23, 0), scale);
-    cushions[13] = Cushion(start, finish);
-
-    finish = Vector::scale(Vector(-50, -20 - 16.0/32.0, 0), scale);
-    cushions[14] = Cushion(cushions[13].getFinish(), finish);
-
-    finish = Vector::scale(Vector(-50, 20 + 16.0/32.0, 0), scale);
-    cushions[15] = Cushion(cushions[14].getFinish(), finish);
-
-    finish = Vector::scale(Vector(-51 - 15.0/32.0, 23, 0), scale);
-    cushions[16] = Cushion(cushions[15].getFinish(), finish);
-
-    finish = Vector::scale(Vector(-52 - 17.0/32.0, 24 + 3.0/32.0, 0), scale);
-    cushions[17] = Cushion(cushions[16].getFinish(), finish);
+    cushions[13] = Cushion(Vector(-ctcx[0], -ctcy[0], 0), Vector(-ctcx[1], -ctcy[1], 0));
+    cushions[14] = Cushion(Vector(-ctcx[1], -ctcy[1], 0), Vector(-ctcx[2], -ctcy[2], 0));
+    cushions[15] = Cushion(Vector(-ctcx[2], -ctcy[2], 0), Vector(-ctcx[2], ctcy[2], 0));
+    cushions[16] = Cushion(Vector(-ctcx[2], ctcy[2], 0), Vector(-ctcx[1], ctcy[1], 0));
+    cushions[17] = Cushion(Vector(-ctcx[1], ctcy[1], 0), Vector(-ctcx[0], ctcy[0], 0));
     
     /** pocket 4 to pocket 5 **/
-    start = Vector::scale(Vector(-48 - 30.0/32.0, 27 + 16.0/32.0, 0), scale);
-    finish = Vector::scale(Vector(-47 - 31.0/32.0, 26 + 16.0/32.0, 0), scale);
-    cushions[18] = Cushion(start, finish);
-
-    finish = Vector::scale(Vector(-45 - 19.0/32.0, 24 + 31.0/32.0, 0), scale);
-    cushions[19] = Cushion(cushions[18].getFinish(), finish);
-
-    finish = Vector::scale(Vector(-3 - 3.0/32.0, 25, 0), scale);
-    cushions[20] = Cushion(cushions[19].getFinish(), finish);
-
-    finish = Vector::scale(Vector(-2 - 12.0/32.0, 27 + 16.0/32.0, 0), scale);
-    cushions[21] = Cushion(cushions[20].getFinish(), finish);
+    cushions[18] = Cushion(Vector(-ctsx[0], ctsy[0], 0), Vector(-ctsx[1], ctsy[1], 0));
+    cushions[19] = Cushion(Vector(-ctsx[1], ctsy[1], 0), Vector(-ctsx[2], ctsy[2], 0));
+    cushions[20] = Cushion(Vector(-ctsx[2], ctsy[2], 0), Vector(-ctsx[3], ctsy[3], 0));
+    cushions[21] = Cushion(Vector(-ctsx[3], ctsy[3], 0), Vector(-ctsx[4], ctsy[4], 0));
 
     /** pocket 5 to pocket 0 **/
-    start = Vector::scale(Vector(2 + 12.0/32.0, 27 + 16.0/32.0, 0), scale);
-    finish = Vector::scale(Vector(3 + 3.0/32.0, 25, 0), scale);
-    cushions[22] = Cushion(start, finish);
-
-    finish = Vector::scale(Vector(45 + 19.0/32.0, 24 + 31.0/32.0, 0), scale);
-    cushions[23] = Cushion(cushions[22].getFinish(), finish);
-
-    finish = Vector::scale(Vector(47 + 31.0/32.0, 26 + 16.0/32.0, 0), scale);
-    cushions[24] = Cushion(cushions[23].getFinish(), finish);
-
-    finish = Vector::scale(Vector(48 + 30.0/32.0, 27 + 16.0/32.0, 0), scale);
-    cushions[25] = Cushion(cushions[24].getFinish(), finish);
+    cushions[22] = Cushion(Vector(ctsx[4], ctsy[4], 0), Vector(ctsx[3], ctsy[3], 0));
+    cushions[23] = Cushion(Vector(ctsx[3], ctsy[3], 0), Vector(ctsx[2], ctsy[2], 0));
+    cushions[24] = Cushion(Vector(ctsx[2], ctsy[2], 0), Vector(ctsx[1], ctsy[1], 0));
+    cushions[25] = Cushion(Vector(ctsx[1], ctsy[1], 0), Vector(ctsx[0], ctsy[0], 0));
 
     /** normalize each negRadius to be length ballRadius **/
     for (int i = 0; i < numCushions; i++){
@@ -205,6 +174,25 @@ Vector Physics::cueShot(Cue cue, Ball* ball){
     Vector direction = Vector::subtract(ball->getPosition(), cue.getPosition());
     direction.scale(cueSpringConstant * cueBallContactTime / ballMass);
     return direction;
+}
+
+
+/**
+ * @param ball the ball to check
+ * @param cushion the cushion to check
+ * @return true if the ball should have already collided with the cushion
+**/
+double Physics::distance(Ball* ball, Cushion cushion){
+    Vector position = ball->getPosition();
+    double t = cushion.getLine().dotProduct(Vector::subtract(position, cushion.getStart()));
+    if (t < 0){
+        return cushion.getStart().distance(position);
+    }
+    else if (t > 1){
+        return cushion.getFinish().distance(position);
+    }
+    Vector proj = Vector::add(cushion.getStart(), Vector::scale(cushion.getLine(), t));
+    return proj.distance(position);
 }
 
 
@@ -300,6 +288,9 @@ double Physics::calcCollisionTime(Ball* ball1, Ball* ball2){
  * @return the amount of time that will pass before ball hits the bank
 **/
 double Physics::calcBankTime(Ball* ball, Cushion cushion, double dt){
+    if (distance(ball, cushion) < ballRadiusSq){
+        return 0;
+    }
     Vector position = ball->getPosition();
     Vector velocity = ball->getVelocity();
     Vector ballDirection = Vector::scale(velocity, dt);

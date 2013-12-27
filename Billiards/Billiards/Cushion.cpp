@@ -20,6 +20,8 @@ Cushion::Cushion(Vector start, Vector finish){
     line = Vector::subtract(finish, start);
     normal = Vector::normalize(line.crossProduct(Vector(0, 0, 1)));
     negRadius = Vector::scale(normal, -1.0);
+    length = line.length();
+    lengthSq = line.lengthSq();
 }
 
 
@@ -32,6 +34,8 @@ Vector Cushion::getFinish(){ return finish; }
 Vector Cushion::getLine(){ return line; }
 Vector Cushion::getNormal(){ return normal; }
 Vector Cushion::getNegRadius(){ return negRadius; }
+double Cushion::getLength(){ return length; }
+double Cushion::getLengthSq(){ return lengthSq; }
 
 
 /**

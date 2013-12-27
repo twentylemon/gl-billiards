@@ -22,6 +22,8 @@ public:
     Vector getLine();
     Vector getNormal();
     Vector getNegRadius();
+    double getLength();
+    double getLengthSq();
 
 private:
     Vector start;
@@ -29,4 +31,5 @@ private:
     Vector line;
     Vector normal;
     Vector negRadius;
+    double length, lengthSq;
 };
