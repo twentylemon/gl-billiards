@@ -178,6 +178,8 @@ void Physics::makeCushions(){
     for (int i = 0; i < numCushions; i++){
         cushions[i].setRadius(ballRadius);
     }
+
+    //numCushions = 9+4;
 }
 
 
@@ -205,6 +207,21 @@ Vector Physics::cueShot(Cue cue, Ball* ball){
     Vector direction = Vector::subtract(ball->getPosition(), cue.getPosition());
     direction.scale(cueSpringConstant * cueBallContactTime / ballMass);
     return direction;
+}
+
+
+/**
+ * @param position the position to check if there is a cushion there
+ * @return true if there is a cushion at the point sent
+**/
+bool Physics::hasCushion(Vector position){
+    double x = position.getX();
+    double y = position.getY();
+    if ((x < -tablePlayWidth/2.0 + pocketSize || x > tablePlayWidth/2.0 - pocketSize || (x < pocketSize && x > -pocketSize)) &&
+        (y < -tablePlayHeight/2.0 + pocketSize || y > tablePlayHeight/2.0 - pocketSize)){
+            return false;
+    }
+    return true;
 }
 
 
@@ -245,7 +262,8 @@ void Physics::rollBalls(std::vector<Ball*> balls, double dt){
             //check for pocketing
             int p = detectPocket(balls[i]->getPosition());
             if (p != -1){
-                std::cerr << "Ball " << i << " has been pocketed." << std::endl << balls[i]->getPosition().toString() << std::endl << pockets[p].toString() << std::endl;
+                std::cerr << "Ball " << i << " has been pocketed." << std::endl << balls[i]->getPosition().toString() << std::endl
+                    << pockets[p].toString() << std::endl;
                 balls[i]->sink();
             }
         }
@@ -286,6 +304,40 @@ double Physics::calcCollisionTime(Ball* ball1, Ball* ball2){
     if (c > 0){
         c = sqrt(c);
         return std::min(-b + c, -b - c);
+    }
+    return WONT_HAPPEN_THIS_FRAME;
+}
+
+
+/**
+ * Calculates when the ball with hit the bank axis specified
+ *
+ * @param ball the ball to check when it hits the bank
+ * @param axis which bank axis we are checking against, X axis or Y
+ * @return the amount of time that will pass before ball hits the bank
+**/
+double Physics::calcBankTime(Ball* ball, Event::BankAxis axis){
+    // TODO check pocket locations, make sure the bank point is not in a pocket
+    double pos = 0, speed = 0, railPos = 0;
+    Vector velocity = ball->getVelocity(), position = ball->getPosition();
+    //determne when the ball will hit (rail, 0, 0) or (0, rail, 0)
+    if (axis == Event::BankAxis::X){
+        pos = position.getX();
+        speed = velocity.getX();
+        railPos = tablePlayWidth / 2.0;     //divide by 2 since center of table is (0,0,0)
+    }
+    else if (axis == Event::BankAxis::Y){
+        pos = position.getY();
+        speed = velocity.getY();
+        railPos = tablePlayHeight / 2.0;
+    }
+    if (speed != 0){
+        double dt = ((speed/std::abs(speed)) * (railPos - ballRadius) - pos) / speed;
+        position.add(Vector::scale(velocity, dt));
+        if (hasCushion(position)){
+            return dt;
+        }
+        //else return WONT_HAPPEN_THIS_FRAME; like below
     }
     return WONT_HAPPEN_THIS_FRAME;
 }
@@ -354,15 +406,28 @@ void Physics::moveBalls(std::vector<Ball*> balls, double dt){
                     }
                 }
             }
-            
-            //check for a bank off the side
+
             for (int c = 0; c < numCushions; c++){
                 double bankTime = calcBankTime(balls[i], cushions[c], dt);
                 if (bankTime >= 0 && bankTime < event->getTime()){
                     delete event;
-                    event = new BankEvent(bankTime, balls[i], cushions[c]);
+                    event = new BankEvent2(bankTime, balls[i], cushions[c]);
                 }
             }
+
+            //check for a bank off the side
+            /*
+            double bankTimeX = calcBankTime(balls[i], Event::BankAxis::X);
+            double bankTimeY = calcBankTime(balls[i], Event::BankAxis::Y);
+            if (bankTimeX >= 0 && bankTimeX < event->getTime()){
+                delete event;
+                event = new BankEvent(bankTimeX, balls[i], Event::BankAxis::X);
+            }
+            if (bankTimeY >= 0 && bankTimeY < event->getTime()){
+                delete event;
+                event = new BankEvent(bankTimeY, balls[i], Event::BankAxis::Y);
+            }
+            */
         }
     }
 

@@ -108,13 +108,13 @@ void initializeGame(){
     global.ballsMoving = false;
     global.shooting = true;
     global.players[global.turn].setCuePosition(global.balls[0]->getPosition());
-
-    global.physics = Physics::getInstance();
-    global.clock = std::clock();
     
     global.table = Table();
 	global.tableZoom = 0;
 	global.tableRotation = Vector();
+
+    global.physics = Physics::getInstance();
+    global.clock = std::clock();
 }
 
 

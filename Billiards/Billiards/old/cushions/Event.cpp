@@ -63,9 +63,9 @@ void CollisionEvent::handle(){
  * @param ball the ball involved in the bank
  * @param axis the bank axis against which the ball hits
 **/
-BankEvent::BankEvent(double time, Ball* ball, Cushion cushion) : Event(time){
+BankEvent::BankEvent(double time, Ball* ball, BankAxis axis) : Event(time){
     this->ball = ball;
-    this->cushion = cushion;
+    this->axis = axis;
 }
 
 
@@ -74,8 +74,51 @@ BankEvent::BankEvent(double time, Ball* ball, Cushion cushion) : Event(time){
 **/
 void BankEvent::handle(){
     Vector velocity = ball->getVelocity();
+
+    // TODO part of angular momentum is converted to linear momentum
+
+    //get the normal and tangential components of the velocity
+    Vector norm = Vector();
+    if (axis == BankAxis::X){
+        velocity.setX(-velocity.getX());
+    }
+    else if (axis == BankAxis::Y){
+        velocity.setY(-velocity.getY());
+    }
+    velocity.scale(1.0 - CUSHION_FRICTION_LOSS);
+    ball->setVelocity(velocity);
+
+    // TODO angular velocity loss, it doesn't change
+    Vector angular = ball->getAngular();
+    angular.scale(1.0 - CUSHION_FRICTION_LOSS);
+    ball->setAngular(angular);
+}
+
+
+/**
+ * BankEvent constructor.
+ *
+ * @param time the time at which this event occurs
+ * @param ball the ball involved in the bank
+ * @param axis the bank axis against which the ball hits
+**/
+BankEvent2::BankEvent2(double time, Ball* ball, Cushion cushion) : Event(time){
+    this->ball = ball;
+    this->cushion = cushion;
+}
+
+
+/**
+ * Handles the velocity update after a bank event.
+**/
+void BankEvent2::handle(){
+
+    std::cerr << "handling bank event" << std::endl;
+
+    Vector velocity = ball->getVelocity();
     Vector normal = cushion.getNormal();
 
+    //std::cerr << "old: " << velocity.toString() << std::endl;
     //reflect the velocity through the cushion normal
     normal.scale(2.0 * velocity.dotProduct(normal));
     velocity.subtract(normal);
@@ -84,4 +127,5 @@ void BankEvent::handle(){
     velocity.scale(1.0 - CUSHION_FRICTION_LOSS);
     ball->setVelocity(velocity);
     ball->addPosition(Vector::scale(cushion.getNormal(), 0.001));   //add a little bounce
+    //std::cerr << "new: " << velocity.toString() << std::endl << std::endl;
 }

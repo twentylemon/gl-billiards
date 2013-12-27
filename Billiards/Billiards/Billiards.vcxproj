@@ -64,6 +64,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Cushion.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="GL\freeglut.h" />
     <ClInclude Include="GL\freeglut_ext.h" />
@@ -76,13 +77,13 @@
     <ClInclude Include="Cue.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Model.h" />
-    <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Table.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Cushion.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="UserInterface.cpp" />
     <ClCompile Include="Vector.cpp" />
@@ -91,7 +92,6 @@
     <ClCompile Include="init.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
-    <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Player.cpp" />

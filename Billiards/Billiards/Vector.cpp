@@ -142,7 +142,7 @@ void Vector::normalize(){
 void Vector::normalize(double length){
     double l = this->length();
     if (l > 0){
-        scale(pow(length, 1.0/2.0) / l);
+        scale(length / l);
     }
 }
 
@@ -309,6 +309,21 @@ Vector Vector::crossProduct(Vector first, Vector second){
     double y = first.getZ() * second.getX() - first.getX() * second.getZ();
     double z = first.getX() * second.getY() - first.getY() * second.getX();
     return Vector(x, y, z);
+}
+
+
+/**
+ * Returns the normalizes version of the vector.
+ *
+ * @param vector the vector to normalize
+ * @return the vector, length 1.0
+**/
+Vector Vector::normalize(Vector vector){
+    double l = vector.length();
+    if (l > 0){
+        vector.scale(1.0 / l);
+    }
+    return vector;
 }
 
 

@@ -35,6 +35,12 @@ Model::~Model(void){
 
 
 /**
+ * Getters/Setters.
+**/
+std::vector<Vector> Model::getVerticies(){ return verticies; }
+
+
+/**
  * Draws this model.
 **/
 void Model::draw(){

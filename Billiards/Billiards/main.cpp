@@ -65,7 +65,7 @@ void displayFunc(){
     if (f){ //make the break shot
         f = false;
         global.balls[0]->setPosition(Vector::add(global.balls[0]->getPosition(), Vector(0, -10 * 0.0254, 0)));
-        global.players[global.turn].addCuePosition(Vector(1.5, .3, 0));
+        global.players[global.turn].addCuePosition(Vector(-1.5 + random(), -0.5 + random(), 0));
         takeShot();
     }
     

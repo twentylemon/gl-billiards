@@ -30,13 +30,15 @@ public:
     bool update(std::vector<Ball*>);
     bool update(std::vector<Ball*>, double);
     
-private:
+//private:
     Physics();
     void makeCushions();
 
     int detectPocket(Vector);
+    bool hasCushion(Vector);
     void rollBalls(std::vector<Ball*>, double);
     double calcCollisionTime(Ball*, Ball*);
+    double calcBankTime(Ball*, Event::BankAxis);
     double calcBankTime(Ball*, Cushion, double);
     void moveBalls(std::vector<Ball*>, double);
 

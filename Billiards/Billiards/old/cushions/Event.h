@@ -20,6 +20,7 @@ class Event
 {
 public:
     Event(double);
+    enum BankAxis { Neither, X, Y };
 
     virtual void handle(){}
 
@@ -45,7 +46,19 @@ private:
 class BankEvent : public Event
 {
 public:
-    BankEvent(double, Ball*, Cushion);
+    BankEvent(double, Ball*, BankAxis);
+    virtual void handle();
+
+private:
+    Ball* ball;
+    BankAxis axis;
+};
+
+
+class BankEvent2 : public Event
+{
+public:
+    BankEvent2(double, Ball*, Cushion);
     virtual void handle();
 
 private:
