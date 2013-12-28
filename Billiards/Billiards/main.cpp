@@ -6,6 +6,7 @@
  * @since 2013-12-10
 **/
 #include "main.h"
+
 Global global;
 
 
@@ -51,6 +52,15 @@ void swapTurns(){
  * Takes the current players shot from where their cue is currently.
 **/
 void takeShot(){
+    
+	//this line copied from display func
+	global.players[global.turn].addCuePosition(Vector(-global.balls[0]->getPosition().getX(),
+													-global.balls[0]->getPosition().getY(),
+													-global.balls[0]->getPosition().getZ()));
+
+	//set rotation of white ball
+	global.balls[0]->setRotation(0, 0, global.players[global.turn].getCue().getRotation().getZ());
+
     global.balls[0]->setVelocity(global.physics->cueShot(global.players[global.turn].getCue(), global.balls[0]));
     global.shooting = false;
 }
@@ -72,13 +82,13 @@ void idleFunc(){
 **/
 void displayFunc(){
     
-    static bool f = true;
+    /*static bool f = true;
     if (f){ //make the break shot
         f = false;
         global.balls[0]->setPosition(Vector::add(global.balls[0]->getPosition(), Vector(0, -10 * 0.0254, 0)));
         global.players[global.turn].addCuePosition(Vector(-1.5 + random(), -0.5 + random(), 0));
         takeShot();
-    }
+    }*/
     
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glPushMatrix();
@@ -103,9 +113,8 @@ void displayFunc(){
 
     std::clock_t now = std::clock();
     if (global.shooting){
-        global.players[global.turn].addCuePosition(Vector(random(), random(), 0));
         global.players[global.turn].drawCue();
-        takeShot();
+        //takeShot();
     }
     else {
         global.ballsMoving = global.physics->update(global.balls, getTimeDiff(global.clock, now));

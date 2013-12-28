@@ -7,6 +7,7 @@
  * @since 2013-12-16
 **/
 #include "Cue.h"
+#include "main.h"
 #define PI 3.14159
 
 /**
@@ -35,10 +36,14 @@ Cue::~Cue(){
 void Cue::draw(){
     glPushMatrix();
     glMatrixMode(GL_MODELVIEW);
-    glTranslated(position.getX(), position.getY(), position.getZ());
+	
+	rotation.setZ(global.cueTranslate->get_z());
+
+	glTranslated(position.getX(), position.getY(), position.getZ());
     glRotated(rotation.getX(), 1, 0, 0);
     glRotated(rotation.getY(), 0, 1, 0);
     glRotated(rotation.getZ(), 0, 0, 1);
+
 	model.draw();
     glPopMatrix();
 }

@@ -37,9 +37,9 @@ typedef struct {
 	GLUI* glui;
 	GLUI_Panel* cuePanel;
 	GLUI_Panel* cameraPanel;
-	GLUI_Rotation* cueRotation;
 	GLUI_StaticText* playerTextField;
 	GLUI_Spinner* shotPowerSpinner;
+	GLUI_Translation* cueTranslate;
 
 	int glutWindow;
 	int windowHeight;
@@ -66,11 +66,13 @@ typedef struct {
 
 extern Global global;
 
+void glTranslatefv(Vector translate);
+void takeShot();
+
 //init.cpp
 void init();
 
+//callback functions for glut/glui
 void resizeWindow(int width, int height);
 void keyboardFunc(unsigned char key, int x, int y);
 void idleFunc();
-void glTranslatefv(Vector translate);
-void takeShot();

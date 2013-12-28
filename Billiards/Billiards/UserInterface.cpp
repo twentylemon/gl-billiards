@@ -1,33 +1,42 @@
 /**
- * Defines behaviour for the glui user interface
+ * Defines behaviour for the glui user interface. Inflates
+ * the UI and sets/defines callbacks
  *
  * @author Dan Lapp
  * @since 27-12-2013
  */
 
 
-#include "main.h"
 #include "UserInterface.h"
 
-float cueRotationMatrix[16] =  {1, 0, 0, 0,
-								0, 1, 0, 0, 
-								0, 0, 1, 0,
-								0, 0, 0, 1};
 
+/**
+ * Callback method for Zoom In button
+ */
 void zoomIn(){
 	global.tableZoom += 0.15;
 }
 
 
+/**
+ * Callback method for Zoom Out button
+ */
 void zoomOut(){
 	global.tableZoom -= 0.15;
 }
 
+/**
+ * Callback method for Reset Zoom button
+ */
 void resetZoom(){
 	global.tableZoom = 0;
 }
 
 
+/**
+ * Initializes the GLUI subwindow and inflates it
+ * with controls. Also sets callbacks
+ */
 void initializeGlui(){
 
 	global.objectType = 1;
@@ -44,7 +53,7 @@ void initializeGlui(){
 	GLUI_Panel* cueRotatePanel = global.glui->add_panel_to_panel(global.cuePanel, NULL);
 	GLUI_Panel* cueShotPanel = global.glui->add_panel_to_panel(global.cuePanel, NULL);
 	
-	global.cueRotation = new GLUI_Rotation(cueRotatePanel, "Cue Rotation", cueRotationMatrix);
+	global.cueTranslate = new GLUI_Translation(cueRotatePanel, "Rotate Cue", GLUI_TRANSLATION_Z);
 	new GLUI_Button(cueShotPanel, "Shoot", 0, (GLUI_Update_CB) takeShot);
 
 	global.shotPowerSpinner = new GLUI_Spinner(cueShotPanel, "Power", GLUI_SPINNER_FLOAT);
@@ -59,7 +68,9 @@ void initializeGlui(){
 	new GLUI_Button(zoomPanel, "Zoom Out", 0, (GLUI_Update_CB) zoomOut);
 	new GLUI_Button(resetZoomPanel, "Reset Zoom", 0, (GLUI_Update_CB) resetZoom);
 
+	//link main glut window with our control panel
 	global.glui->set_main_gfx_window(global.glutWindow);
-
+	
+	//make sure GLUI knows about our idle function
 	GLUI_Master.set_glutIdleFunc(idleFunc);
 }
