@@ -54,6 +54,7 @@ void initializeGlui(){
 	GLUI_Panel* cueShotPanel = global.glui->add_panel_to_panel(global.cuePanel, NULL);
 	
 	global.cueTranslate = new GLUI_Translation(cueRotatePanel, "Rotate Cue", GLUI_TRANSLATION_Z);
+	global.cueTranslate->set_z(180);
 	new GLUI_Button(cueShotPanel, "Shoot", 0, (GLUI_Update_CB) takeShot);
 
 	global.shotPowerSpinner = new GLUI_Spinner(cueShotPanel, "Power", GLUI_SPINNER_FLOAT);

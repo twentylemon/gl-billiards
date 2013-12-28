@@ -53,14 +53,12 @@ void swapTurns(){
 **/
 void takeShot(){
     
-	//this line copied from display func
-	global.players[global.turn].addCuePosition(Vector(-global.balls[0]->getPosition().getX(),
+	global.players[global.turn].setCuePosition(Vector(-global.balls[0]->getPosition().getX(),
 													-global.balls[0]->getPosition().getY(),
 													-global.balls[0]->getPosition().getZ()));
 
-	//set rotation of white ball
-	global.balls[0]->setRotation(0, 0, global.players[global.turn].getCue().getRotation().getZ());
-
+	global.players[global.turn].setCueRotation(Vector(0, 0, global.cueTranslate->get_z()));
+	
     global.balls[0]->setVelocity(global.physics->cueShot(global.players[global.turn].getCue(), global.balls[0]));
     global.shooting = false;
 }
@@ -111,10 +109,14 @@ void displayFunc(){
         global.balls[i]->draw();
     }
 
+	//if player has scratched, reset cue ball
+	if(global.balls[0]->isSunk() && !global.ballsMoving){
+		global.balls[0] = new Ball(0);
+	}
+
     std::clock_t now = std::clock();
     if (global.shooting){
         global.players[global.turn].drawCue();
-        //takeShot();
     }
     else {
         global.ballsMoving = global.physics->update(global.balls, getTimeDiff(global.clock, now));
