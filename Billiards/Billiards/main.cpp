@@ -80,7 +80,7 @@ void updateCue(){
 **/
 void takeShot(){
     if (global.shooting){
-        global.balls[0]->setVelocity(global.physics->cueShot(global.players[global.turn].getCue(), global.balls[0]));
+        global.balls[0]->setVelocity(physics::cueShot(global.players[global.turn].getCue(), global.balls[0]));
         global.shooting = false;
     }
 }
@@ -127,7 +127,7 @@ void displayFunc(){
         global.players[global.turn].drawCue();
     }
     else {
-        global.ballsMoving = global.physics->update(global.balls, getTimeDiff(global.clock, now));
+        global.ballsMoving = physics::update(global.balls, getTimeDiff(global.clock, now));
         if (!global.ballsMoving){
             swapTurns();
         }

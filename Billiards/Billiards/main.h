@@ -12,12 +12,12 @@
 #include <ctime>
 #include "glut.h"
 #include "glui.h"
-#include "Model.h"
+#include "ui.h"
+
 #include "Ball.h"
 #include "Table.h"
 #include "Player.h"
-#include "Physics.h"
-#include "UserInterface.h"
+#include "physics.h"
 
 #define ORTHO_WIDTH 100
 #define ORTHO_HEIGHT 100
@@ -60,7 +60,6 @@ typedef struct {
     bool shooting;
     bool scratch;
 
-    Physics* physics;
     std::clock_t clock;
 } Global;
 

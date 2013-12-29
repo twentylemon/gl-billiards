@@ -1,6 +1,6 @@
 /**
  * Defines behaviour for the glui user interface. Callback
- * methods for control functionality are defined here
+ * methods for control functionality are defined here.
  *
  * @author Dan Lapp
  * @since 2013-12-27

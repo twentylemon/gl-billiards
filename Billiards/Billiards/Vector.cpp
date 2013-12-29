@@ -101,7 +101,7 @@ void Vector::scale(double value){
  * @param other the other Vector to compare against
  * @return true if this and other are very close to each other
 **/
-bool Vector::equals(Vector other){
+bool Vector::equals(Vector other) const {
     return distance(other) < VECTOR_DISTANCE_EQUALS;
 }
 
@@ -111,7 +111,7 @@ bool Vector::equals(Vector other){
  *
  * @return the length of the Vector
 **/
-double Vector::length(){
+double Vector::length() const {
     return sqrt(lengthSq());
 }
 
@@ -121,7 +121,7 @@ double Vector::length(){
  *
  * @return the squared length of this Vector
 **/
-double Vector::lengthSq(){
+double Vector::lengthSq() const {
     return vec[X]*vec[X] + vec[Y]*vec[Y] + vec[Z]+vec[Z];
 }
 
@@ -153,7 +153,7 @@ void Vector::normalize(double length){
  * @param other the other Vector to get the distance from
  * @return the squared euclidean distance
 **/
-double Vector::distance(Vector other){
+double Vector::distance(Vector other) const {
     double x = vec[X] - other.getX();
     double y = vec[Y] - other.getY();
     double z = vec[Z] - other.getZ();
@@ -167,7 +167,7 @@ double Vector::distance(Vector other){
  * @param (x,y,z) the point to get the distance to
  * @return the squared euclidean distance
 **/
-double Vector::distance(double x, double y, double z){
+double Vector::distance(double x, double y, double z) const {
     return distance(Vector(x, y, z));
 }
 
@@ -178,7 +178,7 @@ double Vector::distance(double x, double y, double z){
  * @param other the other Vector
  * @return the dot product between the two Vector's
 **/
-double Vector::dotProduct(Vector other){
+double Vector::dotProduct(Vector other) const {
     return vec[X] * other.getX() + vec[Y] * other.getY() + vec[Z] * other.getZ();
 }
 
@@ -189,7 +189,7 @@ double Vector::dotProduct(Vector other){
  * @param other the other Vector
  * @return the cross product between the two Vector's
 **/
-Vector Vector::crossProduct(Vector other){
+Vector Vector::crossProduct(Vector other) const {
     double x = vec[Y] * other.getZ() - vec[Z] * other.getY();
     double y = vec[Z] * other.getX() - vec[X] * other.getZ();
     double z = vec[X] * other.getY() - vec[Y] * other.getX();
@@ -200,10 +200,10 @@ Vector Vector::crossProduct(Vector other){
 /**
  * Getters/Setters.
 **/
-double Vector::get(int idx){ return vec[idx]; }
-double Vector::getX(){ return vec[X]; }
-double Vector::getY(){ return vec[Y]; }
-double Vector::getZ(){ return vec[Z]; }
+double Vector::get(int idx) const { return vec[idx]; }
+double Vector::getX() const { return vec[X]; }
+double Vector::getY() const { return vec[Y]; }
+double Vector::getZ() const { return vec[Z]; }
 void Vector::set(int idx, double val){ vec[idx] = val; }
 void Vector::set(double* data){ set(data[X], data[Y], data[Z]); }
 void Vector::set(double x, double y, double z){ vec[X] = x; vec[Y] = y; vec[Z] = z; }

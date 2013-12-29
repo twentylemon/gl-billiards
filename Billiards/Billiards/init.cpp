@@ -110,7 +110,6 @@ void initializeGame(){
 	global.tableZoom = 0;
 	global.tableRotation = Vector(0, 0, 180);
 
-    global.physics = Physics::getInstance();
     global.clock = std::clock();
 }
 

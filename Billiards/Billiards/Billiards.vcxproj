@@ -87,30 +87,26 @@
     <ClInclude Include="..\GL\glut.h" />
     <ClInclude Include="Ball.h" />
     <ClInclude Include="Cue.h" />
-    <ClInclude Include="Cushion.h" />
-    <ClInclude Include="Event.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Particle.h" />
-    <ClInclude Include="Physics.h" />
+    <ClInclude Include="physics.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Table.h" />
-    <ClInclude Include="UserInterface.h" />
+    <ClInclude Include="ui.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ball.cpp" />
     <ClCompile Include="Cue.cpp" />
-    <ClCompile Include="Cushion.cpp" />
-    <ClCompile Include="Event.cpp" />
     <ClCompile Include="init.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Particle.cpp" />
-    <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="physics.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Table.cpp" />
-    <ClCompile Include="UserInterface.cpp" />
+    <ClCompile Include="ui.cpp" />
     <ClCompile Include="Vector.cpp" />
   </ItemGroup>
   <ItemGroup>

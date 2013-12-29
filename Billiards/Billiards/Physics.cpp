@@ -1,152 +1,131 @@
 /**
- * Physics.cpp
+ * physics.cpp
  * Game master and physics handler.
  *
  * @author Taras Mychaskiw
  * @version 1.0
  * @since 2013-12-18
 **/
-#include "Physics.h"
+#include "physics.h"
 #define WONT_HAPPEN_THIS_FRAME 3600.0
-static Physics* instance = NULL;
+
+namespace physics {
 
 /**
- * Default constructor.
+ * Cushion constructor.
+ *
+ * @param start where this cushion starts
+ * @param finish where this cushion ends
+ * @param radius the radius of each ball
 **/
-Physics::Physics(){
-    /** cue to ball collision **/
-    cueBallContactTime = 0.01;  //10ms
-    cueSpringConstant = 200;    //10 kg m/s^2
-
-    /** ball properties **/
-    ballMass = 0.170079;        //6 oz (in kg)
-    ballRadius = 0.028575;      //1.125in (in m)
-    ballRadiusSq = ballRadius * ballRadius;
-    ballCircumference = 2.0 * PI * ballRadius;
-
-    /*     width                 ^
-     4--------5--------0 h     y |
-     |                 | e
-     |                 | i     x
-     |                 | g     ->
-     3--------2--------1 h
-   pocket nums labelled  t
-    */
-    /** table properties **/
-    tableWidth = 9.0 * 0.0254;          //9 ft (in m), along the x axis
-    tableHeight = 4.5 * 0.0254;         //4.5 ft (in m), along the y axis
-    tableRailSize = 4 * 0.0254 / 2.0;   //4in (in m), divided by 2
-    tablePlayWidth = 100.0 * 0.0254;    //100in (in m)
-    tablePlayHeight = 50.0 * 0.0254;    //50in (in m)
-
-    /** pockets **/
-    numPockets = 6;
-    pocketSize = 4.8 * 0.0254 / 2.0;    //actually corner = 4.5, side = 5 in, close enough
-    pockets[0] = Vector(tablePlayWidth / 2.0 + tableRailSize, tablePlayHeight / 2.0 + tableRailSize, 0);
-    pockets[1] = Vector(tablePlayWidth / 2.0 + tableRailSize, -tablePlayHeight / 2.0 - tableRailSize, 0);
-    pockets[2] = Vector(0, -tablePlayHeight / 2.0 - tableRailSize, 0);
-    pockets[3] = Vector(-tablePlayWidth / 2.0 - tableRailSize, -tablePlayHeight / 2.0 - tableRailSize, 0);
-    pockets[4] = Vector(-tablePlayWidth / 2.0 - tableRailSize, tablePlayHeight / 2.0 + tableRailSize, 0);
-    pockets[5] = Vector(0, tablePlayHeight / 2.0 + tableRailSize, 0);
-
-    /** cushions **/
-    railSize = 2.0 * 0.0254;
-    makeCushions();
-
-    /** friction **/
-    feltFriction = 0.005;
-    velocityStop = 0.01 * 0.01; //use squared value so we can use squared length
-    angularStop = 0.05;
-    gravity = 9.8;
-
-    /** animation **/
-    timeStep = 0.1;
+Cushion::Cushion(Vector start, Vector finish, double radius){
+    this->start = start;
+    this->finish = finish;
+    line = Vector::subtract(finish, start);
+    normal = Vector::normalize(line.crossProduct(Vector(0, 0, 1)));
+    negRadius = Vector::scale(normal, -1.0);
+    length = line.length();
+    lengthSq = line.lengthSq();
+    setRadius(radius);
 }
 
 
 /**
- * Returns the instance of the physics object.
+ * Getters/Setters
 **/
-Physics* Physics::getInstance(){
-    if (instance == NULL){
-        instance = new Physics();
-    }
-    return instance;
+void Cushion::setRadius(double ballRadius){ negRadius.normalize(ballRadius); }
+Vector Cushion::getStart(){ return start; }
+Vector Cushion::getFinish(){ return finish; }
+Vector Cushion::getLine(){ return line; }
+Vector Cushion::getNormal(){ return normal; }
+Vector Cushion::getNegRadius(){ return negRadius; }
+double Cushion::getLength(){ return length; }
+double Cushion::getLengthSq(){ return lengthSq; }
+
+
+/**
+ * Event constructor. Just stores the original dt for the frame time span.
+ *
+ * @param dt the time at which this event occurs
+**/
+Event::Event(double dt){
+    time = dt;
 }
 
 
 /**
- * Constructor helper. Makes the cuhsions.
+ * Getters/Setters.
 **/
-void Physics::makeCushions(){
-    double scale = 0.0254;
-    //corner to corner, corner to side coords
-    double ctcx[3], ctcy[3], ctsx[5], ctsy[5];
+double Event::getTime(){ return time; }
 
-    //push cushions further into pockets so there's something to bounce off of
-    //ctcx[0] = 52 + 17.0/32.0;   ctcy[0] = 24 + 3.0/32.0;
-    ctcx[0] = 53 + 19.0/32.0;   ctcy[0] = 25 + 6.0/32.0;
-    ctcx[1] = 51 + 15.0/32.0;   ctcy[1] = 23;
-    ctcx[2] = 50;               ctcy[2] = 20 + 16.0/32.0;
-    
-    //ctsx[0] = 48 + 30.0/32.0;   ctsy[0] = 27 + 16.0/32.0;
-    ctsx[0] = 49 + 29.0/32.0;   ctsy[0] = 28 + 16.0/32.0;
-    ctsx[1] = 47 + 31.0/32.0;   ctsy[1] = 26 + 16.0/32.0;
-    ctsx[2] = 45 + 19.0/32.0;   ctsy[2] = 24 + 31.0/32.0;
-    ctsx[3] = 3 + 3.0/32.0;     ctsy[3] = 25;
-    ctsx[4] = 2 + 12.0/32.0;    ctsy[4] = 27 + 16.0/32.0;
 
-    for (int i = 0; i < 5; i++){
-        if (i < 3){
-            ctcx[i] *= scale;   ctcy[i] *= scale;
-        }
-        ctsx[i] *= scale;   ctsy[i] *= scale;
+/**
+ * CollisionEvent constructor.
+ *
+ * @param time the time at which this event occurs
+ * @param ball1 the first ball in the collision
+ * @param ball2 the second ball in the collision
+**/
+CollisionEvent::CollisionEvent(double time, Ball* ball1, Ball* ball2) : Event(time){
+    this->ball1 = ball1;
+    this->ball2 = ball2;
+}
+
+
+/**
+ * Handles speed updates of the collision event.
+**/
+void CollisionEvent::handle(){
+    //got the normal to the collision plane
+    Vector normal = Vector::subtract(ball1->getPosition(), ball2->getPosition());
+    normal.normalize();
+    Vector negNormal = Vector::scale(normal, -1.0);
+
+    //find the normal/tangential components for each of the balls velocities
+    Vector norm1 = Vector::scale(negNormal, Vector::dotProduct(ball1->getVelocity(), negNormal));
+    Vector tan1 = Vector::subtract(ball1->getVelocity(), norm1);
+    Vector norm2 = Vector::scale(normal, Vector::dotProduct(ball2->getVelocity(), normal));
+    Vector tan2 = Vector::subtract(ball2->getVelocity(), norm2);
+
+    //conservation of linear momentum, assume the collision is 100% elastic
+    ball1->setVelocity(Vector::add(tan1, norm2));
+    ball2->setVelocity(Vector::add(tan2, norm1));
+}
+
+
+/**
+ * BankEvent constructor.
+ *
+ * @param time the time at which this event occurs
+ * @param ball the ball involved in the bank
+ * @param axis the bank axis against which the ball hits
+**/
+BankEvent::BankEvent(double time, Ball* ball, Cushion cushion) : Event(time){
+    this->ball = ball;
+    this->cushion = cushion;
+}
+
+
+/**
+ * Handles the velocity update after a bank event.
+**/
+void BankEvent::handle(){
+    Vector velocity = ball->getVelocity();
+    Vector normal = cushion.getNormal();
+
+    //reflect the velocity through the cushion normal
+    normal.scale(2.0 * velocity.dotProduct(normal));
+    velocity.subtract(normal);
+
+    //loss some speed due to friction
+    velocity.scale(1.0 - cushionFrictionLoss);
+    ball->setVelocity(velocity);
+
+    if (getTime() == 0){
+        //if it happened at 0 seconds, add a larger bounce
+        ball->addPosition(Vector::scale(cushion.getNormal(), 0.002));
     }
-
-    numCushions = 26;
-
-    /** from pocket 0 to pocket 1 **/
-    cushions[0] = Cushion(Vector(ctcx[0], ctcy[0], 0), Vector(ctcx[1], ctcy[1], 0));
-    cushions[1] = Cushion(Vector(ctcx[1], ctcy[1], 0), Vector(ctcx[2], ctcy[2], 0));
-    cushions[2] = Cushion(Vector(ctcx[2], ctcy[2], 0), Vector(ctcx[2], -ctcy[2], 0));
-    cushions[3] = Cushion(Vector(ctcx[2], -ctcy[2], 0), Vector(ctcx[1], -ctcy[1], 0));
-    cushions[4] = Cushion(Vector(ctcx[1], -ctcy[1], 0), Vector(ctcx[0], -ctcy[0], 0));
-
-    /** from pocket 1 to pocket 2 **/
-    cushions[5] = Cushion(Vector(ctsx[0], -ctsy[0], 0), Vector(ctsx[1], -ctsy[1], 0));
-    cushions[6] = Cushion(Vector(ctsx[1], -ctsy[1], 0), Vector(ctsx[2], -ctsy[2], 0));
-    cushions[7] = Cushion(Vector(ctsx[2], -ctsy[2], 0), Vector(ctsx[3], -ctsy[3], 0));
-    cushions[8] = Cushion(Vector(ctsx[3], -ctsy[3], 0), Vector(ctsx[4], -ctsy[4], 0));
-
-    /** pocket 2 to pocket 3 **/
-    cushions[9] = Cushion(Vector(-ctsx[4], -ctsy[4], 0), Vector(-ctsx[3], -ctsy[3], 0));
-    cushions[10] = Cushion(Vector(-ctsx[3], -ctsy[3], 0), Vector(-ctsx[2], -ctsy[2], 0));
-    cushions[11] = Cushion(Vector(-ctsx[2], -ctsy[2], 0), Vector(-ctsx[1], -ctsy[1], 0));
-    cushions[12] = Cushion(Vector(-ctsx[1], -ctsy[1], 0), Vector(-ctsx[0], -ctsy[0], 0));
-
-    /** pocket 3 to pocket 4 **/
-    cushions[13] = Cushion(Vector(-ctcx[0], -ctcy[0], 0), Vector(-ctcx[1], -ctcy[1], 0));
-    cushions[14] = Cushion(Vector(-ctcx[1], -ctcy[1], 0), Vector(-ctcx[2], -ctcy[2], 0));
-    cushions[15] = Cushion(Vector(-ctcx[2], -ctcy[2], 0), Vector(-ctcx[2], ctcy[2], 0));
-    cushions[16] = Cushion(Vector(-ctcx[2], ctcy[2], 0), Vector(-ctcx[1], ctcy[1], 0));
-    cushions[17] = Cushion(Vector(-ctcx[1], ctcy[1], 0), Vector(-ctcx[0], ctcy[0], 0));
-    
-    /** pocket 4 to pocket 5 **/
-    cushions[18] = Cushion(Vector(-ctsx[0], ctsy[0], 0), Vector(-ctsx[1], ctsy[1], 0));
-    cushions[19] = Cushion(Vector(-ctsx[1], ctsy[1], 0), Vector(-ctsx[2], ctsy[2], 0));
-    cushions[20] = Cushion(Vector(-ctsx[2], ctsy[2], 0), Vector(-ctsx[3], ctsy[3], 0));
-    cushions[21] = Cushion(Vector(-ctsx[3], ctsy[3], 0), Vector(-ctsx[4], ctsy[4], 0));
-
-    /** pocket 5 to pocket 0 **/
-    cushions[22] = Cushion(Vector(ctsx[4], ctsy[4], 0), Vector(ctsx[3], ctsy[3], 0));
-    cushions[23] = Cushion(Vector(ctsx[3], ctsy[3], 0), Vector(ctsx[2], ctsy[2], 0));
-    cushions[24] = Cushion(Vector(ctsx[2], ctsy[2], 0), Vector(ctsx[1], ctsy[1], 0));
-    cushions[25] = Cushion(Vector(ctsx[1], ctsy[1], 0), Vector(ctsx[0], ctsy[0], 0));
-
-    /** normalize each negRadius to be length ballRadius **/
-    for (int i = 0; i < numCushions; i++){
-        cushions[i].setRadius(ballRadius);
-    }
+    ball->addPosition(Vector::scale(cushion.getNormal(), 0.001));   //add a little bounce
 }
 
 
@@ -158,7 +137,7 @@ void Physics::makeCushions(){
  * @param ball the ball being struck by the cue
  * @return the speed that the ball struck should be travelling
 **/
-Vector Physics::cueShot(Cue cue, Ball* ball){
+Vector cueShot(Cue cue, Ball* ball){
     /*  assume the Cue acts like a spring, and apply Hooke's law
         - k t
     v = ------  x
@@ -182,7 +161,7 @@ Vector Physics::cueShot(Cue cue, Ball* ball){
  * @param cushion the cushion to check
  * @return the squared distance between the ball and the cushion
 **/
-double Physics::distance(Ball* ball, Cushion cushion){
+double distance(Ball* ball, Cushion cushion){
     Vector position = ball->getPosition();
     double t = cushion.getLine().dotProduct(Vector::subtract(position, cushion.getStart()));
     if (t < 0){
@@ -200,7 +179,7 @@ double Physics::distance(Ball* ball, Cushion cushion){
  * @param position to point to check if it's near/in a pocket
  * @return which pocket it should fall into, or -1 if none
 **/
-int Physics::detectPocket(Vector position){
+int detectPocket(Vector position){
     for (int p = 0; p < numPockets; p++){
         if (pockets[p].distance(position) < 2.0 * pocketSize * pocketSize){//4.0 * ballRadiusSq){
             return p;
@@ -217,7 +196,7 @@ int Physics::detectPocket(Vector position){
  * @param balls the set of balls to update
  * @param dt the amount of time to pass
 **/
-void Physics::rollBalls(std::vector<Ball*> balls, double dt){
+void rollBalls(std::vector<Ball*> balls, double dt){
     for (unsigned int i = 0; i < balls.size(); i++){
         if (!balls[i]->isSunk() && balls[i]->isMoving()){
             //get how far they moved
@@ -248,7 +227,7 @@ void Physics::rollBalls(std::vector<Ball*> balls, double dt){
  * @param ball2 the ball ball1 may collide with
  * @return the amount of time that will pass before ball1 and ball2 collide
 **/
-double Physics::calcCollisionTime(Ball* ball1, Ball* ball2){
+double calcCollisionTime(Ball* ball1, Ball* ball2){
     /* the two balls collide when they are 2 radii apart, and we know their position over time is
         r = s + vt
         where s is the starting position
@@ -287,7 +266,7 @@ double Physics::calcCollisionTime(Ball* ball1, Ball* ball2){
  * @param dt the amount of time that will pass this frame (so far at least)
  * @return the amount of time that will pass before ball hits the bank
 **/
-double Physics::calcBankTime(Ball* ball, Cushion cushion, double dt){
+double calcBankTime(Ball* ball, Cushion cushion, double dt){
     if (distance(ball, cushion) < ballRadiusSq){
         return 0;
     }
@@ -310,11 +289,7 @@ double Physics::calcBankTime(Ball* ball, Cushion cushion, double dt){
     if (tWall >= 0 && tBall >= 0 && tWall <= 1 && tBall <= 1){
         Vector collision = Vector::add(position, Vector::scale(ballDirection, tBall));
         Vector dist = Vector::subtract(collision, position);
-        double time = dist.length() / velocity.length();
-        if (time < dt){
-            //std::cerr << tBall << std::endl;
-        }
-        return time;
+        return dist.length() / velocity.length();
     }
     return WONT_HAPPEN_THIS_FRAME;
 }
@@ -328,7 +303,7 @@ double Physics::calcBankTime(Ball* ball, Cushion cushion, double dt){
  * @param balls the set of balls to update
  * @param dt the amount of time passed sicne the last frame
 **/
-void Physics::moveBalls(std::vector<Ball*> balls, double dt){
+void moveBalls(std::vector<Ball*> balls, double dt){
     Event* event = new Event(dt);
 
     //check if any balls will collide with each other or the rails within time dt
@@ -377,7 +352,7 @@ void Physics::moveBalls(std::vector<Ball*> balls, double dt){
  * @param balls the set of balls to update
  * @return true if any balls are still moving on the table
 **/
-bool Physics::update(std::vector<Ball*> balls){
+bool update(std::vector<Ball*> balls){
     return update(balls, timeStep);
 }
 
@@ -389,7 +364,7 @@ bool Physics::update(std::vector<Ball*> balls){
  * @param dt the amount of time passed sicne the last frame
  * @return true if any balls are still moving on the table
 **/
-bool Physics::update(std::vector<Ball*> balls, double dt){
+bool update(std::vector<Ball*> balls, double dt){
     moveBalls(balls, dt);
     bool ballsMoving = false;
 
@@ -413,10 +388,4 @@ bool Physics::update(std::vector<Ball*> balls, double dt){
 
     return ballsMoving;
 }
-
-
-/**
- * Destructor.
-**/
-Physics::~Physics(void){
 }

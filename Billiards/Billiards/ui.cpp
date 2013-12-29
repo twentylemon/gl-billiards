@@ -5,7 +5,7 @@
  * @author Dan Lapp
  * @since 2013-12-27
 **/
-#include "UserInterface.h"
+#include "ui.h"
 
 /**
  * Callback method for Zoom In button.

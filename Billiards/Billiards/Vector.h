@@ -29,11 +29,11 @@ public:
     void add(double, double, double);
     void subtract(Vector);
     void scale(double);
-    double distance(Vector);
-    double distance(double, double, double);
-    bool equals(Vector);
-    double dotProduct(Vector);
-    Vector crossProduct(Vector);
+    double distance(Vector) const;
+    double distance(double, double, double) const;
+    bool equals(Vector) const;
+    double dotProduct(Vector) const;
+    Vector crossProduct(Vector) const;
 
     static Vector add(Vector, Vector);
     static Vector add(Vector, double, double, double);
@@ -45,16 +45,16 @@ public:
     static Vector normalize(Vector);
     static Vector project(Vector, Vector);
 
-    double length();
-    double lengthSq();
+    double length() const;
+    double lengthSq() const;
     void normalize();
     void normalize(double);
 
     //getters/setters
-    double get(int);         //get single element
-    double getX();
-    double getY();
-    double getZ();
+    double get(int) const;  //get single element
+    double getX() const;
+    double getY() const;
+    double getZ() const;
     void set(int, double);   //set single element
     void set(double*);       //set all data
     void set(double, double, double);
