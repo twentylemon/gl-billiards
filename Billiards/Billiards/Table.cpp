@@ -24,9 +24,11 @@ Table::Table(void){
  * Draws the table.
  *
  * @param cameraRotationMatrix specifies the position of the camera
- * around the table
+ *		around the table
+ * @param cameraCenter the camera rotates about this location in the
+ *		world. Usually set to rotate about cueball
 **/
-void Table::draw(float* cameraRotationMatrix){
+void Table::draw(float* cameraRotationMatrix, Vector cameraCenter){
 	if (zoom > ZOOM_MIN){
 		glTranslatef(zoom, 0, ZOOM_MIN);
     }
@@ -37,6 +39,8 @@ void Table::draw(float* cameraRotationMatrix){
 	glRotatef(180, 0, 0, 1);
 	glRotatef(cameraRotationMatrix[5] * 360, 0, 1, 0);
 	glRotatef(cameraRotationMatrix[0] * 360, 0, 0, 1);
+
+	glTranslated(cameraCenter.getX(), cameraCenter.getY(), -0.45);
 	
     bed.draw();
     edges.draw();

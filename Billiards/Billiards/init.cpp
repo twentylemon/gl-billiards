@@ -109,6 +109,8 @@ void initializeGame(){
     
     global.table = Table();
     global.clock = std::clock();
+
+	global.cameraCenter = new Vector();
 }
 
 

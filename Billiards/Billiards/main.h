@@ -42,8 +42,7 @@ typedef struct {
 	int windowHeight;
 	int windowWidth;
 
-	int mousePositionX;
-	int mousePositionY;
+	Vector* cameraCenter;
 
     std::vector<Ball*> balls;
     std::vector<bool> sinkState;
@@ -62,7 +61,6 @@ typedef struct {
 
 extern Global global;
 
-void glTranslatefv(Vector translate);
 void takeShot();
 void updateCue();
 

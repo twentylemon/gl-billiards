@@ -139,7 +139,14 @@ void displayFunc(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-	global.table.draw(getCameraRotationMatrix());
+	//set the world center to cueball location between shots
+	if(!global.ballsMoving){
+		global.cameraCenter->setX(-global.balls[0]->getPosition().getX());
+		global.cameraCenter->setY(-global.balls[0]->getPosition().getY());
+	}
+	
+	global.table.draw(getCameraRotationMatrix(), global.cameraCenter);
+
     for (unsigned int i = 0; i < global.balls.size(); i++){
         global.balls[i]->draw();
     }
