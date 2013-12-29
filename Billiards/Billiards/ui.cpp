@@ -7,11 +7,6 @@
 **/
 #include "ui.h"
 
-float cameraRotationMatrix[16] = {1, 0, 0, 0,
-								0, 1, 0, 0,
-								0, 0, 1, 0,
-								0, 0, 0, 1};
-
 /**
  * Callback method for Zoom In button.
 **/
@@ -66,20 +61,11 @@ void updatePlayerTextField(){
 
 
 /**
- * @returns the camera rotation matrix as a float array pointer
- */
-float* getCameraRotationMatrix(){
-	return cameraRotationMatrix;
-}
-
-
-/**
  * Glut callback to reset the camera to it's original rotation
  */
 void resetCamera(){
-	cameraRotationMatrix[0] = 1;
-	cameraRotationMatrix[5] = 1;
-	cameraRotationMatrix[10] = 1;
+	global.cameraTranslateX->set_x(0);
+	global.cameraTranslateZ->set_z(0);
 }
 
 
@@ -105,7 +91,7 @@ void initializeGlui(){
 	GLUI_Panel* cueRotatePanel = global.glui->add_panel_to_panel(global.cuePanel, NULL);
 	GLUI_Panel* cueShotPanel = global.glui->add_panel_to_panel(global.cuePanel, NULL);
 	
-    global.cueTranslate = new GLUI_Translation(cueRotatePanel, "Rotate Cue", GLUI_TRANSLATION_Z, (float*)0, -1, (GLUI_Update_CB)updateCue);
+    global.cueTranslate = new GLUI_Translation(cueRotatePanel, "Rotate Cue", GLUI_TRANSLATION_X, (float*)0, -1, (GLUI_Update_CB)updateCue);
 	global.cueTranslate->set_z(180);
 	new GLUI_Button(cueShotPanel, "Shoot", 0, (GLUI_Update_CB)takeShot);
 
@@ -113,11 +99,12 @@ void initializeGlui(){
 	global.shotPowerSpinner->set_float_limits(0.0, 1.0);
 
 	//camera panel
-	GLUI_Panel* cameraRotatePanel = global.glui->add_panel_to_panel(global.cameraPanel, NULL);
+	GLUI_Panel* cameraRotatePanel = global.glui->add_panel_to_panel(global.cameraPanel, "Rotate Camera");
 	GLUI_Panel* zoomPanel = global.glui->add_panel_to_panel(global.cameraPanel, NULL);
 	GLUI_Panel* resetZoomPanel = global.glui->add_panel_to_panel(global.cameraPanel, NULL);
 
-	new GLUI_Rotation(cameraRotatePanel, "Rotate Camera", cameraRotationMatrix);
+	global.cameraTranslateZ = new GLUI_Translation(cameraRotatePanel, "Left/Right", GLUI_TRANSLATION_X);
+	global.cameraTranslateX = new GLUI_Translation(cameraRotatePanel, "Up/Down", GLUI_TRANSLATION_Z);
 	new GLUI_Button(cameraRotatePanel, "Reset Camera", 0, (GLUI_Update_CB) resetCamera);
 	new GLUI_Button(zoomPanel, "Zoom In", 0, (GLUI_Update_CB) zoomIn);
 	new GLUI_Button(zoomPanel, "Zoom Out", 0, (GLUI_Update_CB) zoomOut);

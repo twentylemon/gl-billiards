@@ -15,7 +15,7 @@ class Table
 public:
     Table(void);
 
-    void draw(float* cameraRotationMatrix, Vector cameraCenter);
+    void draw(float rotationY, float rotationZ, Vector cameraCenter);
 
     double getZoom();
     double getRotation(int);

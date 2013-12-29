@@ -37,6 +37,8 @@ typedef struct {
 	GLUI_StaticText* shotInfoTextField;
 	GLUI_Spinner* shotPowerSpinner;
 	GLUI_Translation* cueTranslate;
+	GLUI_Translation* cameraTranslateX;
+	GLUI_Translation* cameraTranslateZ;
 
 	int glutWindow;
 	int windowHeight;

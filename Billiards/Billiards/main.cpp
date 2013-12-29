@@ -145,7 +145,7 @@ void displayFunc(){
 		global.cameraCenter->setY(-global.balls[0]->getPosition().getY());
 	}
 	
-	global.table.draw(getCameraRotationMatrix(), global.cameraCenter);
+	global.table.draw(global.cameraTranslateX->get_x(), global.cameraTranslateZ->get_z(), global.cameraCenter);
 
     for (unsigned int i = 0; i < global.balls.size(); i++){
         global.balls[i]->draw();

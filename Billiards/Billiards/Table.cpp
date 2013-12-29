@@ -28,7 +28,7 @@ Table::Table(void){
  * @param cameraCenter the camera rotates about this location in the
  *		world. Usually set to rotate about cueball
 **/
-void Table::draw(float* cameraRotationMatrix, Vector cameraCenter){
+void Table::draw(float rotationY, float rotationZ, Vector cameraCenter){
 	if (zoom > ZOOM_MIN){
 		glTranslatef(zoom, 0, ZOOM_MIN);
     }
@@ -37,8 +37,10 @@ void Table::draw(float* cameraRotationMatrix, Vector cameraCenter){
     }
 	
 	glRotatef(180, 0, 0, 1);
-	glRotatef(cameraRotationMatrix[5] * 360, 0, 1, 0);
-	glRotatef(cameraRotationMatrix[0] * 360, 0, 0, 1);
+	glRotatef(rotationY, 0, 1, 0);
+	glRotatef(rotationZ, 0, 0, 1);
+
+	//glMultMatrixf(cameraRotationMatrix);
 
 	glTranslated(cameraCenter.getX(), cameraCenter.getY(), -0.45);
 	
