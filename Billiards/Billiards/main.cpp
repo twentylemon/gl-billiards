@@ -100,7 +100,7 @@ void updateSunkBalls(){
     for (unsigned int i = 0; i <= 15; i++){
         if (!global.sinkState[i] && global.balls[i]->isSunk()){
             global.sinkState[i] = true;
-		    std::string str = "ball " + std::to_string(i) + " pocketed";
+		    std::string str = "Ball " + std::to_string(i) + " Pocketed";
             if (i == 0){
                 str = "Scratch";
             }
@@ -139,7 +139,7 @@ void displayFunc(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    global.table.draw();
+	global.table.draw(getCameraRotationMatrix());
     for (unsigned int i = 0; i < global.balls.size(); i++){
         global.balls[i]->draw();
     }
@@ -184,26 +184,7 @@ void keyboardFunc(unsigned char key, int x, int y){
  * @param y the y coord of where the mouse event occurred
 **/
 void motionFunc(int x, int y){
-    Vector rotation = global.table.getRotation();
-    /*
-    if (rotation.getY() >= 360){
-        rotation.setY(rotation.getY() - 360);
-    }
-	else if (rotation.getY() < 0){
-        rotation.setY(rotation.getY() + 360);
-    }
-    if (rotation.getZ() >= 360){
-        rotation.setZ(rotation.getZ() - 360);
-    }
-	else if (rotation.getZ() < 0){
-        rotation.setZ(rotation.getZ() + 360);
-    }
-    */
-    rotation.add(0, global.mousePositionY - y, global.mousePositionX - x);
-    global.table.setRotation(rotation);
-	
-	global.mousePositionX = x;
-	global.mousePositionY = y;
+    
 }
 
 

@@ -16,6 +16,9 @@ void initializeGlui();
 void zoomIn();
 void zoomOut();
 void resetZoom();
+void resetCamera();
 
 //glui control methods
 void updatePlayerTextField();
+
+

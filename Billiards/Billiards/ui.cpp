@@ -7,6 +7,11 @@
 **/
 #include "ui.h"
 
+float cameraRotationMatrix[16] = {1, 0, 0, 0,
+								0, 1, 0, 0,
+								0, 0, 1, 0,
+								0, 0, 0, 1};
+
 /**
  * Callback method for Zoom In button.
 **/
@@ -61,6 +66,24 @@ void updatePlayerTextField(){
 
 
 /**
+ * @returns the camera rotation matrix as a float array pointer
+ */
+float* getCameraRotationMatrix(){
+	return cameraRotationMatrix;
+}
+
+
+/**
+ * Glut callback to reset the camera to it's original rotation
+ */
+void resetCamera(){
+	cameraRotationMatrix[0] = 1;
+	cameraRotationMatrix[5] = 1;
+	cameraRotationMatrix[10] = 1;
+}
+
+
+/**
  * Initializes the GLUI subwindow and inflates it
  * with controls. Also sets callbacks.
 **/
@@ -89,10 +112,13 @@ void initializeGlui(){
 	global.shotPowerSpinner = new GLUI_Spinner(cueShotPanel, "Power", GLUI_SPINNER_FLOAT, -1, (GLUI_Update_CB)updateCue);
 	global.shotPowerSpinner->set_float_limits(0.0, 1.0);
 
-	//zoom buttons
+	//camera panel
+	GLUI_Panel* cameraRotatePanel = global.glui->add_panel_to_panel(global.cameraPanel, NULL);
 	GLUI_Panel* zoomPanel = global.glui->add_panel_to_panel(global.cameraPanel, NULL);
 	GLUI_Panel* resetZoomPanel = global.glui->add_panel_to_panel(global.cameraPanel, NULL);
 
+	new GLUI_Rotation(cameraRotatePanel, "Rotate Camera", cameraRotationMatrix);
+	new GLUI_Button(cameraRotatePanel, "Reset Camera", 0, (GLUI_Update_CB) resetCamera);
 	new GLUI_Button(zoomPanel, "Zoom In", 0, (GLUI_Update_CB) zoomIn);
 	new GLUI_Button(zoomPanel, "Zoom Out", 0, (GLUI_Update_CB) zoomOut);
 	new GLUI_Button(resetZoomPanel, "Reset Zoom", 0, (GLUI_Update_CB) resetZoom);

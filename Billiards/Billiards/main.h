@@ -26,6 +26,7 @@
 
 #define ESC 27
 
+
 typedef struct {
 	//glui objects
 	int objectType;
@@ -72,3 +73,5 @@ void init();
 void resizeWindow(int width, int height);
 void keyboardFunc(unsigned char key, int x, int y);
 void idleFunc();
+
+float* getCameraRotationMatrix();

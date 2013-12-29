@@ -22,17 +22,22 @@ Table::Table(void){
 
 /**
  * Draws the table.
+ *
+ * @param cameraRotationMatrix specifies the position of the camera
+ * around the table
 **/
-void Table::draw(){
+void Table::draw(float* cameraRotationMatrix){
 	if (zoom > ZOOM_MIN){
 		glTranslatef(zoom, 0, ZOOM_MIN);
     }
 	else {
 		glTranslatef(zoom, 0, zoom);
     }
-	glRotatef(rotation.getX(), 1, 0, 0);
-	glRotatef(rotation.getY(), 0, 1, 0);
-	glRotatef(rotation.getZ(), 0, 0, 1);
+	
+	glRotatef(180, 0, 0, 1);
+	glRotatef(cameraRotationMatrix[5] * 360, 0, 1, 0);
+	glRotatef(cameraRotationMatrix[0] * 360, 0, 0, 1);
+	
     bed.draw();
     edges.draw();
 	rails.draw();
