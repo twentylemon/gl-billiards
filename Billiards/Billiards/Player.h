@@ -7,6 +7,7 @@
  */
 #pragma once
 #include "Cue.h"
+#include "Ball.h"
 
 class Player
 {
@@ -17,6 +18,7 @@ public:
 
 	int getPlayerNumber();
 	int getBallType();
+	void setBallType(int ballType);
     Cue getCue();
     Vector getCuePosition();
     void setCuePosition(Vector);

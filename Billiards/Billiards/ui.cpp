@@ -49,10 +49,10 @@ void updatePlayerTextField(){
 		text.append("Open");
 		break;
 	case BALL_TYPE_SOLID:
-		text.append("Solid");
+		text.append("Solids");
 		break;
     case BALL_TYPE_STRIPE:
-		text.append("Striped");
+		text.append("Stripes");
 		break;
 	}
 	
@@ -70,7 +70,11 @@ void initializeGlui(){
 	//create glui window and add a rollout panel for controls
 	global.glui = GLUI_Master.create_glui_subwindow(global.glutWindow, GLUI_SUBWINDOW_RIGHT);
 
-	global.playerTextField = new GLUI_StaticText(global.glui, "Player 1: Open");
+	//player and turn info
+	GLUI_Panel* playerInfoPanel = global.glui->add_panel(NULL);
+	global.playerTextField = new GLUI_StaticText(playerInfoPanel, "Player 1: Open");
+	global.shotInfoTextField = new GLUI_StaticText(playerInfoPanel, "");
+
 	global.cuePanel = new GLUI_Rollout(global.glui, "Cue");
 	global.cameraPanel = new GLUI_Rollout(global.glui, "Camera");
 

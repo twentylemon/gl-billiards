@@ -55,6 +55,7 @@ void swapTurns(){
     }
 
 	updatePlayerTextField();
+	global.shotInfoTextField->set_text("");
     updateCue();
 }
 

@@ -33,6 +33,7 @@ typedef struct {
 	GLUI_Panel* cuePanel;
 	GLUI_Panel* cameraPanel;
 	GLUI_StaticText* playerTextField;
+	GLUI_StaticText* shotInfoTextField;
 	GLUI_Spinner* shotPowerSpinner;
 	GLUI_Translation* cueTranslate;
 

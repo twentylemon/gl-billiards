@@ -38,6 +38,7 @@ public:
     double getRadius();
     double getDiameter();
     double getMass();
+    int getNumber();
     Vector getStartPosition();
 
     bool isSunk();

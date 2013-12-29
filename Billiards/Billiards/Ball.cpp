@@ -93,6 +93,38 @@ void Ball::sink(){
     setVelocity(0, 0, 0);
     setAngular(0, 0, 0);
     setSunk(true);
+
+    /*
+	if (number == 0){ //cue ball (scratch)
+		global.shotInfoTextField->set_text("Scratch");
+
+	}
+    else if(number == 8) { //8 ball (game is over)
+
+		//check if player wins or loses
+
+	}
+    else if(number < 8) { //solid ball
+
+		std::string str = "Ball " + std::to_string(ballNumber) + " sunk";
+		global.shotInfoTextField->set_text(str.data());
+
+		if(global.players[global.turn].getBallType() == BALL_TYPE_NONE){
+			global.players[global.turn].setBallType(BALL_TYPE_SOLID);
+			global.players[global.other].setBallType(BALL_TYPE_STRIPE);
+		}
+
+	} else { //striped ball
+
+		std::string str = "Ball " + std::to_string(ballNumber) + " sunk";
+		global.shotInfoTextField->set_text(str.data());
+
+		if(global.players[global.turn].getBallType() == BALL_TYPE_NONE){
+			global.players[global.turn].setBallType(BALL_TYPE_STRIPE);
+			global.players[global.other].setBallType(BALL_TYPE_SOLID);
+		}
+	}
+    */
 }
 
 
@@ -104,6 +136,7 @@ double Ball::getRadius(){ return RADIUS; }
 double Ball::getDiameter(){ return DIAMETER; }
 double Ball::getMass(){ return MASS; }
 bool Ball::isSunk(){ return sunk; }
+int Ball::getNumber(){ return number; }
 
 
 /**
