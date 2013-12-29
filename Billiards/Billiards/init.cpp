@@ -92,7 +92,6 @@ void initializeMaterials(){
  * Creates all of the ball objects and the table.
 **/
 void initializeGame(){
-
     for (int ballNum = 0; ballNum < 16; ballNum++){
         global.balls.push_back(new Ball(ballNum));
         global.sinkState.push_back(false);

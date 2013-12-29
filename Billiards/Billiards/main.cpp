@@ -47,6 +47,7 @@ void swapTurns(){
 	//if player has scratched, reset cue ball
 	if (global.balls[0]->isSunk()){
         global.balls[0]->setSunk(false);
+        global.sinkState[0] = false;
         global.balls[0]->setPosition(global.balls[0]->getStartPosition());
         global.scratch = true;
 	}
@@ -91,18 +92,18 @@ void takeShot(){
  * Checks for any new balls that were sunk, and handles them accordingly.
 **/
 void updateSunkBalls(){
-	if (global.balls[0]->isSunk()){
-		global.shotInfoTextField->set_text("Scratch");
-	}
-    else if (global.balls[8]->isSunk()){
+    if (global.balls[8]->isSunk()){
         // TODO handle win/loss
 	}
 
     //i = ballNumber
-    for (unsigned int i = 1; i <= 15; i++){
+    for (unsigned int i = 0; i <= 15; i++){
         if (!global.sinkState[i] && global.balls[i]->isSunk()){
             global.sinkState[i] = true;
 		    std::string str = "ball " + std::to_string(i) + " pocketed";
+            if (i == 0){
+                str = "Scratch";
+            }
 		    global.shotInfoTextField->set_text(str.data());
 
             if (i >= 1 && i <= 7 && global.players[global.turn].getBallType() == BALL_TYPE_NONE){

@@ -21,7 +21,7 @@
 
 //gluPerspective constants
 #define MAX_CLIPPING 10000.0
-#define MIN_CLIPPING 0.1
+#define MIN_CLIPPING 0.001
 #define PERSPECTIVE_FIELD_OF_VIEW_ANGLE 45.0
 
 #define ESC 27

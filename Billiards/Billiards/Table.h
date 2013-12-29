@@ -8,7 +8,7 @@
 **/
 #pragma once
 #include "Model.h"
-#define ZOOM_MIN 0.7
+#define ZOOM_MIN 1
 
 class Table
 {
