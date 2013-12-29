@@ -196,7 +196,8 @@ namespace physics
 
     /** friction **/
     const double feltFriction = 0.005;
-    const double velocityStop = 0.01 * 0.01; //use squared value so we can use squared length
+    //const double velocityStop = 0.01 * 0.01; //use squared value so we can use squared length
+    const double velocityStop = 0.03 * 0.03;
     const double angularStop = 0.05;
     const double gravity = 9.8;
 

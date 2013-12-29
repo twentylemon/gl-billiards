@@ -88,6 +88,37 @@ void takeShot(){
 
 
 /**
+ * Checks for any new balls that were sunk, and handles them accordingly.
+**/
+void updateSunkBalls(){
+	if (global.balls[0]->isSunk()){
+		global.shotInfoTextField->set_text("Scratch");
+	}
+    else if (global.balls[8]->isSunk()){
+        // TODO handle win/loss
+	}
+
+    //i = ballNumber
+    for (unsigned int i = 1; i <= 15; i++){
+        if (!global.sinkState[i] && global.balls[i]->isSunk()){
+            global.sinkState[i] = true;
+		    std::string str = "ball " + std::to_string(i) + " pocketed";
+		    global.shotInfoTextField->set_text(str.data());
+
+            if (i >= 1 && i <= 7 && global.players[global.turn].getBallType() == BALL_TYPE_NONE){
+			    global.players[global.turn].setBallType(BALL_TYPE_SOLID);
+			    global.players[global.other].setBallType(BALL_TYPE_STRIPE);
+		    }
+            else if (i >= 9 && i <= 15 && global.players[global.turn].getBallType() == BALL_TYPE_NONE){
+			    global.players[global.turn].setBallType(BALL_TYPE_STRIPE);
+			    global.players[global.other].setBallType(BALL_TYPE_SOLID);
+            }
+        }
+    }
+}
+
+
+/**
  * Explicitly define the main window if it loses focus.
 **/
 void idleFunc(){
@@ -118,6 +149,7 @@ void displayFunc(){
     }
     else {
         global.ballsMoving = physics::update(global.balls, getTimeDiff(global.clock, now));
+        updateSunkBalls();
         if (!global.ballsMoving){
             swapTurns();
         }

@@ -45,6 +45,7 @@ typedef struct {
 	int mousePositionY;
 
     std::vector<Ball*> balls;
+    std::vector<bool> sinkState;
 
     Table table;
 
