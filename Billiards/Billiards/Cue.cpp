@@ -7,8 +7,6 @@
  * @since 2013-12-16
 **/
 #include "Cue.h"
-#include "main.h"
-#define PI 3.14159
 
 /**
  * Default constructor.
@@ -20,6 +18,7 @@ Cue::Cue(int playerNumber) : Particle(){
 	else {
 		model = Model("Objects/cue.3DS", "Objects/textures/cue1.bmp");
     }
+    rotation.setZ(180);
 }
 
 
@@ -36,14 +35,8 @@ Cue::~Cue(){
 void Cue::draw(){
     glPushMatrix();
     glMatrixMode(GL_MODELVIEW);
-	
-	rotation.setZ(global.cueTranslate->get_z());
-
 	glTranslated(position.getX(), position.getY(), position.getZ());
-    glRotated(rotation.getX(), 1, 0, 0);
-    glRotated(rotation.getY(), 0, 1, 0);
     glRotated(rotation.getZ(), 0, 0, 1);
-
 	model.draw();
     glPopMatrix();
 }

@@ -16,7 +16,7 @@ static Physics* instance = NULL;
 Physics::Physics(){
     /** cue to ball collision **/
     cueBallContactTime = 0.01;  //10ms
-    cueSpringConstant = 100;     //10 kg m/s^2
+    cueSpringConstant = 200;    //10 kg m/s^2
 
     /** ball properties **/
     ballMass = 0.170079;        //6 oz (in kg)
@@ -180,7 +180,7 @@ Vector Physics::cueShot(Cue cue, Ball* ball){
 /**
  * @param ball the ball to check
  * @param cushion the cushion to check
- * @return true if the ball should have already collided with the cushion
+ * @return the squared distance between the ball and the cushion
 **/
 double Physics::distance(Ball* ball, Cushion cushion){
     Vector position = ball->getPosition();
@@ -233,7 +233,7 @@ void Physics::rollBalls(std::vector<Ball*> balls, double dt){
             //check for pocketing
             int p = detectPocket(balls[i]->getPosition());
             if (p != -1){
-                std::cerr << "Ball " << i << " has been pocketed." << std::endl << balls[i]->getPosition().toString() << std::endl << pockets[p].toString() << std::endl;
+                std::cerr << "Ball " << i << " has been pocketed." << std::endl;
                 balls[i]->sink();
             }
         }

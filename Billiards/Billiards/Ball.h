@@ -20,6 +20,7 @@
 #define TABLE_HEIGHT 4.5 * 12.0 * 0.0254
 #define BALL_MASS 0.170079
 
+#define BALL_TYPE_NONE 0
 #define BALL_TYPE_SOLID 1
 #define BALL_TYPE_STRIPE 2
 

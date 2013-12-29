@@ -103,6 +103,7 @@ void initializeGame(){
     global.other = 1;
     global.ballsMoving = false;
     global.shooting = true;
+    global.scratch = true;
     global.players[global.turn].setCuePosition(global.balls[0]->getPosition());
     
     global.table = Table();

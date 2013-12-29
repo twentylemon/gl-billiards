@@ -3,13 +3,13 @@
  * methods for control functionality are defined here
  *
  * @author Dan Lapp
- * @since 27-12-2013
- */
-
+ * @since 2013-12-27
+**/
+#include <string.h>
 #include "main.h"
 #include "glui.h"
 
-#define ESC 27
+#define ZOOM_STEP 0.15
 
 //glui callbacks
 void initializeGlui();
@@ -19,9 +19,3 @@ void resetZoom();
 
 //glui control methods
 void updatePlayerTextField();
-
-
-
-
-
-

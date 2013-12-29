@@ -31,7 +31,6 @@
 #define ESC 27
 
 typedef struct {
-
 	//glui objects
 	int objectType;
 	GLUI* glui;
@@ -59,6 +58,7 @@ typedef struct {
     int turn, other;
     bool ballsMoving;
     bool shooting;
+    bool scratch;
 
     Physics* physics;
     std::clock_t clock;
@@ -68,6 +68,7 @@ extern Global global;
 
 void glTranslatefv(Vector translate);
 void takeShot();
+void updateCue();
 
 //init.cpp
 void init();
