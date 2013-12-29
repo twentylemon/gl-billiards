@@ -15,20 +15,15 @@ class Table
 public:
     Table(void);
 
-    void draw(float rotationY, float rotationZ, Vector cameraCenter);
+    void draw(Vector, Vector);
 
     double getZoom();
-    double getRotation(int);
-    Vector getRotation();
     void setZoom(double);
-    void setRotation(int, double);
-    void setRotation(Vector);
     void addZoom(double);
 
 private:
     Model bed;
     Model edges;
 	Model rails;
-    Vector rotation;
     double zoom;
 };

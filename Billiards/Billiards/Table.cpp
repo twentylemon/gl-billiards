@@ -16,19 +16,16 @@ Table::Table(void){
     edges = Model("Objects/table_edges.3DS", "Objects/textures/tablesides.bmp");
 	rails = Model("Objects/table_rails.3DS", "Objects/textures/felt.bmp");
     zoom = 0;
-    rotation = Vector(0, 0, 180);
 }
 
 
 /**
  * Draws the table.
  *
- * @param cameraRotationMatrix specifies the position of the camera
- *		around the table
- * @param cameraCenter the camera rotates about this location in the
- *		world. Usually set to rotate about cueball
+ * @param cameraRotationMatrix specifies the position of the camera around the table
+ * @param cameraCenter the camera rotates about this location in the world. Usually set to rotate about cueball
 **/
-void Table::draw(float rotationY, float rotationZ, Vector cameraCenter){
+void Table::draw(Vector rotation, Vector cameraCenter){
 	if (zoom > ZOOM_MIN){
 		glTranslatef(zoom, 0, ZOOM_MIN);
     }
@@ -37,12 +34,9 @@ void Table::draw(float rotationY, float rotationZ, Vector cameraCenter){
     }
 	
 	glRotatef(180, 0, 0, 1);
-	glRotatef(rotationY, 0, 1, 0);
-	glRotatef(rotationZ, 0, 0, 1);
-
-	//glMultMatrixf(cameraRotationMatrix);
-
-	glTranslated(cameraCenter.getX(), cameraCenter.getY(), -0.45);
+	glRotatef(rotation.getY(), 0, 1, 0);
+	glRotatef(rotation.getZ(), 0, 0, 1);
+	glTranslated(cameraCenter.getX(), cameraCenter.getY(), cameraCenter.getZ() - 0.45);
 	
     bed.draw();
     edges.draw();
@@ -54,9 +48,5 @@ void Table::draw(float rotationY, float rotationZ, Vector cameraCenter){
  * Getters/Setters.
 **/
 double Table::getZoom(){ return zoom; }
-double Table::getRotation(int idx){ return rotation.get(idx); }
-Vector Table::getRotation(){ return rotation; }
 void Table::setZoom(double zoom){ this->zoom = zoom; }
-void Table::setRotation(int idx, double val){ rotation.set(idx, val); }
-void Table::setRotation(Vector rot){ rotation = rot; }
 void Table::addZoom(double diff){ zoom += diff; }

@@ -57,6 +57,7 @@ void updatePlayerTextField(){
 	}
 	
 	global.playerTextField->set_text(text.data());
+	global.shotInfoTextField->set_text("");
 }
 
 
@@ -64,8 +65,9 @@ void updatePlayerTextField(){
  * Glut callback to reset the camera to it's original rotation
  */
 void resetCamera(){
-	global.cameraTranslateX->set_x(0);
-	global.cameraTranslateZ->set_z(0);
+    global.cameraTranslate->set_x(0);
+    global.cameraTranslate->set_y(0);
+    global.cameraTranslate->set_z(0);
 }
 
 
@@ -84,12 +86,12 @@ void initializeGlui(){
 	global.playerTextField = new GLUI_StaticText(playerInfoPanel, "Player 1: Open");
 	global.shotInfoTextField = new GLUI_StaticText(playerInfoPanel, "");
 
-	global.cuePanel = new GLUI_Rollout(global.glui, "Cue");
-	global.cameraPanel = new GLUI_Rollout(global.glui, "Camera");
+	GLUI_Panel* cuePanel = new GLUI_Rollout(global.glui, "Cue");
+	GLUI_Panel* cameraPanel = new GLUI_Rollout(global.glui, "Camera");
 
 	//rotation control for cue
-	GLUI_Panel* cueRotatePanel = global.glui->add_panel_to_panel(global.cuePanel, NULL);
-	GLUI_Panel* cueShotPanel = global.glui->add_panel_to_panel(global.cuePanel, NULL);
+	GLUI_Panel* cueRotatePanel = global.glui->add_panel_to_panel(cuePanel, NULL);
+	GLUI_Panel* cueShotPanel = global.glui->add_panel_to_panel(cuePanel, NULL);
 	
     global.cueTranslate = new GLUI_Translation(cueRotatePanel, "Rotate Cue", GLUI_TRANSLATION_X, (float*)0, -1, (GLUI_Update_CB)updateCue);
 	global.cueTranslate->set_z(180);
@@ -99,16 +101,29 @@ void initializeGlui(){
 	global.shotPowerSpinner->set_float_limits(0.0, 1.0);
 
 	//camera panel
-	GLUI_Panel* cameraRotatePanel = global.glui->add_panel_to_panel(global.cameraPanel, "Rotate Camera");
-	GLUI_Panel* zoomPanel = global.glui->add_panel_to_panel(global.cameraPanel, NULL);
-	GLUI_Panel* resetZoomPanel = global.glui->add_panel_to_panel(global.cameraPanel, NULL);
+	GLUI_Panel* cameraRotatePanel = global.glui->add_panel_to_panel(cameraPanel, NULL);
+    GLUI_Panel* followPanel = global.glui->add_panel_to_panel(cameraPanel, "Follow a Ball");
+	GLUI_Panel* zoomPanel = global.glui->add_panel_to_panel(cameraPanel, NULL);
+	//GLUI_Panel* resetZoomPanel = global.glui->add_panel_to_panel(cameraPanel, NULL);
 
-	global.cameraTranslateZ = new GLUI_Translation(cameraRotatePanel, "Left/Right", GLUI_TRANSLATION_X);
-	global.cameraTranslateX = new GLUI_Translation(cameraRotatePanel, "Up/Down", GLUI_TRANSLATION_Z);
-	new GLUI_Button(cameraRotatePanel, "Reset Camera", 0, (GLUI_Update_CB) resetCamera);
-	new GLUI_Button(zoomPanel, "Zoom In", 0, (GLUI_Update_CB) zoomIn);
-	new GLUI_Button(zoomPanel, "Zoom Out", 0, (GLUI_Update_CB) zoomOut);
-	new GLUI_Button(resetZoomPanel, "Reset Zoom", 0, (GLUI_Update_CB) resetZoom);
+	global.cameraTranslate = new GLUI_Translation(cameraRotatePanel, "Rotate", GLUI_TRANSLATION_XY);
+    global.cameraCenterType = new GLUI_RadioGroup(cameraRotatePanel, (int*)0, -1, (GLUI_Update_CB)updateCamera);
+    //order of radio buttons matters! cueball = 0, origin = 1
+    new GLUI_RadioButton(global.cameraCenterType, "Followed/Cue Ball");
+    new GLUI_RadioButton(global.cameraCenterType, "Center of Table");
+
+    global.cameraFollowList = new GLUI_Listbox(followPanel, "Follow", &global.follow, -1, (GLUI_Update_CB)updateCamera);
+    global.cameraFollowList->add_item(0, "None");
+    global.cameraFollowList->add_item(1, "Cue Ball");
+    for (int i = 1; i < 16; i++){
+        global.cameraFollowList->add_item(i+1, std::to_string(i).append(" Ball").data());
+    }
+
+	new GLUI_Button(cameraRotatePanel, "Reset Camera", 0, (GLUI_Update_CB)resetCamera);
+	new GLUI_Button(zoomPanel, "Zoom In", 0, (GLUI_Update_CB)zoomIn);
+	new GLUI_Button(zoomPanel, "Zoom Out", 0, (GLUI_Update_CB)zoomOut);
+	//new GLUI_Button(resetZoomPanel, "Reset Zoom", 0, (GLUI_Update_CB)resetZoom);
+	new GLUI_Button(zoomPanel, "Reset Zoom", 0, (GLUI_Update_CB)resetZoom);
 
 	//link main glut window with our control panel
 	global.glui->set_main_gfx_window(global.glutWindow);

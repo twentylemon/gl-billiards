@@ -26,30 +26,29 @@
 
 #define ESC 27
 
-
 typedef struct {
 	//glui objects
 	int objectType;
 	GLUI* glui;
-	GLUI_Panel* cuePanel;
-	GLUI_Panel* cameraPanel;
+	GLUI_Translation* cueTranslate;
 	GLUI_StaticText* playerTextField;
 	GLUI_StaticText* shotInfoTextField;
 	GLUI_Spinner* shotPowerSpinner;
-	GLUI_Translation* cueTranslate;
-	GLUI_Translation* cameraTranslateX;
-	GLUI_Translation* cameraTranslateZ;
+	GLUI_Translation* cameraTranslate;
+    GLUI_RadioGroup* cameraCenterType;
+
+    int follow;
+    GLUI_Listbox* cameraFollowList;
 
 	int glutWindow;
 	int windowHeight;
 	int windowWidth;
 
-	Vector* cameraCenter;
-
     std::vector<Ball*> balls;
     std::vector<bool> sinkState;
 
     Table table;
+	Vector cameraCenter;
 
 	Player players[2];
     int numPlayers;
@@ -65,6 +64,7 @@ extern Global global;
 
 void takeShot();
 void updateCue();
+void updateCamera();
 
 //init.cpp
 void init();
@@ -73,5 +73,3 @@ void init();
 void resizeWindow(int width, int height);
 void keyboardFunc(unsigned char key, int x, int y);
 void idleFunc();
-
-float* getCameraRotationMatrix();

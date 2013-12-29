@@ -90,9 +90,9 @@ void initializeMaterials(){
 
 /**
  * Creates all of the ball objects and the table.
+ * A call to swapTurns() is still required after this is finished.
 **/
 void initializeGame(){
-	
     for (int ballNum = 0; ballNum < 16; ballNum++){
         global.balls.push_back(new Ball(ballNum));
         global.sinkState.push_back(false);
@@ -100,17 +100,14 @@ void initializeGame(){
 	global.players[0] = Player(1);
     global.players[1] = Player(2);
     global.numPlayers = 2;
-    global.turn = 0;
-    global.other = 1;
+    global.turn = 1;
+    global.other = 0;
     global.ballsMoving = false;
-    global.shooting = true;
-    global.scratch = true;
-    global.players[global.turn].setCuePosition(global.balls[0]->getPosition());
     
     global.table = Table();
+	global.cameraCenter = Vector();
     global.clock = std::clock();
-
-	global.cameraCenter = new Vector();
+    //a call to swapTurns() is required before play can begin!
 }
 
 

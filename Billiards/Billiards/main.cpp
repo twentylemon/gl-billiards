@@ -30,6 +30,33 @@ double random(){
 
 
 /**
+ * @return the rotation vector for drawing the table
+**/
+Vector getTableRotation(){
+    return Vector(global.cameraTranslate->get_x(), global.cameraTranslate->get_y(), global.cameraTranslate->get_z());
+}
+
+
+/**
+ * Updates the camera position, center of rotation etc.
+**/
+void updateCamera(){
+    if (global.follow != 0){
+        global.cameraCenter = Vector::scale(global.balls[global.follow-1]->getPosition(), -1.0);
+    }
+    else {
+        int type = global.cameraCenterType->get_int_val();
+        if (type == CENTER_TYPE_ORIGIN){
+            global.cameraCenter = Vector();
+        }
+        else if (type == CENTER_TYPE_CUE){
+            global.cameraCenter = Vector::scale(global.balls[0]->getPosition(), -1.0);
+        }
+    }
+}
+
+
+/**
  * Changes whose turn it is to shoot. Should only be called once
  * all balls have stopped moving.
 **/
@@ -56,8 +83,8 @@ void swapTurns(){
     }
 
 	updatePlayerTextField();
-	global.shotInfoTextField->set_text("");
     updateCue();
+    updateCamera();
 }
 
 
@@ -73,7 +100,7 @@ void updateCue(){
     position.add(global.balls[0]->getPosition());
 
     global.players[global.turn].setCuePosition(position);
-    global.players[global.turn].setCueRotation(Vector(0,0, theta));
+    global.players[global.turn].setCueRotation(Vector(0, 0, theta));
 }
 
 
@@ -139,14 +166,9 @@ void displayFunc(){
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-	//set the world center to cueball location between shots
-	if(!global.ballsMoving){
-		global.cameraCenter->setX(-global.balls[0]->getPosition().getX());
-		global.cameraCenter->setY(-global.balls[0]->getPosition().getY());
-	}
+    updateCamera();
 	
-	global.table.draw(global.cameraTranslateX->get_x(), global.cameraTranslateZ->get_z(), global.cameraCenter);
-
+    global.table.draw(getTableRotation(), global.cameraCenter);
     for (unsigned int i = 0; i < global.balls.size(); i++){
         global.balls[i]->draw();
     }
@@ -191,7 +213,6 @@ void keyboardFunc(unsigned char key, int x, int y){
  * @param y the y coord of where the mouse event occurred
 **/
 void motionFunc(int x, int y){
-    
 }
 
 
@@ -221,11 +242,11 @@ int main(int argc, char** argv){
     glutIdleFunc(displayFunc);
     glutKeyboardFunc(keyboardFunc);
     glutMouseFunc(mouseFunc);
-	//glutMouseWheelFunc(mouseWheelFunc);
     glutMotionFunc(motionFunc);
 	GLUI_Master.set_glutReshapeFunc(resizeWindow);
 
 	initializeGlui();
+    swapTurns();
 
     glutMainLoop();
     return 0;
