@@ -11,7 +11,7 @@
 
 #define ZOOM_STEP 0.15
 
-#define CENTER_TYPE_CUE 0
+#define CENTER_TYPE_FOLLOW 0
 #define CENTER_TYPE_ORIGIN 1
 
 //glui callbacks

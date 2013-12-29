@@ -41,17 +41,12 @@ Vector getTableRotation(){
  * Updates the camera position, center of rotation etc.
 **/
 void updateCamera(){
-    if (global.follow != 0){
-        global.cameraCenter = Vector::scale(global.balls[global.follow-1]->getPosition(), -1.0);
+    int type = global.cameraCenterType->get_int_val();
+    if (type == CENTER_TYPE_ORIGIN){
+        global.cameraCenter = Vector();
     }
-    else {
-        int type = global.cameraCenterType->get_int_val();
-        if (type == CENTER_TYPE_ORIGIN){
-            global.cameraCenter = Vector();
-        }
-        else if (type == CENTER_TYPE_CUE){
-            global.cameraCenter = Vector::scale(global.balls[0]->getPosition(), -1.0);
-        }
+    else if (type == CENTER_TYPE_FOLLOW){
+        global.cameraCenter = Vector::scale(global.balls[global.follow]->getPosition(), -1.0);
     }
 }
 
@@ -71,7 +66,6 @@ void swapTurns(){
             swap = false;
         }
         //copy the state over to the new shot
-        std::cerr << i << global.prev[i].isSunk() << global.balls[i]->isSunk() << std::endl;
         global.prev[i].copy(global.balls[i]);
     }
 

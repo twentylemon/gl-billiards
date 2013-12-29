@@ -108,15 +108,14 @@ void initializeGlui(){
 
 	global.cameraTranslate = new GLUI_Translation(cameraRotatePanel, "Rotate", GLUI_TRANSLATION_XY);
     global.cameraCenterType = new GLUI_RadioGroup(cameraRotatePanel, (int*)0, -1, (GLUI_Update_CB)updateCamera);
-    //order of radio buttons matters! cueball = 0, origin = 1
-    new GLUI_RadioButton(global.cameraCenterType, "Followed/Cue Ball");
+    //order of radio buttons matters! follow = 0, origin = 1
+    new GLUI_RadioButton(global.cameraCenterType, "Follow Ball");
     new GLUI_RadioButton(global.cameraCenterType, "Center of Table");
 
     global.cameraFollowList = new GLUI_Listbox(followPanel, "Follow", &global.follow, -1, (GLUI_Update_CB)updateCamera);
-    global.cameraFollowList->add_item(0, "None");
-    global.cameraFollowList->add_item(1, "Cue Ball");
+    global.cameraFollowList->add_item(0, "Cue Ball");
     for (int i = 1; i < 16; i++){
-        global.cameraFollowList->add_item(i+1, std::to_string(i).append(" Ball").data());
+        global.cameraFollowList->add_item(i, std::to_string(i).append(" Ball").data());
     }
 
 	new GLUI_Button(cameraRotatePanel, "Reset Camera", 0, (GLUI_Update_CB)resetCamera);
