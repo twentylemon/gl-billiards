@@ -28,6 +28,6 @@ public:
 
 protected:
 	int playerNumber;
-	int ballType;
+	int ballType; //ball types: 0 = open, 1 = solid, 2 = striped
 	Cue cue;
 };

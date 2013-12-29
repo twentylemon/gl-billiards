@@ -8,7 +8,7 @@
 
 
 #include "UserInterface.h"
-
+#include <string.h>
 
 /**
  * Callback method for Zoom In button
@@ -30,6 +30,34 @@ void zoomOut(){
  */
 void resetZoom(){
 	global.tableZoom = 0;
+}
+
+
+void updatePlayerTextField(){
+
+	std::string text = "Player ";
+	
+	if(global.turn == 0)
+		text.append("1: ");
+	else
+		text.append("2: ");
+
+	switch(global.players[global.turn].getBallType()){
+
+	case 0:
+		text.append("Open");
+		break;
+
+	case 1:
+		text.append("Solid");
+		break;
+
+	case 2:
+		text.append("Striped");
+		break;
+	}
+	
+	global.playerTextField->set_text(text.data());
 }
 
 

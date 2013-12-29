@@ -17,6 +17,9 @@ void zoomIn();
 void zoomOut();
 void resetZoom();
 
+//glui control methods
+void updatePlayerTextField();
+
 
 
 

@@ -44,6 +44,8 @@ void swapTurns(){
         global.turn = 0;
         global.other = 1;
     }
+
+	updatePlayerTextField();
     global.players[global.turn].setCuePosition(global.balls[0]->getPosition());
 }
 
@@ -111,6 +113,7 @@ void displayFunc(){
 
 	//if player has scratched, reset cue ball
 	if(global.balls[0]->isSunk() && !global.ballsMoving){
+		global.balls[0]-> ~Ball();
 		global.balls[0] = new Ball(0);
 	}
 
@@ -123,6 +126,7 @@ void displayFunc(){
 
         if (!global.ballsMoving){
             swapTurns();
+			
         }
     }
     global.clock = now;
