@@ -23,6 +23,8 @@
 #define BALL_TYPE_NONE 0
 #define BALL_TYPE_SOLID 1
 #define BALL_TYPE_STRIPE 2
+#define BALL_TYPE_CUE 3
+#define BALL_TYPE_BLACK 8
 
 class Ball : public Particle
 {
@@ -39,7 +41,10 @@ public:
     double getDiameter();
     double getMass();
     int getNumber();
+    int getType();
     Vector getStartPosition();
+
+    void copy(Ball*);
 
     bool isSunk();
     void setSunk(bool);
@@ -49,11 +54,10 @@ private:
     const double DIAMETER;
     const double MASS;
     int number;
+    bool sunk;
 
     double rotMatrix[16];
     std::deque<std::pair<Vector, double>> rotList;
     void doRotate();
-
-    bool sunk;
 };
 

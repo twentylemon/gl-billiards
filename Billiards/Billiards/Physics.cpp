@@ -347,18 +347,8 @@ void moveBalls(std::vector<Ball*> balls, double dt){
 
 /**
  * Updates all of the positions/speeds of the balls, does collisions etc if needed.
- * The default time step is used.
- *
- * @param balls the set of balls to update
- * @return true if any balls are still moving on the table
-**/
-bool update(std::vector<Ball*> balls){
-    return update(balls, timeStep);
-}
-
-
-/**
- * Updates all of the positions/speeds of the balls, does collisions etc if needed.
+ * The value in firstCueHit will be modified if the cue ball hits something this frame.
+ * firstCueHit will be 0 if the cue ball hit nothing this frame, otherwise the ball number.
  *
  * @param balls the set of balls to update
  * @param dt the amount of time passed sicne the last frame

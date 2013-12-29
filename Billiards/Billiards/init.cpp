@@ -95,7 +95,7 @@ void initializeMaterials(){
 void initializeGame(){
     for (int ballNum = 0; ballNum < 16; ballNum++){
         global.balls.push_back(new Ball(ballNum));
-        global.sinkState.push_back(false);
+        global.prev.push_back(Ball(ballNum));
     }
 	global.players[0] = Player(1);
     global.players[1] = Player(2);
@@ -103,6 +103,7 @@ void initializeGame(){
     global.turn = 1;
     global.other = 0;
     global.ballsMoving = false;
+    global.firstCueHit = 0;
     
     global.table = Table();
 	global.cameraCenter = Vector();

@@ -105,6 +105,17 @@ double Ball::getDiameter(){ return DIAMETER; }
 double Ball::getMass(){ return MASS; }
 bool Ball::isSunk(){ return sunk; }
 int Ball::getNumber(){ return number; }
+int Ball::getType(){
+    switch (number){
+    case 0: return BALL_TYPE_CUE;
+    case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+        return BALL_TYPE_SOLID;
+    case 8: return BALL_TYPE_BLACK;
+    case 9: case 10: case 11: case 12: case 13: case 14: case 15:
+        return BALL_TYPE_STRIPE;
+    }
+    return BALL_TYPE_NONE;
+}
 
 
 /**
@@ -134,6 +145,19 @@ Vector Ball::getStartPosition(){
     case 15: return Vector(offset + 3.0 * diameter, radius, 0);
     }
     return Vector();
+}
+
+
+/**
+ * Bookkeeping copy. Used for keeping the previous state of a ball, so only the key
+ * attributes are copied, like number, position and pocketed state.
+ *
+ * @param other the ball to deep copy
+**/
+void Ball::copy(Ball* ball){
+    number = ball->getNumber();
+    position = ball->getPosition();
+    sunk = ball->isSunk();
 }
 
 

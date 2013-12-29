@@ -90,8 +90,6 @@ namespace physics
     };
 
     Vector cueShot(Cue, Ball*);
-
-    bool update(std::vector<Ball*>);
     bool update(std::vector<Ball*>, double);
 
     int detectPocket(Vector);

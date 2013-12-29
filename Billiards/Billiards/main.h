@@ -45,7 +45,7 @@ typedef struct {
 	int windowWidth;
 
     std::vector<Ball*> balls;
-    std::vector<bool> sinkState;
+    std::vector<Ball> prev;
 
     Table table;
 	Vector cameraCenter;
@@ -53,6 +53,7 @@ typedef struct {
 	Player players[2];
     int numPlayers;
     int turn, other;
+    int firstCueHit;
     bool ballsMoving;
     bool shooting;
     bool scratch;

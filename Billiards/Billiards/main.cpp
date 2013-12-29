@@ -62,19 +62,33 @@ void updateCamera(){
 **/
 void swapTurns(){
     global.shooting = true;
-    if (global.turn == 0){
-        global.turn = 1;
-        global.other = 0;
+
+    //check if we are supposed switch who is shooting
+    bool scratch = global.balls[0]->isSunk();
+    bool swap = true;
+    for (unsigned int i = 0; i < global.balls.size(); i++){
+        if (global.players[global.turn].getBallType() == global.balls[i]->getType() && global.balls[i]->isSunk() && !global.prev[i].isSunk()){
+            swap = false;
+        }
+        //copy the state over to the new shot
+        std::cerr << i << global.prev[i].isSunk() << global.balls[i]->isSunk() << std::endl;
+        global.prev[i].copy(global.balls[i]);
     }
-    else {
-        global.turn = 0;
-        global.other = 1;
+
+    if (swap || scratch){
+        if (global.turn == 0){
+            global.turn = 1;
+            global.other = 0;
+        }
+        else {
+            global.turn = 0;
+            global.other = 1;
+        }
     }
 
 	//if player has scratched, reset cue ball
-	if (global.balls[0]->isSunk()){
+	if (scratch){
         global.balls[0]->setSunk(false);
-        global.sinkState[0] = false;
         global.balls[0]->setPosition(global.balls[0]->getStartPosition());
         global.scratch = true;
 	}
@@ -84,7 +98,6 @@ void swapTurns(){
 
 	updatePlayerTextField();
     updateCue();
-    updateCamera();
 }
 
 
@@ -125,21 +138,22 @@ void updateSunkBalls(){
 
     //i = ballNumber
     for (unsigned int i = 0; i <= 15; i++){
-        if (!global.sinkState[i] && global.balls[i]->isSunk()){
-            global.sinkState[i] = true;
+        if (global.balls[i]->isSunk() && !global.prev[i].isSunk()){
 		    std::string str = "Ball " + std::to_string(i) + " Pocketed";
             if (i == 0){
                 str = "Scratch";
             }
 		    global.shotInfoTextField->set_text(str.data());
 
-            if (i >= 1 && i <= 7 && global.players[global.turn].getBallType() == BALL_TYPE_NONE){
-			    global.players[global.turn].setBallType(BALL_TYPE_SOLID);
-			    global.players[global.other].setBallType(BALL_TYPE_STRIPE);
-		    }
-            else if (i >= 9 && i <= 15 && global.players[global.turn].getBallType() == BALL_TYPE_NONE){
-			    global.players[global.turn].setBallType(BALL_TYPE_STRIPE);
-			    global.players[global.other].setBallType(BALL_TYPE_SOLID);
+            if (global.players[global.turn].getBallType() == BALL_TYPE_NONE){
+                if (i >= 1 && i <= 7){
+			        global.players[global.turn].setBallType(BALL_TYPE_SOLID);
+			        global.players[global.other].setBallType(BALL_TYPE_STRIPE);
+		        }
+                else if (i >= 9 && i <= 15){
+			        global.players[global.turn].setBallType(BALL_TYPE_STRIPE);
+			        global.players[global.other].setBallType(BALL_TYPE_SOLID);
+                }
             }
         }
     }
