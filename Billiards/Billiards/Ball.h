@@ -47,6 +47,8 @@ private:
     const double DIAMETER;
     const double MASS;
 
+	int ballNumber;
+
     double rotMatrix[16];
     std::deque<std::pair<Vector, double>> rotList;
     void doRotate();

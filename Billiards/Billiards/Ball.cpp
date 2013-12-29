@@ -7,6 +7,7 @@
  * @since 2013-12-16
 **/
 #include "Ball.h"
+#include "main.h"
 
 /**
  * Default constructor.
@@ -14,12 +15,16 @@
  * @param number the number on the ball, 0 if the cue ball
 **/
 Ball::Ball(int number) : RADIUS(BALL_RADIUS), DIAMETER(2.0 * BALL_RADIUS), MASS(BALL_MASS), Particle(){
+
     model = Model("Objects/ball.3DS", "Objects/textures/ball" + std::to_string(number) + ".bmp");
     sunk = false;
+	ballNumber = number;
+
     double offset = 1.0/4.0 * TABLE_WIDTH;
     double o = 0.01 * RADIUS;   //leave tiny bit of extra space
     double radius = RADIUS + o;
     double diameter = DIAMETER + 2.0*o;
+
     switch (number){
     case 0: setPosition(-1.5/5.0 * TABLE_WIDTH, 0, 0); break;
     case 1: setPosition(offset, 0, 0); break;
@@ -113,6 +118,34 @@ void Ball::sink(){
     setVelocity(0, 0, 0);
     setAngular(0, 0, 0);
     setSunk(true);
+
+	if(ballNumber == 0){ //cue ball (scratch)
+		global.shotInfoTextField->set_text("Scratch");
+
+	} else if(ballNumber == 8) { //8 ball (game is over)
+
+		//check if player wins or loses
+
+	} else if(ballNumber < 8) { //solid ball
+
+		std::string str = "Ball " + std::to_string(ballNumber) + " sunk";
+		global.shotInfoTextField->set_text(str.data());
+
+		if(global.players[global.turn].getBallType() == BALL_TYPE_NONE){
+			global.players[global.turn].setBallType(BALL_TYPE_SOLID);
+			global.players[global.other].setBallType(BALL_TYPE_STRIPE);
+		}
+
+	} else { //striped ball
+
+		std::string str = "Ball " + std::to_string(ballNumber) + " sunk";
+		global.shotInfoTextField->set_text(str.data());
+
+		if(global.players[global.turn].getBallType() == BALL_TYPE_NONE){
+			global.players[global.turn].setBallType(BALL_TYPE_STRIPE);
+			global.players[global.other].setBallType(BALL_TYPE_SOLID);
+		}
+	}
 }
 
 

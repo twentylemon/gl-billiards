@@ -14,7 +14,7 @@
 Player::Player(int player){
 	playerNumber = player;
 	cue = Cue(playerNumber);
-	ballType = 0;
+	ballType = BALL_TYPE_NONE;
 }
 
 
@@ -30,6 +30,7 @@ Player::~Player(){
 **/
 int Player::getPlayerNumber(){ return playerNumber; }
 int Player::getBallType(){ return ballType; }
+void Player::setBallType(int ballType) { this->ballType = ballType; }
 Cue Player::getCue(){ return cue; }
 Vector Player::getCuePosition(){ return cue.getPosition(); }
 void Player::setCuePosition(Vector position){ cue.setPosition(position); }
