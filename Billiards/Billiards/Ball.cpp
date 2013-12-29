@@ -16,28 +16,8 @@
 Ball::Ball(int number) : RADIUS(BALL_RADIUS), DIAMETER(2.0 * BALL_RADIUS), MASS(BALL_MASS), Particle(){
     model = Model("Objects/ball.3DS", "Objects/textures/ball" + std::to_string(number) + ".bmp");
     sunk = false;
-    double offset = 1.0/4.0 * TABLE_WIDTH;
-    double o = 0.01 * RADIUS;   //leave tiny bit of extra space
-    double radius = RADIUS + o;
-    double diameter = DIAMETER + 2.0*o;
-    switch (number){
-    case 0: setPosition(-1.5/5.0 * TABLE_WIDTH, 0, 0); break;
-    case 1: setPosition(offset, 0, 0); break;
-    case 2: setPosition(offset + 4.0 * diameter, 2.0 * radius, 0); break;
-    case 3: setPosition(offset + diameter, -radius, 0); break;
-    case 4: setPosition(offset + 3.0 * diameter, -radius, 0); break;
-    case 5: setPosition(offset + 4.0 * diameter, -2.0 * radius, 0); break;
-    case 6: setPosition(offset + 2.0 * diameter, 2.0 * radius, 0); break;
-    case 7: setPosition(offset + 4.0 * diameter, 4.0 * radius, 0); break;
-    case 8: setPosition(offset + 2.0 * diameter, 0, 0); break;
-    case 9: setPosition(offset + 3.0 * diameter, -3.0 * radius, 0); break;
-    case 10: setPosition(offset + 4.0 * diameter, 0, 0); break;
-    case 11: setPosition(offset + diameter, radius, 0); break;
-    case 12: setPosition(offset + 4.0 * diameter, -4.0 * radius, 0); break;
-    case 13: setPosition(offset + 3.0 * diameter, 3.0 * radius, 0); break;
-    case 14: setPosition(offset + 2.0 * diameter, -2.0 * radius, 0); break;
-    case 15: setPosition(offset + 3.0 * diameter, radius, 0); break;
-    }
+    this->number = number;
+    setPosition(getStartPosition());
 
     //initialize a random rotation
     for (int i = 0; i < 16; i++){
@@ -124,6 +104,36 @@ double Ball::getRadius(){ return RADIUS; }
 double Ball::getDiameter(){ return DIAMETER; }
 double Ball::getMass(){ return MASS; }
 bool Ball::isSunk(){ return sunk; }
+
+
+/**
+ * @return the starting position of this ball
+**/
+Vector Ball::getStartPosition(){
+    double offset = 1.0/4.0 * TABLE_WIDTH;
+    double o = 0.01 * RADIUS;   //leave tiny bit of extra space
+    double radius = RADIUS + o;
+    double diameter = DIAMETER + 2.0*o;
+    switch (number){
+    case 0: return Vector(-1.5/5.0 * TABLE_WIDTH, 0, 0);
+    case 1: return Vector(offset, 0, 0);
+    case 2: return Vector(offset + 4.0 * diameter, 2.0 * radius, 0);
+    case 3: return Vector(offset + diameter, -radius, 0);
+    case 4: return Vector(offset + 3.0 * diameter, -radius, 0);
+    case 5: return Vector(offset + 4.0 * diameter, -2.0 * radius, 0);
+    case 6: return Vector(offset + 2.0 * diameter, 2.0 * radius, 0);
+    case 7: return Vector(offset + 4.0 * diameter, 4.0 * radius, 0);
+    case 8: return Vector(offset + 2.0 * diameter, 0, 0);
+    case 9: return Vector(offset + 3.0 * diameter, -3.0 * radius, 0);
+    case 10: return Vector(offset + 4.0 * diameter, 0, 0);
+    case 11: return Vector(offset + diameter, radius, 0);
+    case 12: return Vector(offset + 4.0 * diameter, -4.0 * radius, 0);
+    case 13: return Vector(offset + 3.0 * diameter, 3.0 * radius, 0);
+    case 14: return Vector(offset + 2.0 * diameter, -2.0 * radius, 0);
+    case 15: return Vector(offset + 3.0 * diameter, radius, 0);
+    }
+    return Vector();
+}
 
 
 /**

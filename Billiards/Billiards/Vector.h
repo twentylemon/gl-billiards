@@ -9,7 +9,7 @@
 #include <new>
 #include <array>
 #include <string>
-#define VECTOR_DISTANCE_EQUALS 0.1
+#define VECTOR_DISTANCE_EQUALS 1E-5
 
 class Vector {
 public:

@@ -11,7 +11,7 @@
  * Callback method for Zoom In button.
 **/
 void zoomIn(){
-	global.tableZoom += ZOOM_STEP;
+    global.table.addZoom(ZOOM_STEP);
 }
 
 
@@ -19,7 +19,7 @@ void zoomIn(){
  * Callback method for Zoom Out button.
 **/
 void zoomOut(){
-	global.tableZoom -= ZOOM_STEP;
+    global.table.addZoom(-ZOOM_STEP);
 }
 
 
@@ -27,7 +27,7 @@ void zoomOut(){
  * Callback method for Reset Zoom button.
 **/
 void resetZoom(){
-	global.tableZoom = 0;
+    global.table.setZoom(0);
 }
 
 

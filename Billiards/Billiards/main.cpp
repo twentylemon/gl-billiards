@@ -46,8 +46,8 @@ void swapTurns(){
 
 	//if player has scratched, reset cue ball
 	if (global.balls[0]->isSunk()){
-		delete global.balls[0];
-		global.balls[0] = new Ball(0);
+        global.balls[0]->setSunk(false);
+        global.balls[0]->setPosition(global.balls[0]->getStartPosition());
         global.scratch = true;
 	}
     else {
@@ -87,8 +87,8 @@ void takeShot(){
 
 
 /**
- * Explicitly define the main window if it loses focus
- */
+ * Explicitly define the main window if it loses focus.
+**/
 void idleFunc(){
 	if (glutGetWindow() != global.glutWindow){
 		glutSetWindow(global.glutWindow);
@@ -105,17 +105,6 @@ void displayFunc(){
     glPushMatrix();
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    
-	/* Translates for rotation and zoom of camera and draws table */
-	if (global.tableZoom > 0.7){
-		glTranslatef(global.tableZoom, 0, 0.7);
-    }
-	else {
-		glTranslatef(global.tableZoom, 0, global.tableZoom);
-    }
-	glRotatef(global.tableRotation.getX(), 1, 0, 0);
-	glRotatef(global.tableRotation.getY(), 0, 1, 0);
-	glRotatef(global.tableRotation.getZ(), 0, 0, 1);
 
     global.table.draw();
     for (unsigned int i = 0; i < global.balls.size(); i++){
@@ -161,21 +150,23 @@ void keyboardFunc(unsigned char key, int x, int y){
  * @param y the y coord of where the mouse event occurred
 **/
 void motionFunc(int x, int y){
-	if (global.tableRotation.getY() >= 360){
-		global.tableRotation.setY(global.tableRotation.getY() - 360);
+    Vector rotation = global.table.getRotation();
+    /*
+    if (rotation.getY() >= 360){
+        rotation.setY(rotation.getY() - 360);
     }
-	else if (global.tableRotation.getY() < 0){
-		global.tableRotation.setY(global.tableRotation.getY() + 360);
+	else if (rotation.getY() < 0){
+        rotation.setY(rotation.getY() + 360);
     }
-	if (global.tableRotation.getZ() >= 360){
-		global.tableRotation.setZ(global.tableRotation.getZ() - 360);
+    if (rotation.getZ() >= 360){
+        rotation.setZ(rotation.getZ() - 360);
     }
-	else if (global.tableRotation.getZ() < 0){
-		global.tableRotation.setZ(global.tableRotation.getZ() + 360);
+	else if (rotation.getZ() < 0){
+        rotation.setZ(rotation.getZ() + 360);
     }
-	// >340 && <158
-
-	global.tableRotation.add(0, global.mousePositionY - y, global.mousePositionX - x);
+    */
+    rotation.add(0, global.mousePositionY - y, global.mousePositionX - x);
+    global.table.setRotation(rotation);
 	
 	global.mousePositionX = x;
 	global.mousePositionY = y;
@@ -192,26 +183,6 @@ void motionFunc(int x, int y){
 **/
 void mouseFunc(int button, int state, int x, int y){
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
-	}
-}
-
-
-/**	
- *	Freeglut mouse wheel callback function. Called when user scrolls
- *	the mouse wheel. Zooms in and out on the table
- *
- *	@param wheel mouse wheel number
- *	@param direction +/- 1 depending on direction of scroll
- *	@param int x mouse pointer x coord
- *	@param int y mouse pointer y coord
- */
-void mouseWheelFunc(int wheel, int direction, int x, int y){
-    std::cerr << global.tableZoom << std::endl;
-	if (direction > 0){
-		global.tableZoom += 0.10;   //zoom in
-	}
-    else {
-		global.tableZoom -= 0.10;   //zoom out
 	}
 }
 

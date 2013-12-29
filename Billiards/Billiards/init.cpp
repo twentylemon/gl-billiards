@@ -107,9 +107,6 @@ void initializeGame(){
     global.players[global.turn].setCuePosition(global.balls[0]->getPosition());
     
     global.table = Table();
-	global.tableZoom = 0;
-	global.tableRotation = Vector(0, 0, 180);
-
     global.clock = std::clock();
 }
 
@@ -129,8 +126,6 @@ void init(){
     global.glutWindow = glutCreateWindow("gl-billiards");
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-
-    //glOrtho(-ORTHO_WIDTH, ORTHO_WIDTH, -ORTHO_HEIGHT, ORTHO_HEIGHT, -ORTHO_DEPTH, ORTHO_DEPTH);
     
 	initializeWindow();
 	initializeLighting();

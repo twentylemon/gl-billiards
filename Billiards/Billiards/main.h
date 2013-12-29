@@ -19,10 +19,6 @@
 #include "Player.h"
 #include "physics.h"
 
-#define ORTHO_WIDTH 100
-#define ORTHO_HEIGHT 100
-#define ORTHO_DEPTH 100
-
 //gluPerspective constants
 #define MAX_CLIPPING 10000.0
 #define MIN_CLIPPING 0.1
@@ -50,8 +46,6 @@ typedef struct {
     std::vector<Ball*> balls;
 
     Table table;
-	Vector tableRotation;
-	float tableZoom;
 
 	Player players[2];
     int numPlayers;

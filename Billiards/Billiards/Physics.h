@@ -154,7 +154,6 @@ namespace physics
     const double ctsx[] = { (49 + 29.0/32.0) * scale, (47 + 31.0/32.0) * scale, (45 + 19.0/32.0) * scale, (3 + 3.0/32.0) * scale, (2 + 12.0/32.0) * scale };
     const double ctsy[] = { (28 + 16.0/32.0) * scale, (26 + 16.0/32.0) * scale, (24 + 31.0/32.0) * scale, (25) * scale, (27 + 16.0/32.0) * scale };
 
-
     static const Cushion cushions[] = {
         /** from pocket 0 to pocket 1 **/
         Cushion(Vector(ctcx[0], ctcy[0], 0), Vector(ctcx[1], ctcy[1], 0), ballRadius),

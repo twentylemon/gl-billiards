@@ -38,6 +38,7 @@ public:
     double getRadius();
     double getDiameter();
     double getMass();
+    Vector getStartPosition();
 
     bool isSunk();
     void setSunk(bool);
@@ -46,6 +47,7 @@ private:
     const double RADIUS;
     const double DIAMETER;
     const double MASS;
+    int number;
 
     double rotMatrix[16];
     std::deque<std::pair<Vector, double>> rotList;
