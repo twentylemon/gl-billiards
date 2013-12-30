@@ -115,6 +115,9 @@ void updateCue(){
  * Takes the current players shot from where their cue is currently.
 **/
 void takeShot(){
+	if(global.shotPowerSpinner->get_float_val() == 0.0)
+		return;
+
     if (global.shooting){
         global.balls[0]->setVelocity(physics::cueShot(global.players[global.turn].getCue(), global.balls[0]));
         global.shooting = false;
@@ -189,7 +192,7 @@ void displayFunc(){
         global.ballsMoving = physics::update(global.balls, getTimeDiff(global.clock, now));
         updateSunkBalls();
         if (!global.ballsMoving){
-            swapTurns();
+			swapTurns();
         }
     }
     global.clock = now;
@@ -255,7 +258,6 @@ int main(int argc, char** argv){
 
 	initializeGlui();
     swapTurns();
-
     glutMainLoop();
     return 0;
 }
