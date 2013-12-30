@@ -5,6 +5,9 @@
  * @version 1.0
  * @since 2013-12-10
 **/
+
+//hides console winda
+//#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 #include "main.h"
 
 Global global;
@@ -80,11 +83,13 @@ void swapTurns(){
         }
     }
 
-	//if player has scratched, reset cue ball
+	//if player has scratched, reset cue ball, only if 8 ball is on the table
 	if (scratch){
-        global.balls[0]->setSunk(false);
-        global.balls[0]->setPosition(global.balls[0]->getStartPosition());
-        global.scratch = true;
+		if(!global.balls[8]->isSunk()){
+			global.balls[0]->setSunk(false);
+			global.balls[0]->setPosition(global.balls[0]->getStartPosition());
+		}
+		global.scratch = true;
 	}
     else {
         global.scratch = false;
@@ -113,8 +118,16 @@ void updateCue(){
 
 /**
  * Takes the current players shot from where their cue is currently.
+ * If the user presses the shot button when the game is over, we restart
+ * the game
 **/
 void takeShot(){
+
+	if(global.gameOver){
+		restartGame();
+		return;
+	}
+
 	if(global.shotPowerSpinner->get_float_val() == 0.0)
 		return;
 
@@ -126,11 +139,58 @@ void takeShot(){
 
 
 /**
+ * Checks to see if player has pocketed all balls of their type
+ *
+ * @param player the index of the player in global.players
+ * @returns true if the player has sunk all balls of their type,
+ *		false otherwise
+ */
+bool allBallsPocketed(){
+
+	bool ballsPocketed = true;
+
+	if(global.players[global.turn].getBallType() == BALL_TYPE_SOLID){
+		//check balls 1 - 7
+		for(unsigned int i = 1; i <= 7; i++){
+		if(!global.balls[i]->isSunk())
+			ballsPocketed = false;
+		}
+	} else {
+		//check balls 9 - 15
+		for(unsigned int i = 9; i <= 15; i++){
+		if(!global.balls[i]->isSunk())
+			ballsPocketed = false;
+		}
+	}
+
+	return ballsPocketed;
+}
+
+
+/**
  * Checks for any new balls that were sunk, and handles them accordingly.
 **/
 void updateSunkBalls(){
     if (global.balls[8]->isSunk()){
-        // TODO handle win/loss
+		global.gameOver = true;
+		bool playerWon;	
+
+		if(global.balls[0]->isSunk() || global.players[global.turn].getBallType() == BALL_TYPE_NONE){
+			//automatic loss, dont need to check for pocketed balls
+			playerWon = false;
+
+		} else {	
+			//checks to see if player has pocketed all balls of their type
+			playerWon = allBallsPocketed();
+		}
+
+		if(playerWon){
+			playerWins(global.turn + 1);
+		} else {
+			playerWins(global.other + 1);
+		}
+
+		return;
 	}
 
     //i = ballNumber
@@ -139,6 +199,12 @@ void updateSunkBalls(){
 		    std::string str = "Ball " + std::to_string(i) + " Pocketed";
             if (i == 0){
                 str = "Scratch";
+				
+				//player scratched on 8 ball, other player wins
+				if(allBallsPocketed()){ 
+					global.gameOver = true;
+					playerWins(global.other + 1);
+				}
             }
 		    global.shotInfoTextField->set_text(str.data());
 
@@ -191,7 +257,7 @@ void displayFunc(){
     else {
         global.ballsMoving = physics::update(global.balls, getTimeDiff(global.clock, now));
         updateSunkBalls();
-        if (!global.ballsMoving){
+		if (!global.ballsMoving && !global.gameOver){
 			swapTurns();
         }
     }
@@ -257,6 +323,7 @@ int main(int argc, char** argv){
 	GLUI_Master.set_glutReshapeFunc(resizeWindow);
 
 	initializeGlui();
+
     swapTurns();
     glutMainLoop();
     return 0;

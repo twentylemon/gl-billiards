@@ -23,3 +23,4 @@ void resetCamera();
 
 //glui control methods
 void updatePlayerTextField();
+void playerWins(int player);

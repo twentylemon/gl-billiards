@@ -57,7 +57,9 @@ void updatePlayerTextField(){
 	}
 	
 	global.playerTextField->set_text(text.data());
-	global.shotInfoTextField->set_text("");
+
+	if(!global.gameOver)
+		global.shotInfoTextField->set_text("");
 }
 
 
@@ -68,6 +70,21 @@ void resetCamera(){
     global.cameraTranslate->set_x(0);
     global.cameraTranslate->set_y(0);
     global.cameraTranslate->set_z(0);
+}
+
+
+/**
+ * Updates the ui when a player wins the game
+ */
+void playerWins(int player){
+	
+	std::string str;
+	str = "Player " + std::to_string(player) + " Wins";
+	global.playerTextField->set_text("Game Over");
+	global.shotInfoTextField->set_text(str.data());
+
+	global.shootButton->set_name("Restart Game");
+
 }
 
 
@@ -95,7 +112,7 @@ void initializeGlui(){
 	
     global.cueTranslate = new GLUI_Translation(cueRotatePanel, "Rotate Cue", GLUI_TRANSLATION_X, (float*)0, -1, (GLUI_Update_CB)updateCue);
 	global.cueTranslate->set_z(180);
-	new GLUI_Button(cueShotPanel, "Shoot", 0, (GLUI_Update_CB)takeShot);
+	global.shootButton = new GLUI_Button(cueShotPanel, "Shoot", 0, (GLUI_Update_CB)takeShot);
 
 	global.shotPowerSpinner = new GLUI_Spinner(cueShotPanel, "Power", GLUI_SPINNER_FLOAT, -1, (GLUI_Update_CB)updateCue);
 	global.shotPowerSpinner->set_float_limits(0.0, 1.0);

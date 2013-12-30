@@ -36,6 +36,7 @@ typedef struct {
 	GLUI_Spinner* shotPowerSpinner;
 	GLUI_Translation* cameraTranslate;
     GLUI_RadioGroup* cameraCenterType;
+	GLUI_Button* shootButton;
 
     int follow;
     GLUI_Listbox* cameraFollowList;
@@ -57,6 +58,7 @@ typedef struct {
     bool ballsMoving;
     bool shooting;
     bool scratch;
+	bool gameOver;
 
     std::clock_t clock;
 } Global;
@@ -69,6 +71,7 @@ void updateCamera();
 
 //init.cpp
 void init();
+void restartGame();
 
 //callback functions for glut/glui
 void resizeWindow(int width, int height);

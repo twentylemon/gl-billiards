@@ -118,7 +118,7 @@ int Model::load3DS(char* p_filename){
 		 
 		float max = 0.0f;
 		float min = 10000000.0f;
-*/
+		*/
 		switch (l_chunk_id){
 		//----------------- MAIN3DS -----------------
 		// Description: Main chunk, contains all the other chunks

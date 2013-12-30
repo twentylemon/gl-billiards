@@ -108,7 +108,25 @@ void initializeGame(){
     global.table = Table();
 	global.cameraCenter = Vector();
     global.clock = std::clock();
+	global.gameOver = false;
+
     //a call to swapTurns() is required before play can begin!
+}
+
+
+/**
+ * Restarts the game. Deletes all objects from memory preparing
+ * for initializeGame() to be called
+ */
+void restartGame(){
+	global.balls.clear();
+	global.shootButton->set_name("Shoot");
+	global.shotPowerSpinner->set_float_val(0.0);
+
+	resetCamera();
+	resetZoom();
+
+	initializeGame();
 }
 
 
