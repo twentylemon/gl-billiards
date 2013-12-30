@@ -5,9 +5,6 @@
  * @version 1.0
  * @since 2013-12-10
 **/
-
-//hides console winda
-//#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 #include "main.h"
 
 Global global;
@@ -21,14 +18,6 @@ Global global;
 **/
 double getTimeDiff(std::clock_t before, std::clock_t after){
     return (double)(after - before) / CLOCKS_PER_SEC;
-}
-
-
-/**
- * @return a random number in range [0,1)
-**/
-double random(){
-    return (double)rand() / (double)RAND_MAX;
 }
 
 
@@ -85,7 +74,7 @@ void swapTurns(){
 
 	//if player has scratched, reset cue ball, only if 8 ball is on the table
 	if (scratch){
-		if(!global.balls[8]->isSunk()){
+		if (!global.balls[8]->isSunk()){
 			global.balls[0]->setSunk(false);
 			global.balls[0]->setPosition(global.balls[0]->getStartPosition());
 		}
@@ -118,19 +107,16 @@ void updateCue(){
 
 /**
  * Takes the current players shot from where their cue is currently.
- * If the user presses the shot button when the game is over, we restart
- * the game
+ * If the user presses the shot button when the game is over, we restart the game.
 **/
 void takeShot(){
-
-	if(global.gameOver){
+	if (global.gameOver){
 		restartGame();
 		return;
 	}
-
-	if(global.shotPowerSpinner->get_float_val() == 0.0)
+	if (global.shotPowerSpinner->get_float_val() == 0.0){
 		return;
-
+    }
     if (global.shooting){
         global.balls[0]->setVelocity(physics::cueShot(global.players[global.turn].getCue(), global.balls[0]));
         global.shooting = false;
@@ -139,31 +125,28 @@ void takeShot(){
 
 
 /**
- * Checks to see if player has pocketed all balls of their type
+ * Checks to see if the current player has pocketed all balls of their type
  *
- * @param player the index of the player in global.players
- * @returns true if the player has sunk all balls of their type,
- *		false otherwise
- */
+ * @returns true if the player has sunk all balls of their type, false otherwise
+**/
 bool allBallsPocketed(){
-
-	bool ballsPocketed = true;
-
-	if(global.players[global.turn].getBallType() == BALL_TYPE_SOLID){
+	if (global.players[global.turn].getBallType() == BALL_TYPE_SOLID){
 		//check balls 1 - 7
-		for(unsigned int i = 1; i <= 7; i++){
-		if(!global.balls[i]->isSunk())
-			ballsPocketed = false;
-		}
-	} else {
+		for (int i = 1; i <= 7; i++){
+		    if (!global.balls[i]->isSunk()){
+			    return false;
+            }
+        }
+	}
+    else if (global.players[global.turn].getBallType() == BALL_TYPE_STRIPE){
 		//check balls 9 - 15
-		for(unsigned int i = 9; i <= 15; i++){
-		if(!global.balls[i]->isSunk())
-			ballsPocketed = false;
+		for (int i = 9; i <= 15; i++){
+		    if (!global.balls[i]->isSunk()){
+			    return false;
+            }
 		}
 	}
-
-	return ballsPocketed;
+	return true;
 }
 
 
@@ -175,21 +158,21 @@ void updateSunkBalls(){
 		global.gameOver = true;
 		bool playerWon;	
 
-		if(global.balls[0]->isSunk() || global.players[global.turn].getBallType() == BALL_TYPE_NONE){
+		if (global.balls[0]->isSunk() || global.players[global.turn].getBallType() == BALL_TYPE_NONE){
 			//automatic loss, dont need to check for pocketed balls
 			playerWon = false;
-
-		} else {	
+		}
+        else {	
 			//checks to see if player has pocketed all balls of their type
 			playerWon = allBallsPocketed();
 		}
 
-		if(playerWon){
-			playerWins(global.turn + 1);
-		} else {
-			playerWins(global.other + 1);
+		if (playerWon){
+			playerWins(global.turn);
 		}
-
+        else {
+			playerWins(global.other);
+		}
 		return;
 	}
 
@@ -201,7 +184,7 @@ void updateSunkBalls(){
                 str = "Scratch";
 				
 				//player scratched on 8 ball, other player wins
-				if(allBallsPocketed()){ 
+				if (allBallsPocketed()){ 
 					global.gameOver = true;
 					playerWins(global.other + 1);
 				}
@@ -269,62 +252,19 @@ void displayFunc(){
 
 
 /**
- * glut keyboard function.
- *
- * @param key the character struck
- * @param x the x coord of where the mouse was when key was struck
- * @param y the y coord of where the mouse was when key was struck
-**/
-void keyboardFunc(unsigned char key, int x, int y){
-    switch (key){
-    case ESC:
-        break;
-    }
-}
-
-
-/**
- * glut mouse move function.
- *
- * @param x the x coord of where the mouse event occurred
- * @param y the y coord of where the mouse event occurred
-**/
-void motionFunc(int x, int y){
-}
-
-
-/**
- * glut mouse click function.
- *
- * @param button the mouse button clicked
- * @param state the state the button is in (up,down)
- * @param x the x coord of where the mouse event occurred
- * @param y the y coord of where the mouse event occurred
-**/
-void mouseFunc(int button, int state, int x, int y){
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
-	}
-}
-
-
-/**
  * Entry point to the application. Defines the main window etc.
 **/
 int main(int argc, char** argv){
     glutInit(&argc, argv);
-	
     init();
 
     glutDisplayFunc(displayFunc);
-    glutIdleFunc(displayFunc);
-    glutKeyboardFunc(keyboardFunc);
-    glutMouseFunc(mouseFunc);
-    glutMotionFunc(motionFunc);
-	GLUI_Master.set_glutReshapeFunc(resizeWindow);
 
+	GLUI_Master.set_glutReshapeFunc(resizeWindow);
 	initializeGlui();
 
     swapTurns();
+
     glutMainLoop();
     return 0;
 }

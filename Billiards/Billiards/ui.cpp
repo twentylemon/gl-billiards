@@ -57,15 +57,15 @@ void updatePlayerTextField(){
 	}
 	
 	global.playerTextField->set_text(text.data());
-
-	if(!global.gameOver)
+	if (!global.gameOver){
 		global.shotInfoTextField->set_text("");
+    }
 }
 
 
 /**
  * Glut callback to reset the camera to it's original rotation
- */
+**/
 void resetCamera(){
     global.cameraTranslate->set_x(0);
     global.cameraTranslate->set_y(0);
@@ -74,17 +74,14 @@ void resetCamera(){
 
 
 /**
- * Updates the ui when a player wins the game
- */
+ * Updates the ui when a player wins the game.
+**/
 void playerWins(int player){
-	
-	std::string str;
-	str = "Player " + std::to_string(player) + " Wins";
+    player++;
+	std::string str = "Player " + std::to_string(player) + " Wins";
 	global.playerTextField->set_text("Game Over");
 	global.shotInfoTextField->set_text(str.data());
-
 	global.shootButton->set_name("Restart Game");
-
 }
 
 

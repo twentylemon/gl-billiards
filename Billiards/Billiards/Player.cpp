@@ -19,13 +19,6 @@ Player::Player(int player){
 
 
 /**
- * Destructor
-**/
-Player::~Player(){
-}
-
-
-/**
  * Getters/Setters
 **/
 int Player::getPlayerNumber(){ return playerNumber; }
@@ -44,4 +37,11 @@ void Player::addCueRotation(Vector rotation){ cue.addRotation(rotation); }
 **/
 void Player::drawCue(){
 	cue.draw();
+}
+
+
+/**
+ * Destructor
+**/
+Player::~Player(){
 }

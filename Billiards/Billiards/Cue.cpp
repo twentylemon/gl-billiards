@@ -23,13 +23,6 @@ Cue::Cue(int playerNumber) : Particle(){
 
 
 /**
- * Destructor. Nothing to detroy.
-**/
-Cue::~Cue(){
-}
-
-
-/**
  * Draws the cue on the screen.
 **/
 void Cue::draw(){
@@ -39,4 +32,11 @@ void Cue::draw(){
     glRotated(rotation.getZ(), 0, 0, 1);
 	model.draw();
     glPopMatrix();
+}
+
+
+/**
+ * Destructor. Nothing to detroy.
+**/
+Cue::~Cue(){
 }

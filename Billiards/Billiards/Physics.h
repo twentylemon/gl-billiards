@@ -18,6 +18,10 @@
 
 namespace physics
 {
+    /**
+     * Rail/cushion/wall wrapper. Basically a vector from a start point to
+     * an end point.
+    **/
     class Cushion
     {
     public:
@@ -139,7 +143,6 @@ namespace physics
     /** cushions **/
     const double railSize = 2.0 * 0.0254;
     const int numCushions = 26;
-    const double cushionFrictionLoss = 0.2;
 
     const double scale = 0.0254;
     //push cushions further into pockets so there's something to bounce off of
@@ -193,12 +196,11 @@ namespace physics
     };
 
     /** friction **/
-    const double feltFriction = 0.005;
-    //const double velocityStop = 0.01 * 0.01; //use squared value so we can use squared length
-    const double velocityStop = 0.03 * 0.03;
-    const double angularStop = 0.05;
+    //const double feltFriction = 0.005;
+    const double feltFriction = 0.01;
+    const double cushionFrictionLoss = 0.3;
+    const double velocityStop = 0.01 * 0.01; //use squared value so we can use squared length
+    //const double velocityStop = 0.03 * 0.03;
+    //const double angularStop = 0.05;
     const double gravity = 9.8;
-
-    /** animation **/
-    const double timeStep = 0.1;
 };

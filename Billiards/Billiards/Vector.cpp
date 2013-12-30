@@ -269,7 +269,7 @@ Vector Vector::subtract(Vector first, Vector second){
  * @return the result of value * first
 **/
 Vector Vector::scale(Vector first, double value){
-    return new Vector(first.getX() * value, first.getY() * value, first.getZ() * value);
+    return Vector(first.getX() * value, first.getY() * value, first.getZ() * value);
 }
 
 

@@ -28,13 +28,6 @@ Model::Model(std::string modelPath, std::string texturePath){
 
 
 /**
- * Destructor.
-**/
-Model::~Model(void){
-}
-
-
-/**
  * Getters/Setters.
 **/
 std::vector<Vector> Model::getVerticies(){ return verticies; }
@@ -102,23 +95,10 @@ int Model::load3DS(char* p_filename){
 
 	while (ftell (l_file) < _filelength (_fileno (l_file))) //Loop to scan the whole file 
 	{
-		//getche(); //Insert this command for debug (to wait for keypress for each chuck reading)
-
 		fread(&l_chunk_id, 2, 1, l_file); //Read the chunk header
 		
-		if(debug_mode)
-			printf("ChunkID: %x\n",l_chunk_id); 
 		fread(&l_chunk_lenght, 4, 1, l_file); //Read the lenght of the chunk
 
-		if(debug_mode)
-			printf("ChunkLenght: %x\n",l_chunk_lenght);
-
-		/*
-		 * DEBUGGING ONLY
-		 
-		float max = 0.0f;
-		float min = 10000000.0f;
-		*/
 		switch (l_chunk_id){
 		//----------------- MAIN3DS -----------------
 		// Description: Main chunk, contains all the other chunks
@@ -168,7 +148,6 @@ int Model::load3DS(char* p_filename){
 		case 0x4110: 
 			fread(&l_qty, sizeof (unsigned short), 1, l_file);
 
-
             for (i = 0; i < l_qty; i++){
                 float x, y, z;
 				fread(&x, sizeof(float), 1, l_file);
@@ -176,19 +155,7 @@ int Model::load3DS(char* p_filename){
 				fread(&z, sizeof(float), 1, l_file);
                 //convert the points from inches to meters
                 verticies.push_back(Vector(0.0254*x, 0.0254*y, 0.0254*z));
-
-				/*
-				 *	DEBUGGING ONLY
-				  if(x < min)
-						min = x;
-
-					if( x > max)
-						max = x;*/
 			}
-				/*
-				 *	DEBUGGING ONLY
-				 printf("Model::load3ds(), x-coordinates-> max: %f, min: %f\n", max, min);*/ 
-
 			break;
 
 		//--------------- TRI_FACEL1 ----------------
@@ -315,9 +282,11 @@ int Model::loadTextureBitmap(char *filename){
 
 
 /*
- * Modified code from Damiano Vitulli makes up this function
- *
- */
+ * Modified code from Damiano Vitulli makes up this function.
+ * Basically, each surface normal is calculated and saved, and we keep track of which
+ * surfaces are next to each vertex. Then each vertex normal becomes the average
+ * normal of all it's adjacent surface normals.
+**/
 void Model::calculateNormals(){
     std::vector<int> numPolygons(verticies.size());
     for (unsigned int i = 0; i < verticies.size(); i++){
@@ -344,4 +313,11 @@ void Model::calculateNormals(){
             normals[i].scale(1.0 / numPolygons[i]);
         }
     }
+}
+
+
+/**
+ * Destructor.
+**/
+Model::~Model(void){
 }

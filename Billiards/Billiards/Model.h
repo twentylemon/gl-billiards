@@ -19,18 +19,15 @@ class Model {
 public:
     static const int debug_mode = 0;
 
-    Model();
+    Model(void);
     Model(std::string, std::string);
-    ~Model();
+    ~Model(void);
 
     void draw();
-
 	void loadObject(char* model, char* texture);
-
     std::vector<Vector> getVerticies();
 
 private:
-    
     void calculateNormals();
     int load3DS(char*);
     int loadTextureBitmap(char*);

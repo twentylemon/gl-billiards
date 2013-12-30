@@ -6,6 +6,10 @@
  * @since 2013-12-10
 **/
 #pragma once
+
+//hides console winda
+//#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
+
 #include <iostream>
 #include <vector>
 #include <new>
@@ -23,8 +27,6 @@
 #define MAX_CLIPPING 10000.0
 #define MIN_CLIPPING 0.001
 #define PERSPECTIVE_FIELD_OF_VIEW_ANGLE 45.0
-
-#define ESC 27
 
 typedef struct {
 	//glui objects

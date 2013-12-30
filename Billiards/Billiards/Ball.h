@@ -60,4 +60,3 @@ private:
     std::deque<std::pair<Vector, double>> rotList;
     void doRotate();
 };
-

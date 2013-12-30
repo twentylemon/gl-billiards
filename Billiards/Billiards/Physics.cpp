@@ -148,7 +148,6 @@ Vector cueShot(Cue cue, Ball* ball){
               x is the direction vector between the ball and the cue
               v the the need velocity of the ball
     */
-
     //get the vector between the cue and the ball
     Vector direction = Vector::subtract(ball->getPosition(), cue.getPosition());
     direction.scale(cueSpringConstant * cueBallContactTime / ballMass);

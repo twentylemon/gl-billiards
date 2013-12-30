@@ -16,7 +16,7 @@ class Cue : public Particle
 {
 public:
     Cue(void){}
-    Cue(int playerNumber);
+    Cue(int);
     ~Cue(void);
 
     void draw();

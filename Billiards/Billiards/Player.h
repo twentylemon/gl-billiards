@@ -13,12 +13,12 @@ class Player
 {
 public:
     Player(void){}
-	Player(int player);
+	Player(int);
 	~Player();
 
 	int getPlayerNumber();
 	int getBallType();
-	void setBallType(int ballType);
+	void setBallType(int);
     Cue getCue();
     Vector getCuePosition();
     void setCuePosition(Vector);
@@ -30,6 +30,6 @@ public:
 
 protected:
 	int playerNumber;
-	int ballType; //ball types: 0 = open, 1 = solid, 2 = striped
+	int ballType;
 	Cue cue;
 };

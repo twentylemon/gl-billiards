@@ -17,15 +17,15 @@ void initializeLighting(){
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 
-	float ambientLight[] = { 0.3f, 0.3f, 0.3f, 1.0f };
+	float ambientLight[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 	float diffuseLight[] = { 0.7f, 0.7f, 0.7f, 1.0f };
 	float specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	float shininess[] = { 50.0f };
 	float position[] = { 0, 0, 1, 0 };
 
-	//glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);	
-	//glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
-	//glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);	
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
 	glLightfv(GL_LIGHT0, GL_POSITION, position);
 }
 
@@ -33,7 +33,7 @@ void initializeLighting(){
 /**
  *	Initializes the main display window. Sets up the viewport and camera,
  *	and initializes polygon and texture modes.
- */
+**/
 void initializeWindow(){
     glClearColor(0, 0, 0, 1);
 	glShadeModel(GL_SMOOTH);
@@ -58,7 +58,6 @@ void initializeWindow(){
  *	@param height new window height
  */
 void resizeWindow(int width, int height){
-
 	GLUI_Master.auto_set_viewport();
 
 	glMatrixMode(GL_PROJECTION);
@@ -74,7 +73,7 @@ void resizeWindow(int width, int height){
 
 /**
  *	Initializes the materials used for objects
- */
+**/
 void initializeMaterials(){
 	float ambient[]= { 0.2f, 0.2f, 0.2f, 1 };
 	float diffuse[]= { 1.0f, 1.0f, 1.0f, 1 };
@@ -104,12 +103,11 @@ void initializeGame(){
     global.other = 0;
     global.ballsMoving = false;
     global.firstCueHit = 0;
+	global.gameOver = false;
     
     global.table = Table();
 	global.cameraCenter = Vector();
     global.clock = std::clock();
-	global.gameOver = false;
-
     //a call to swapTurns() is required before play can begin!
 }
 
@@ -117,7 +115,7 @@ void initializeGame(){
 /**
  * Restarts the game. Deletes all objects from memory preparing
  * for initializeGame() to be called
- */
+**/
 void restartGame(){
 	global.balls.clear();
 	global.shootButton->set_name("Shoot");
