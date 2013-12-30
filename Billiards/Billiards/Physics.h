@@ -95,13 +95,14 @@ namespace physics
 
     Vector cueShot(Cue, Ball*);
     bool update(std::vector<Ball*>, double);
+    bool update(std::vector<Ball*>, double, int&);
 
     int detectPocket(Vector);
     void rollBalls(std::vector<Ball*>, double);
     double calcCollisionTime(Ball*, Ball*);
     double distance(Ball*, Cushion);
     double calcBankTime(Ball*, Cushion, double);
-    void moveBalls(std::vector<Ball*>, double);
+    void moveBalls(std::vector<Ball*>, double, int&);
 
     /** cue to ball collision **/
     const double cueBallContactTime = 0.01;  //10ms

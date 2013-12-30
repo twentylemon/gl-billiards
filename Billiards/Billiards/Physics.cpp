@@ -300,9 +300,11 @@ double calcBankTime(Ball* ball, Cushion cushion, double dt){
  * is handled. After which, we just recurse until a total time dt is reached.
  *
  * @param balls the set of balls to update
+ * @param firstBallHit will be modified to be 0 if no ball was hit, or the ball number
+ *      of the first ball hit otherwise
  * @param dt the amount of time passed sicne the last frame
 **/
-void moveBalls(std::vector<Ball*> balls, double dt){
+void moveBalls(std::vector<Ball*> balls, double dt, int& firstBallHit){
     Event* event = new Event(dt);
 
     //check if any balls will collide with each other or the rails within time dt
@@ -316,6 +318,9 @@ void moveBalls(std::vector<Ball*> balls, double dt){
                     if (collisionTime >= 0 && collisionTime < event->getTime()){
                         delete event;
                         event = new CollisionEvent(collisionTime, balls[i], balls[j]);
+                        if (firstBallHit == 0){
+                            firstBallHit = j;
+                        }
                     }
                 }
             }
@@ -339,7 +344,7 @@ void moveBalls(std::vector<Ball*> balls, double dt){
 
     //recurse if need be
     if (event->getTime() < dt){
-        moveBalls(balls, dt - event->getTime());
+        moveBalls(balls, dt - event->getTime(), firstBallHit);
     }
 }
 
@@ -347,14 +352,31 @@ void moveBalls(std::vector<Ball*> balls, double dt){
 /**
  * Updates all of the positions/speeds of the balls, does collisions etc if needed.
  * The value in firstCueHit will be modified if the cue ball hits something this frame.
- * firstCueHit will be 0 if the cue ball hit nothing this frame, otherwise the ball number.
  *
  * @param balls the set of balls to update
  * @param dt the amount of time passed sicne the last frame
  * @return true if any balls are still moving on the table
 **/
 bool update(std::vector<Ball*> balls, double dt){
-    moveBalls(balls, dt);
+    int null;
+    return update(balls, dt, null);
+}
+
+
+/**
+ * Updates all of the positions/speeds of the balls, does collisions etc if needed.
+ * The value in firstCueHit will be modified if the cue ball hits something this frame.
+ * firstBallHit will be 0 if the cue ball hit nothing this frame, otherwise the ball number.
+ *
+ * @param balls the set of balls to update
+ * @param dt the amount of time passed sicne the last frame
+ * @param firstBallHit will be modified to be 0 if no ball was hit, or the ball number
+ *      of the first ball hit otherwise
+ * @return true if any balls are still moving on the table
+**/
+bool update(std::vector<Ball*> balls, double dt, int& firstBallHit){
+    firstBallHit = 0;
+    moveBalls(balls, dt, firstBallHit);
     bool ballsMoving = false;
 
     /** calculate new velocities **/

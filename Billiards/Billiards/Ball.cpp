@@ -127,7 +127,7 @@ Vector Ball::getStartPosition(){
     double radius = RADIUS + o;
     double diameter = DIAMETER + 2.0*o;
     switch (number){
-    case 0: return Vector(-1.5/5.0 * TABLE_WIDTH, 0, 0);
+    case 0: return Vector(-1.4/5.0 * TABLE_WIDTH, 0, 0);
     case 1: return Vector(offset, 0, 0);
     case 2: return Vector(offset + 4.0 * diameter, 2.0 * radius, 0);
     case 3: return Vector(offset + diameter, -radius, 0);

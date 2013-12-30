@@ -78,6 +78,12 @@
       <AdditionalDependencies>../GL/lib/glut32.lib;../glui/msvc/lib/glui32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>del /s /q ..\..\exe\
+copy ..\$(IntermediateOutputPath)\$(TargetFileName) ..\..\exe
+copy ..\GL\glut32.dll ..\..\exe
+xcopy Objects ..\..\exe\Objects\ /s /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\GL\freeglut.h" />

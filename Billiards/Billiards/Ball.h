@@ -15,9 +15,9 @@
 #include "Model.h"
 #include "glut.h"
 
-#define BALL_RADIUS 1.125 * 0.0254
-#define TABLE_WIDTH 9.0 * 12.0 * 0.0254
-#define TABLE_HEIGHT 4.5 * 12.0 * 0.0254
+#define BALL_RADIUS (1.125 * 0.0254)
+#define TABLE_WIDTH (9.0 * 12.0 * 0.0254)
+#define TABLE_HEIGHT (4.5 * 12.0 * 0.0254)
 #define BALL_MASS 0.170079
 
 #define BALL_TYPE_NONE 0

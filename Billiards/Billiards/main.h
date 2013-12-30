@@ -6,10 +6,8 @@
  * @since 2013-12-10
 **/
 #pragma once
-
-//hides console winda
+//hides console window
 //#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
-
 #include <iostream>
 #include <vector>
 #include <new>
@@ -22,6 +20,12 @@
 #include "Table.h"
 #include "Player.h"
 #include "physics.h"
+
+#define CUE_BALL_XMIN (-physics::tablePlayWidth / 2.0 + physics::ballRadius)
+#define CUE_BALL_XMAX global.balls[0]->getStartPosition().getX()
+#define CUE_BALL_YMIN (-physics::tablePlayHeight / 2.0 + physics::ballRadius)
+#define CUE_BALL_YMAX (physics::tablePlayHeight / 2.0 - physics::ballRadius)
+#define CUE_BALL_STEP (physics::ballRadius / 3.0)
 
 //gluPerspective constants
 #define MAX_CLIPPING 10000.0
@@ -56,10 +60,12 @@ typedef struct {
 	Player players[2];
     int numPlayers;
     int turn, other;
-    int firstCueHit;
+    int firstBallHit, ballHit;
     bool ballsMoving;
     bool shooting;
     bool scratch;
+    bool typeSetThisTurn;
+    int shots;
 	bool gameOver;
 
     std::clock_t clock;

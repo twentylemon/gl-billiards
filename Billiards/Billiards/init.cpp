@@ -102,8 +102,10 @@ void initializeGame(){
     global.turn = 1;
     global.other = 0;
     global.ballsMoving = false;
-    global.firstCueHit = 0;
+    global.typeSetThisTurn = false;
+    global.firstBallHit = 0;
 	global.gameOver = false;
+    global.shots = -1;
     
     global.table = Table();
 	global.cameraCenter = Vector();

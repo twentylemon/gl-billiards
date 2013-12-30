@@ -50,18 +50,27 @@ void updateCamera(){
 void swapTurns(){
     global.shooting = true;
 
-    //check if we are supposed switch who is shooting
+    //check for fouls/scratch
+    int playerBallType = global.players[global.turn].getBallType();
+    int hitBallType = global.balls[global.firstBallHit]->getType();
+    bool foul = hitBallType == BALL_TYPE_CUE || (hitBallType != playerBallType &&
+        playerBallType != BALL_TYPE_NONE && !global.typeSetThisTurn);
     bool scratch = global.balls[0]->isSunk();
-    bool swap = true;
+
+    //check for balls they sunk of their own type
+    bool sunkMyOwn = false;
     for (unsigned int i = 0; i < global.balls.size(); i++){
-        if (global.players[global.turn].getBallType() == global.balls[i]->getType() && global.balls[i]->isSunk() && !global.prev[i].isSunk()){
-            swap = false;
+        if (global.balls[i]->isSunk() && !global.prev[i].isSunk()){
+            //this ball was sunk this shot
+            if (playerBallType == global.balls[i]->getType()){
+                sunkMyOwn = true;  //they sunk their own ball, huzzah
+            }
         }
         //copy the state over to the new shot
         global.prev[i].copy(global.balls[i]);
     }
 
-    if (swap || scratch){
+    if (!sunkMyOwn || scratch || foul){
         if (global.turn == 0){
             global.turn = 1;
             global.other = 0;
@@ -73,7 +82,7 @@ void swapTurns(){
     }
 
 	//if player has scratched, reset cue ball, only if 8 ball is on the table
-	if (scratch){
+	if (scratch || foul){
 		if (!global.balls[8]->isSunk()){
 			global.balls[0]->setSunk(false);
 			global.balls[0]->setPosition(global.balls[0]->getStartPosition());
@@ -84,6 +93,9 @@ void swapTurns(){
         global.scratch = false;
     }
 
+    global.typeSetThisTurn = false;
+    global.firstBallHit = 0;
+    global.shots++;
 	updatePlayerTextField();
     updateCue();
 }
@@ -146,6 +158,9 @@ bool allBallsPocketed(){
             }
 		}
 	}
+    else if (global.players[global.turn].getBallType() == BALL_TYPE_NONE){
+        return false;
+    }
 	return true;
 }
 
@@ -186,17 +201,18 @@ void updateSunkBalls(){
 				//player scratched on 8 ball, other player wins
 				if (allBallsPocketed()){ 
 					global.gameOver = true;
-					playerWins(global.other + 1);
+					playerWins(global.other);
 				}
             }
 		    global.shotInfoTextField->set_text(str.data());
 
             if (global.players[global.turn].getBallType() == BALL_TYPE_NONE){
-                if (i >= 1 && i <= 7){
+                global.typeSetThisTurn = true;
+                if (global.balls[i]->getType() == BALL_TYPE_SOLID){
 			        global.players[global.turn].setBallType(BALL_TYPE_SOLID);
 			        global.players[global.other].setBallType(BALL_TYPE_STRIPE);
 		        }
-                else if (i >= 9 && i <= 15){
+                else if (global.balls[i]->getType() == BALL_TYPE_STRIPE){
 			        global.players[global.turn].setBallType(BALL_TYPE_STRIPE);
 			        global.players[global.other].setBallType(BALL_TYPE_SOLID);
                 }
@@ -238,7 +254,10 @@ void displayFunc(){
         global.players[global.turn].drawCue();
     }
     else {
-        global.ballsMoving = physics::update(global.balls, getTimeDiff(global.clock, now));
+        global.ballsMoving = physics::update(global.balls, getTimeDiff(global.clock, now), global.ballHit);
+        if (global.firstBallHit == 0){
+            global.firstBallHit = global.ballHit;
+        }
         updateSunkBalls();
 		if (!global.ballsMoving && !global.gameOver){
 			swapTurns();
@@ -252,6 +271,44 @@ void displayFunc(){
 
 
 /**
+ * glut special function.
+ *
+ * @param key the character struck
+ * @param x the x coord of where the mouse was when key was struck
+ * @param y the y coord of where the mouse was when key was struck
+**/
+void keyboardFunc(int key, int x, int y){
+    if (global.scratch || global.shots <= 0){
+        Vector position = global.balls[0]->getPosition();
+        switch (key){
+        case GLUT_KEY_UP:
+            if (position.getX() + CUE_BALL_STEP < CUE_BALL_XMAX){
+                position.add(CUE_BALL_STEP, 0, 0);
+            }
+            break;
+        case GLUT_KEY_DOWN:
+            if (position.getX() - CUE_BALL_STEP > CUE_BALL_XMIN){
+                position.add(-CUE_BALL_STEP, 0, 0);
+            }
+            break;
+        case GLUT_KEY_LEFT:
+            if (position.getY() + CUE_BALL_STEP < CUE_BALL_YMAX){
+                position.add(0, CUE_BALL_STEP, 0);
+            }
+            break;
+        case GLUT_KEY_RIGHT:
+            if (position.getY() - CUE_BALL_STEP > CUE_BALL_YMIN){
+                position.add(0, -CUE_BALL_STEP, 0);
+            }
+            break;
+        }
+        global.balls[0]->setPosition(position);
+        updateCue();
+    }
+}
+
+
+/**
  * Entry point to the application. Defines the main window etc.
 **/
 int main(int argc, char** argv){
@@ -259,6 +316,7 @@ int main(int argc, char** argv){
     init();
 
     glutDisplayFunc(displayFunc);
+    glutSpecialFunc(keyboardFunc);
 
 	GLUI_Master.set_glutReshapeFunc(resizeWindow);
 	initializeGlui();
