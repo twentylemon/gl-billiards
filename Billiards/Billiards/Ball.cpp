@@ -48,7 +48,12 @@ void Ball::draw(){
  * @param angle how much to rotate
 **/
 void Ball::pushRotation(Vector axis, double angle){
-    rotList.push_front(std::make_pair(axis, angle));
+    if (rotList.size() > 0 && rotList.front().first.equals(axis)){
+        rotList.front().second += angle;
+    }
+    else {
+        rotList.push_front(std::make_pair(axis, angle));
+    }
 }
 
 
@@ -60,6 +65,7 @@ void Ball::pushRotation(Vector axis, double angle){
 **/
 void Ball::consolidateRotation(){
     if (rotList.size() > 0){
+        std::cerr << rotList.size() << std::endl;
         glPushMatrix();
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();

@@ -206,6 +206,7 @@ void rollBalls(std::vector<Ball*> balls, double dt){
             Vector angle = Vector();
             double theta = 360.0 * dr.length() / ballCircumference;
             Vector axis = dr.crossProduct(Vector(0, 0, -1));
+            axis.normalize();
             balls[i]->pushRotation(axis, theta);
 
             //check for pocketing

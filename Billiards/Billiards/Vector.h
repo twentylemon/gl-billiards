@@ -6,10 +6,9 @@
  * @since 2013-12-10
 **/
 #pragma once
-#include <new>
 #include <array>
 #include <string>
-#define VECTOR_DISTANCE_EQUALS 1E-5
+#define VECTOR_DISTANCE_EQUALS 0.0
 
 class Vector {
 public:
