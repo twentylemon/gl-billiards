@@ -65,7 +65,6 @@ void Ball::pushRotation(Vector axis, double angle){
 **/
 void Ball::consolidateRotation(){
     if (rotList.size() > 0){
-        std::cerr << rotList.size() << std::endl;
         glPushMatrix();
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
