@@ -156,6 +156,9 @@ xcopy Objects ..\..\exe\Objects\ /s /y</Command>
   <ItemGroup>
     <ResourceCompile Include="Billiards.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="sound\test.wav" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

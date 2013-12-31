@@ -13,6 +13,10 @@
 #include "Vector.h"
 #include "Cue.h"
 #include "Ball.h"
+
+#include <Windows.h>
+#include "resource.h"
+
 #define PI 3.14159
 #undef min  //from Model.h -> stdio.h
 
@@ -92,6 +96,8 @@ namespace physics
         Ball* ball;
         Cushion cushion;
     };
+
+    void playSound(int);
 
     Vector cueShot(Cue, Ball*);
     bool update(std::vector<Ball*>, double);

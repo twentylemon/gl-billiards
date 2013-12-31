@@ -129,6 +129,16 @@ void BankEvent::handle(){
 
 
 /**
+ * Plays a sound asynchronously.
+ *
+ * @param resourceID the resouce ID of the sound to play
+**/
+void playSound(int resourceID){
+    PlaySound(MAKEINTRESOURCE(resourceID), GetModuleHandle(NULL), SND_ASYNC | SND_RESOURCE);
+}
+
+
+/**
  * Takes a shot. Returns the velocity of the ball after the shot occurs.
  * The distance between the cue and the ball determines the power of the shot.
  *
@@ -138,6 +148,7 @@ void BankEvent::handle(){
 **/
 Vector cueShot(Cue cue, Ball* ball){
     //get the vector between the cue and the ball
+    playSound(IDW_TEST);
     Vector direction = Vector::subtract(ball->getPosition(), cue.getPosition());
     direction.scale(cueSpringConstant * cueBallContactTime / ballMass);
     return direction;
