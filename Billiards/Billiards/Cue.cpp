@@ -12,12 +12,7 @@
  * Default constructor.
 **/
 Cue::Cue(int playerNumber) : Particle(){
-	if (playerNumber == 1){
-		model = Model("Objects/cue.3DS", "Objects/textures/cue1.bmp");
-    }
-	else {
-		model = Model("Objects/cue.3DS", "Objects/textures/cue1.bmp");
-    }
+    model = Model("Objects/cue.3DS", "Objects/textures/cue" + std::to_string(playerNumber) + ".bmp");
     rotation.setZ(180);
 }
 

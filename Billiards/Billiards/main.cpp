@@ -10,6 +10,30 @@
 Global global;
 
 /**
+ * @param position the position to check
+ * @return true if the position is colliding with any ball other than the cue ball
+**/
+bool isColliding(Vector position){
+    for (unsigned int i = 1; i < global.balls.size(); i++){
+        if (global.balls[i]->getPosition().distance(position) < 4.0 * physics::ballRadiusSq){
+            return true;
+        }
+    }
+    return false;
+}
+
+
+/**
+ * @param position the position to check
+ * @return true if the position is within the legal (x,y) range for the ball in hand position
+**/
+bool legalRange(Vector position){
+    return position.getX() >= CUE_BALL_XMIN && position.getX() <= CUE_BALL_XMAX &&
+        position.getY() >= CUE_BALL_YMIN && position.getY() <= CUE_BALL_YMAX;
+}
+
+
+/**
  * Returns the amount of time in seconds between the two clocks.
  *
  * @param before the earlier time
@@ -282,28 +306,30 @@ void keyboardFunc(int key, int x, int y){
         Vector position = global.balls[0]->getPosition();
         switch (key){
         case GLUT_KEY_UP:
-            if (position.getX() + CUE_BALL_STEP < CUE_BALL_XMAX){
+            do {
                 position.add(CUE_BALL_STEP, 0, 0);
-            }
+            } while (isColliding(position) && legalRange(position));
             break;
         case GLUT_KEY_DOWN:
-            if (position.getX() - CUE_BALL_STEP > CUE_BALL_XMIN){
+            do {
                 position.add(-CUE_BALL_STEP, 0, 0);
-            }
+            } while (isColliding(position) && legalRange(position));
             break;
         case GLUT_KEY_LEFT:
-            if (position.getY() + CUE_BALL_STEP < CUE_BALL_YMAX){
+            do {
                 position.add(0, CUE_BALL_STEP, 0);
-            }
+            } while (isColliding(position) && legalRange(position));
             break;
         case GLUT_KEY_RIGHT:
-            if (position.getY() - CUE_BALL_STEP > CUE_BALL_YMIN){
+            do {
                 position.add(0, -CUE_BALL_STEP, 0);
-            }
+            } while (isColliding(position) && legalRange(position));
             break;
         }
-        global.balls[0]->setPosition(position);
-        updateCue();
+        if (!isColliding(position) && legalRange(position)){
+            global.balls[0]->setPosition(position);
+            updateCue();
+        }
     }
 }
 

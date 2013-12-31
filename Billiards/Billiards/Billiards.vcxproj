@@ -98,6 +98,7 @@ xcopy Objects ..\..\exe\Objects\ /s /y</Command>
     <ClInclude Include="Particle.h" />
     <ClInclude Include="physics.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Table.h" />
     <ClInclude Include="ui.h" />
     <ClInclude Include="Vector.h" />
@@ -126,6 +127,7 @@ xcopy Objects ..\..\exe\Objects\ /s /y</Command>
     <None Include="Objects\textures\tablesides.psd" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Objects\icon_256.ico" />
     <Image Include="Objects\textures\ball0.bmp" />
     <Image Include="Objects\textures\ball1.bmp" />
     <Image Include="Objects\textures\ball10.bmp" />
@@ -150,6 +152,9 @@ xcopy Objects ..\..\exe\Objects\ /s /y</Command>
     <Image Include="Objects\textures\tablesides.bmp" />
     <Image Include="Objects\textures\tableSidesUVmap.bmp" />
     <Image Include="Objects\textures\tabletop.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Billiards.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
