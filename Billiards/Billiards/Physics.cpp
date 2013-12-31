@@ -211,7 +211,6 @@ void rollBalls(std::vector<Ball*> balls, double dt){
             //check for pocketing
             int p = detectPocket(balls[i]->getPosition());
             if (p != -1){
-                std::cerr << "Ball " << i << " has been pocketed." << std::endl;
                 balls[i]->sink();
             }
         }
@@ -385,7 +384,9 @@ bool update(std::vector<Ball*> balls, double dt, int& firstBallHit){
             ballsMoving = true;
 
             //scale by negative friction so it slows down
-            Vector friction = Vector::scale(balls[i]->getVelocity(), -feltFriction);
+            //Vector friction = Vector::scale(balls[i]->getVelocity(), -feltFriction);
+            Vector friction = Vector::normalize(balls[i]->getVelocity());
+            friction.scale(-feltFriction * ballMass * gravity * dt);
             balls[i]->addVelocity(friction);
             
             if (balls[i]->getVelocity().lengthSq() < velocityStop){

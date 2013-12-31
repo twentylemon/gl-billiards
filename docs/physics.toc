@@ -3,3 +3,6 @@
 \contentsline {subsubsection}{\numberline {1.1.1}Linear Momentum}{1}
 \contentsline {subsubsection}{\numberline {1.1.2}Angular Momentum}{2}
 \contentsline {subsection}{\numberline {1.2}Event Detection}{2}
+\contentsline {subsubsection}{\numberline {1.2.1}Collision Detection}{3}
+\contentsline {subsubsection}{\numberline {1.2.2}Bank off the Cushion Detection}{3}
+\contentsline {subsubsection}{\numberline {1.2.3}Pocketing Detection}{3}
