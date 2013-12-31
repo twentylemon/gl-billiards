@@ -9,8 +9,8 @@
 #include "main.h"
 
 /**
- * Initializes all scene lighting
- */
+ * Initializes all scene lighting.
+**/
 void initializeLighting(){
 	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_NORMALIZE);
@@ -20,13 +20,12 @@ void initializeLighting(){
 	float ambientLight[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 	float diffuseLight[] = { 0.7f, 0.7f, 0.7f, 1.0f };
 	float specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	float shininess[] = { 50.0f };
-	float position[] = { 0, 0, 1, 0 };
-
+	float position0[] = { 0, -0.5f, 1, 0 };
+    
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);	
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
-	glLightfv(GL_LIGHT0, GL_POSITION, position);
+	glLightfv(GL_LIGHT0, GL_POSITION, position0);
 }
 
 
@@ -52,11 +51,11 @@ void initializeWindow(){
 
 
 /**
- *	Sets window ratio when window is resized
+ *	Sets window ratio when window is resized.
  *
  *	@param width new window width
  *	@param height new window height
- */
+**/
 void resizeWindow(int width, int height){
 	GLUI_Master.auto_set_viewport();
 

@@ -94,7 +94,7 @@ void Ball::doRotate(){
  * Sinks this ball into a pocket.
 **/
 void Ball::sink(){
-    addPosition(Vector(0, 0, -8.0 * 0.0254));
+    addPosition(Vector(0, 0, -5.0 * 0.0254));
     setVelocity(0, 0, 0);
     setAngular(0, 0, 0);
     setSunk(true);
