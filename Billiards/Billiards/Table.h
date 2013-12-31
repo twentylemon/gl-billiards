@@ -25,5 +25,7 @@ private:
     Model bed;
     Model edges;
 	Model rails;
+	Model bottom;
+	Model legs;
     double zoom;
 };

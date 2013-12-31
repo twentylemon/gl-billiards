@@ -79,7 +79,7 @@ void resetCamera(){
 void playerWins(int player){
     player++;
 	std::string str = "Player " + std::to_string(player) + " Wins";
-	global.playerTextField->set_text("Game Over");
+	global.playerTextField->set_text("8 Ball Pocketed");
 	global.shotInfoTextField->set_text(str.data());
 	global.shootButton->set_name("Restart Game");
 }
