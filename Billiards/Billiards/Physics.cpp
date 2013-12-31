@@ -138,16 +138,6 @@ void BankEvent::handle(){
  * @return the speed that the ball struck should be travelling
 **/
 Vector cueShot(Cue cue, Ball* ball){
-    /*  assume the Cue acts like a spring, and apply Hooke's law
-        - k t
-    v = ------  x
-           m
-        where k is the spring constant
-              t is the amount of time the cue is in contact with the ball
-              m is the mass of the ball
-              x is the direction vector between the ball and the cue
-              v the the need velocity of the ball
-    */
     //get the vector between the cue and the ball
     Vector direction = Vector::subtract(ball->getPosition(), cue.getPosition());
     direction.scale(cueSpringConstant * cueBallContactTime / ballMass);
@@ -226,18 +216,6 @@ void rollBalls(std::vector<Ball*> balls, double dt){
  * @return the amount of time that will pass before ball1 and ball2 collide
 **/
 double calcCollisionTime(Ball* ball1, Ball* ball2){
-    /* the two balls collide when they are 2 radii apart, and we know their position over time is
-        r = s + vt
-        where s is the starting position
-              v is the velocity
-              t is the time elapsed
-        we get...
-        |r1 - r2| = 2R
-        | |s1 - s2| + 2(s1 - s2)(v1 - v2)t + |v1 - v2|t^2 | = 2R
-        where |x| is the length of x
-              R is the radius of a ball
-        solving for t gives a quadratic equation
-    */
     //get their differences in position and velocity
     Vector dr = Vector::subtract(ball1->getPosition(), ball2->getPosition());   //s1 - s2
     Vector dv = Vector::subtract(ball1->getVelocity(), ball2->getVelocity());   //v1 - v2
