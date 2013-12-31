@@ -15,6 +15,7 @@ Table::Table(void){
     bed = Model("Objects/table_bed.3DS", "Objects/textures/tabletop.bmp");
     edges = Model("Objects/table_edges.3DS", "Objects/textures/tablesides.bmp");
 	rails = Model("Objects/table_rails.3DS", "Objects/textures/felt.bmp");
+	//bottom = Model("Objects/table_bottom.3DS", "Objects/textures/tablesides.bmp");
     zoom = 0;
 }
 
