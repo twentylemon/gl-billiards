@@ -72,13 +72,10 @@ void updateCamera(){
  * all balls have stopped moving.
 **/
 void swapTurns(){
-    global.shooting = true;
-
     //check for fouls/scratch
     int playerBallType = global.players[global.turn].getBallType();
     int hitBallType = global.balls[global.firstBallHit]->getType();
-    bool foul = hitBallType == BALL_TYPE_CUE || (hitBallType != playerBallType &&
-        playerBallType != BALL_TYPE_NONE && !global.typeSetThisTurn && global.firstBallHit != 8);
+    bool foul = global.players[global.turn].isFoul(hitBallType) && !global.typeSetThisTurn;
     bool scratch = global.balls[0]->isSunk();
 
     //check for balls they sunk of their own type
@@ -116,11 +113,13 @@ void swapTurns(){
     else {
         global.scratch = false;
     }
-
+    
+    global.shooting = true;
     global.typeSetThisTurn = false;
     global.firstBallHit = 0;
-    global.shots++;
     global.msg.clear();
+    global.shots++;
+
 	updatePlayerTextField();
     updateCue();
 }
@@ -149,12 +148,8 @@ void updateCue(){
 void takeShot(){
 	if (global.gameOver){
 		restartGame();
-		return;
 	}
-	if (global.shotPowerSpinner->get_float_val() == 0.0){
-		return;
-    }
-    if (global.shooting){
+    else if (global.shooting && global.shotPowerSpinner->get_float_val() > 0.0){
         global.balls[0]->setVelocity(physics::cueShot(global.players[global.turn].getCue(), global.balls[0]));
         global.shooting = false;
     }
@@ -212,23 +207,28 @@ void updateSunkBalls(){
 		}
 	}
     else {
-        for (unsigned int ballNumber = 0; ballNumber <= 15; ballNumber++){
-            if (global.balls[ballNumber]->isSunk() && !global.prev[ballNumber].isSunk()){
-                std::string msg = "Ball " + std::to_string(ballNumber) + " Pocketed";
-                if (ballNumber == 0){
-                    msg = "Scratch";
-				    //player scratched on 8 ball, other player wins
-				    if (allBallsPocketed()){ 
-					    global.gameOver = true;
-					    playerWins(global.other);
-				    }
-                }
-                if (std::find(global.msg.begin(), global.msg.end(), msg) == global.msg.end()){
-                    global.msg.push_back(msg);
-                }
+        //post foul message
+        if (global.firstBallHit != 0 && global.players[global.turn].isFoul(global.balls[global.firstBallHit]->getType()) && !global.typeSetThisTurn){
+            postMessage("Foul");
+        }
 
+        //post scratch message
+        if (global.balls[0]->isSunk()){
+            if (postMessage("Scratch") && allBallsPocketed()){
+			    //player scratched on 8 ball, other player wins
+			    if (allBallsPocketed()){ 
+				    global.gameOver = true;
+				    playerWins(global.other);
+			    }
+            }
+        }
+
+        for (unsigned int ballNumber = 1; ballNumber <= 15; ballNumber++){
+            if (global.balls[ballNumber]->isSunk() && !global.prev[ballNumber].isSunk()){
+                postMessage("Ball " + std::to_string(ballNumber) + " Pocketed");
+
+                //check if the types need to be updated
                 if (global.players[global.turn].getBallType() == BALL_TYPE_NONE){
-                    global.typeSetThisTurn = true;
                     if (global.balls[ballNumber]->getType() == BALL_TYPE_SOLID){
 			            global.players[global.turn].setBallType(BALL_TYPE_SOLID);
 			            global.players[global.other].setBallType(BALL_TYPE_STRIPE);
@@ -237,11 +237,10 @@ void updateSunkBalls(){
 			            global.players[global.turn].setBallType(BALL_TYPE_STRIPE);
 			            global.players[global.other].setBallType(BALL_TYPE_SOLID);
                     }
+                    global.typeSetThisTurn = true;
+                    updatePlayerTextField();
                 }
             }
-        }
-        if (global.msg.size() > 0){
-            global.shotInfoTextField->set_text(global.msg.back().data());
         }
     }
 }

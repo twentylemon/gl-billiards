@@ -20,6 +20,7 @@ void zoomIn();
 void zoomOut();
 void resetZoom();
 void resetCamera();
+bool postMessage(std::string);
 
 //glui control methods
 void updatePlayerTextField();

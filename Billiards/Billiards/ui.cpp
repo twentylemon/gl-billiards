@@ -32,6 +32,19 @@ void resetZoom(){
 
 
 /**
+ * @param msg the message to display, iff it is a new message
+ * @return true if the message was posted
+**/
+bool postMessage(std::string msg){
+    std::pair<std::set<std::string>::iterator, bool> msgInsert = global.msg.insert(msg);
+    if (msgInsert.second){
+        global.shotInfoTextField->set_text((*msgInsert.first).data());
+    }
+    return msgInsert.second;
+}
+
+
+/**
  * Updates the text field to show info for whoever is shooting.
 **/
 void updatePlayerTextField(){
@@ -57,7 +70,7 @@ void updatePlayerTextField(){
 	}
 	
 	global.playerTextField->set_text(text.data());
-	if (!global.gameOver){
+    if (!global.shooting && !global.gameOver){
 		global.shotInfoTextField->set_text("");
     }
 }

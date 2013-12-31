@@ -26,6 +26,8 @@ public:
     void setCueRotation(Vector);
     void addCueRotation(Vector);
 
+    bool isFoul(int);
+
 	void drawCue();
 
 protected:

@@ -10,6 +10,7 @@
 //#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 #include <iostream>
 #include <vector>
+#include <set>
 #include <new>
 #include <ctime>
 #include "glut.h"
@@ -53,7 +54,7 @@ typedef struct {
 
     std::vector<Ball*> balls;
     std::vector<Ball> prev;
-    std::vector<std::string> msg;
+    std::set<std::string> msg;
 
     Table table;
 	Vector cameraCenter;
@@ -84,5 +85,4 @@ void restartGame();
 
 //callback functions for glut/glui
 void resizeWindow(int width, int height);
-void keyboardFunc(unsigned char key, int x, int y);
 void idleFunc();
