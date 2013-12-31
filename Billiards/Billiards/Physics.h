@@ -132,6 +132,7 @@ namespace physics
     /** pockets **/
     const int numPockets = 6;
     const double pocketSize = 4.8 * 0.0254 / 2.0;    //actually corner = 4.5, side = 5 in, close enough
+    const double pocketSizeSq = pocketSize * pocketSize;
     static const Vector pockets[] = {
         Vector(tablePlayWidth / 2.0 + tableRailSize, tablePlayHeight / 2.0 + tableRailSize, 0),
         Vector(tablePlayWidth / 2.0 + tableRailSize, -tablePlayHeight / 2.0 - tableRailSize, 0),
@@ -197,11 +198,9 @@ namespace physics
     };
 
     /** friction **/
-    //const double feltFriction = 0.005;
     const double feltFriction = 0.1;
     const double cushionFrictionLoss = 0.3;
     const double velocityStop = 0.01 * 0.01; //use squared value so we can use squared length
-    //const double velocityStop = 0.03 * 0.03;
     //const double angularStop = 0.05;
     const double gravity = 9.8;
 };

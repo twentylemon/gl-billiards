@@ -77,8 +77,7 @@ CollisionEvent::CollisionEvent(double time, Ball* ball1, Ball* ball2) : Event(ti
 **/
 void CollisionEvent::handle(){
     //got the normal to the collision plane
-    Vector normal = Vector::subtract(ball1->getPosition(), ball2->getPosition());
-    normal.normalize();
+    Vector normal = Vector::normalize(Vector::subtract(ball1->getPosition(), ball2->getPosition()));
     Vector negNormal = Vector::scale(normal, -1.0);
 
     //find the normal/tangential components for each of the balls velocities
@@ -170,7 +169,7 @@ double distance(Ball* ball, Cushion cushion){
 **/
 int detectPocket(Vector position){
     for (int p = 0; p < numPockets; p++){
-        if (pockets[p].distance(position) < 2.0 * pocketSize * pocketSize){//4.0 * ballRadiusSq){
+        if (pockets[p].distance(position) < pocketSizeSq){
             return p;
         }
     }
@@ -217,7 +216,7 @@ void rollBalls(std::vector<Ball*> balls, double dt){
 **/
 double calcCollisionTime(Ball* ball1, Ball* ball2){
     //get their differences in position and velocity
-    Vector dr = Vector::subtract(ball1->getPosition(), ball2->getPosition());   //s1 - s2
+    Vector dr = Vector::subtract(ball1->getPosition(), ball2->getPosition());   //r1 - r2
     Vector dv = Vector::subtract(ball1->getVelocity(), ball2->getVelocity());   //v1 - v2
 
     double a = Vector::dotProduct(dv, dv);
@@ -235,7 +234,7 @@ double calcCollisionTime(Ball* ball1, Ball* ball2){
 
 
 /**
- * Calculates when the ball with hit the bank axis specified
+ * Calculates when the ball with hit the cushion.
  *
  * @param ball the ball to check when it hits the bank
  * @param cushion which cushion we are checking against
@@ -277,9 +276,9 @@ double calcBankTime(Ball* ball, Cushion cushion, double dt){
  * is handled. After which, we just recurse until a total time dt is reached.
  *
  * @param balls the set of balls to update
+ * @param dt the amount of time passed sicne the last frame
  * @param firstBallHit will be modified to be 0 if no ball was hit, or the ball number
  *      of the first ball hit otherwise
- * @param dt the amount of time passed sicne the last frame
 **/
 void moveBalls(std::vector<Ball*> balls, double dt, int& firstBallHit){
     Event* event = new Event(dt);
@@ -328,7 +327,6 @@ void moveBalls(std::vector<Ball*> balls, double dt, int& firstBallHit){
 
 /**
  * Updates all of the positions/speeds of the balls, does collisions etc if needed.
- * The value in firstCueHit will be modified if the cue ball hits something this frame.
  *
  * @param balls the set of balls to update
  * @param dt the amount of time passed sicne the last frame
@@ -362,7 +360,6 @@ bool update(std::vector<Ball*> balls, double dt, int& firstBallHit){
             ballsMoving = true;
 
             //scale by negative friction so it slows down
-            //Vector friction = Vector::scale(balls[i]->getVelocity(), -feltFriction);
             Vector friction = Vector::normalize(balls[i]->getVelocity());
             friction.scale(-feltFriction * ballMass * gravity * dt);
             balls[i]->addVelocity(friction);

@@ -120,6 +120,7 @@ void swapTurns(){
     global.typeSetThisTurn = false;
     global.firstBallHit = 0;
     global.shots++;
+    global.msg.clear();
 	updatePlayerTextField();
     updateCue();
 }
@@ -198,49 +199,49 @@ void updateSunkBalls(){
 		bool playerWon;	
 
 		if (global.balls[0]->isSunk() || global.players[global.turn].getBallType() == BALL_TYPE_NONE){
-			//automatic loss, dont need to check for pocketed balls
-			playerWon = false;
+			playerWon = false;  //automatic loss, dont need to check for pocketed balls
 		}
         else {	
-			//checks to see if player has pocketed all balls of their type
-			playerWon = allBallsPocketed();
+			playerWon = allBallsPocketed(); //checks to see if player has pocketed all balls of their type
 		}
-
 		if (playerWon){
 			playerWins(global.turn);
 		}
         else {
 			playerWins(global.other);
 		}
-		return;
 	}
+    else {
+        for (unsigned int ballNumber = 0; ballNumber <= 15; ballNumber++){
+            if (global.balls[ballNumber]->isSunk() && !global.prev[ballNumber].isSunk()){
+                std::string msg = "Ball " + std::to_string(ballNumber) + " Pocketed";
+                if (ballNumber == 0){
+                    msg = "Scratch";
+				    //player scratched on 8 ball, other player wins
+				    if (allBallsPocketed()){ 
+					    global.gameOver = true;
+					    playerWins(global.other);
+				    }
+                }
+                if (std::find(global.msg.begin(), global.msg.end(), msg) == global.msg.end()){
+                    global.msg.push_back(msg);
+                }
 
-    //i = ballNumber
-    for (unsigned int i = 0; i <= 15; i++){
-        if (global.balls[i]->isSunk() && !global.prev[i].isSunk()){
-		    std::string str = "Ball " + std::to_string(i) + " Pocketed";
-            if (i == 0){
-                str = "Scratch";
-				
-				//player scratched on 8 ball, other player wins
-				if (allBallsPocketed()){ 
-					global.gameOver = true;
-					playerWins(global.other);
-				}
-            }
-		    global.shotInfoTextField->set_text(str.data());
-
-            if (global.players[global.turn].getBallType() == BALL_TYPE_NONE){
-                global.typeSetThisTurn = true;
-                if (global.balls[i]->getType() == BALL_TYPE_SOLID){
-			        global.players[global.turn].setBallType(BALL_TYPE_SOLID);
-			        global.players[global.other].setBallType(BALL_TYPE_STRIPE);
-		        }
-                else if (global.balls[i]->getType() == BALL_TYPE_STRIPE){
-			        global.players[global.turn].setBallType(BALL_TYPE_STRIPE);
-			        global.players[global.other].setBallType(BALL_TYPE_SOLID);
+                if (global.players[global.turn].getBallType() == BALL_TYPE_NONE){
+                    global.typeSetThisTurn = true;
+                    if (global.balls[ballNumber]->getType() == BALL_TYPE_SOLID){
+			            global.players[global.turn].setBallType(BALL_TYPE_SOLID);
+			            global.players[global.other].setBallType(BALL_TYPE_STRIPE);
+		            }
+                    else if (global.balls[ballNumber]->getType() == BALL_TYPE_STRIPE){
+			            global.players[global.turn].setBallType(BALL_TYPE_STRIPE);
+			            global.players[global.other].setBallType(BALL_TYPE_SOLID);
+                    }
                 }
             }
+        }
+        if (global.msg.size() > 0){
+            global.shotInfoTextField->set_text(global.msg.back().data());
         }
     }
 }
@@ -295,7 +296,7 @@ void displayFunc(){
 
 
 /**
- * glut special function.
+ * glut special keyboard function.
  *
  * @param key the character struck
  * @param x the x coord of where the mouse was when key was struck

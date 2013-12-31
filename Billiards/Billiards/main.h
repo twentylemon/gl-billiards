@@ -53,6 +53,7 @@ typedef struct {
 
     std::vector<Ball*> balls;
     std::vector<Ball> prev;
+    std::vector<std::string> msg;
 
     Table table;
 	Vector cameraCenter;
