@@ -122,11 +122,13 @@ void restartGame(){
 	global.balls.clear();
 	global.shootButton->set_name("Shoot");
 	global.shotPowerSpinner->set_float_val(0.0);
+    global.cueTranslate->set_z(180);
 
 	resetCamera();
 	resetZoom();
 
 	initializeGame();
+    swapTurns();
 }
 
 

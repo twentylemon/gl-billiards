@@ -191,7 +191,7 @@ bool allBallsPocketed(){
 void updateSunkBalls(){
     if (global.balls[8]->isSunk()){
 		global.gameOver = true;
-		bool playerWon;	
+		bool playerWon;
 
 		if (global.balls[0]->isSunk() || global.players[global.turn].getBallType() == BALL_TYPE_NONE){
 			playerWon = false;  //automatic loss, dont need to check for pocketed balls

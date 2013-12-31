@@ -76,6 +76,7 @@ typedef struct {
 extern Global global;
 
 void takeShot();
+void swapTurns();
 void updateCue();
 void updateCamera();
 

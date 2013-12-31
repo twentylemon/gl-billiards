@@ -70,7 +70,7 @@ void updatePlayerTextField(){
 	}
 	
 	global.playerTextField->set_text(text.data());
-    if (!global.shooting && !global.gameOver){
+    if (global.shooting && !global.gameOver){
 		global.shotInfoTextField->set_text("");
     }
 }
