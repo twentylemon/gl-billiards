@@ -7,4 +7,4 @@
 \contentsline {subsection}{\numberline {1.4}Event Handling and Velocity Updates}{4}
 \contentsline {subsubsection}{\numberline {1.4.1}Ball-Ball Collisions}{4}
 \contentsline {subsubsection}{\numberline {1.4.2}Ball-Wall Collisions}{4}
-\contentsline {subsubsection}{\numberline {1.4.3}Friction}{4}
+\contentsline {subsubsection}{\numberline {1.4.3}Friction}{5}
