@@ -78,7 +78,7 @@ void swapTurns(){
     int playerBallType = global.players[global.turn].getBallType();
     int hitBallType = global.balls[global.firstBallHit]->getType();
     bool foul = hitBallType == BALL_TYPE_CUE || (hitBallType != playerBallType &&
-        playerBallType != BALL_TYPE_NONE && !global.typeSetThisTurn);
+        playerBallType != BALL_TYPE_NONE && !global.typeSetThisTurn && global.firstBallHit != 8);
     bool scratch = global.balls[0]->isSunk();
 
     //check for balls they sunk of their own type
