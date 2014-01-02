@@ -1,223 +1,198 @@
-\documentclass[12pt]{article}
-\usepackage{graphicx}
-\usepackage{float}
-\usepackage{amsmath}
-\usepackage{scrextend}
-\addtolength{\textwidth}{1in}
-\addtolength{\textheight}{1in}
-\addtolength{\evensidemargin}{0.5in}
-\addtolength{\oddsidemargin}{-0.5in}
-\addtolength{\topmargin}{-0.5in}
-\title{gl-billiards}
-\author{Dan Lapp\\Taras Mychaskiw\\COSC 3P98 Project}
-\date{January 8th, 2014}
+% COSC 3P98 Project
+% gl-billiards
+% Dan Lapp
+% Taras Mychaskiw
 
-\begin{document}
-\maketitle
-    \begin{abstract}
-    \end{abstract}
+\section{Physics Engine}
 
-    \thispagestyle{empty}
-    \tableofcontents
-    %\cleardoublepage
-    %\newpage
-    \thispagestyle{empty}
-    \mbox{}
-    \clearpage
-    \setcounter{page}{1}
+    \subsection{Taking a Shot}
+    Once a ball is hit by the cue, there are two ways energy is transferred to the ball. First, and more noticeable of the two
+    is the transfer of linear momentum. This sends the ball moving around the table in straight lines. Second is the transfer
+    of angular momentum, which applies spin to the ball. Unfortunately in gl-billiards, spin is not implemented (though some
+    time was spent formulating equations for spin). \\
+    To simplify the shot making process, the pool cue is assumed to act like a spring. That is, the further you pull
+    the cue away from the ball you are going to hit, the more powerful your shot will be. Spring motion can be described
+    using Hooke's Law,
+    \begin{equation}
+        \vec F = -k \vec x
+        \label{equ:hookes_law}
+    \end{equation}
+    where, $\vec F$ is the force, $\vec x$ is how much the spring is stretched and $k$ is the spring constant, which
+    describes basically how powerful (springy) the spring is.
+    \\
+    Hooke's Law is equivalent to Newton's Second Law, which states
+    \begin{equation}
+        \vec F = m \vec a
+        \label{equ:newton}
+    \end{equation}
+    where, $\vec F$ is the force, $m$ is the mass of the object and $\vec a$ is the acceleration of the object. Setting
+    Equation~\ref{equ:hookes_law} equal to Equation~\ref{equ:newton} gives
+    \begin{eqnarray}
+        -k \vec x &=& m \vec a \nonumber \\
+        -k \vec x &=& m \frac{\Delta \vec v}{\Delta t} \nonumber \\
+        \Delta \vec v &=& \frac{-k \Delta t}{m}\vec x  \nonumber
+    \end{eqnarray}
+    where $\vec v$ is the velocity of the object, and $t$ is the time. For pool, the initial velocity of the ball being struck is
+    always zero, so we can simplify the above equation to
+    \begin{equation}
+        \vec v = \frac{-k t}{m}\vec x
+        \label{equ:shot_velocity}
+    \end{equation}
+    where $\vec x$ is the distance between the ball and the tip of the cue, $m$ is the mass of the ball, $t$ is how much time the
+    cue is in contact with the ball and $k$ is the spring constant of the cue. The values for $t$ and $k$ needed to be experimentally
+    found though trial and error, essentially trying values until what happened in the simulation closely represented real life. The
+    values for $t$ and $k$ were found to be $0.01$s and $200$N/m.
+    %\end{Taking a Shot}
     
-    \section{Physics Engine}
-    
-        \subsection{Taking a Shot}
-        Once a ball is hit by the cue, there are two ways energy is transferred to the ball. First, and more noticeable of the two
-        is the transfer of linear momentum. This sends the ball moving around the table in straight lines. Second is the transfer
-        of angular momentum, which applies spin to the ball. Unfortunately in gl-billiards, spin is not implemented (though some
-        time was spent formulating equations for spin). \\
-        To simplify the shot making process, the pool cue is assumed to act like a spring. That is, the further you pull
-        the cue away from the ball you are going to hit, the more powerful your shot will be. Spring motion can be described
-        using Hooke's Law,
-        \begin{equation}
-            \vec F = -k \vec x
-            \label{equ:hookes_law}
-        \end{equation}
-        where, $\vec F$ is the force, $\vec x$ is how much the spring is stretched and $k$ is the spring constant, which
-        describes basically how powerful (springy) the spring is.
-        \\
-        Hooke's Law is equivalent to Newton's Second Law, which states
-        \begin{equation}
-            \vec F = m \vec a
-            \label{equ:newton}
-        \end{equation}
-        where, $\vec F$ is the force, $m$ is the mass of the object and $\vec a$ is the acceleration of the object. Setting
-        Equation~\ref{equ:hookes_law} equal to Equation~\ref{equ:newton} gives
-        \begin{eqnarray}
-            -k \vec x &=& m \vec a \nonumber \\
-            -k \vec x &=& m \frac{\Delta \vec v}{\Delta t} \nonumber \\
-            \Delta \vec v &=& \frac{-k \Delta t}{m}\vec x  \nonumber
-        \end{eqnarray}
-        where $\vec v$ is the velocity of the object, and $t$ is the time. For pool, the initial velocity of the ball being struck is
-        always zero, so we can simplify the above equation to
-        \begin{equation}
-            \vec v = \frac{-k t}{m}\vec x
-            \label{equ:shot_velocity}
-        \end{equation}
-        where $\vec x$ is the distance between the ball and the tip of the cue, $m$ is the mass of the ball, $t$ is how much time the
-        cue is in contact with the ball and $k$ is the spring constant of the cue. The values for $t$ and $k$ needed to be experimentally
-        found though trial and error, essentially trying values until what happened in the simulation closely represented real life. The
-        values for $t$ and $k$ were found to be $0.01$s and $200$N/m.
-        %\end{Taking a Shot}
-        
-        \subsection{Event System}
-        For the purposes of this program, an event is a ball-ball collision, or a ball banking off of the cushion. The way gl-billiards works
-        is each time the screen is redisplayed, some physics updater function is called with a parameter $dt$, which is how much time has passed
-        since the last frame. The engine simulates the pool game up until a time $dt$ has passed. For example, if $1$s was passed, then it would
-        simulate $1$s of play before returning, then the screen would be updated as if $1$s had passed.
-        \\
-        So, the engine determines which events occur within time $dt$. Event detection then becomes \textit{when} do events happen instead
-        of \textit{if} they happened. The entire update function works as follows:\\
-        \texttt{
-            update($dt$)                                                        \\
+    \subsection{Event System}
+    For the purposes of this program, an event is a ball-ball collision, or a ball banking off of the cushion. The way gl-billiards works
+    is each time the screen is redisplayed, some physics updater function is called with a parameter $dt$, which is how much time has passed
+    since the last frame. The engine simulates the pool game up until a time $dt$ has passed. For example, if $1$s was passed, then it would
+    simulate $1$s of play before returning, then the screen would be updated as if $1$s had passed.
+    \\
+    So, the engine determines which events occur within time $dt$. Event detection then becomes \textit{when} do events happen instead
+    of \textit{if} they happened. The entire update function works as follows:\\
+    \texttt{
+        update($dt$)                                                        \\
+        \begin{addmargin}[1em]{0em}
+        find earliest event that occurs within time $dt$, call it $event$   \\
+        if no such event                                                    \\
             \begin{addmargin}[1em]{0em}
-            find earliest event that occurs within time $dt$, call it $event$   \\
-            if no such event                                                    \\
-                \begin{addmargin}[1em]{0em}
-                roll balls until $dt$                                           \\
-                \end{addmargin}
-            otherwise                                                           \\
-                \begin{addmargin}[1em]{0em}
-                roll balls until $event$ occurs                                 \\
-                handle $event$                                                  \\
-                $dt$ <-- $dt$ - $event$.$getTime()$                             \\
-                call update($dt$) again                                         \\
-                \end{addmargin}
+            roll balls until $dt$                                           \\
             \end{addmargin}
-        }
-        In this manner, all events that happen within $dt$ and handled automatically before the frame updates and the balls slow
-        down due to friction. Note that "roll balls" simply means each ball moves at it's speed for some amount of time. Pocketing
-        detection needs to be done there, as it is not a standard event. That is, if a ball is pocketed, it cannot possible participate
-        in any events in time $dt$, since it would bank off the cushion or collide with another ball first. \\
-        After $update(dt)$ is finished, each ball gets affected by friction and slows down slightly. Friction takes the form of a
-        slight decrease in the velocity of the ball. 
-        %\end{Event System}
+        otherwise                                                           \\
+            \begin{addmargin}[1em]{0em}
+            roll balls until $event$ occurs                                 \\
+            handle $event$                                                  \\
+            $dt$ <-- $dt$ - $event$.$getTime()$                             \\
+            call update($dt$) again                                         \\
+            \end{addmargin}
+        \end{addmargin}
+    }
+    In this manner, all events that happen within $dt$ and handled automatically before the frame updates and the balls slow
+    down due to friction. Note that "roll balls" simply means each ball moves at it's speed for some amount of time. Pocketing
+    detection needs to be done there, as it is not a standard event. That is, if a ball is pocketed, it cannot possible participate
+    in any events in time $dt$, since it would bank off the cushion or collide with another ball first. \\
+    After $update(dt)$ is finished, each ball gets affected by friction and slows down slightly. Friction takes the form of a
+    slight decrease in the velocity of the ball. 
+    %\end{Event System}
+    
+    \subsection{Event Detection}
+        \subsubsection{Ball-Ball Collision Detection}
+        A ball-ball collision will occur when the centers of the balls are two radii apart. In gl-billiards, the trajectory
+        of each ball is simplified to be a straight line per frame since friction is only applied at the end of each frame.
+        Thus, the trajectory of each ball becomes,
+        \begin{equation}
+            \vec r = \vec r_0 + \vec v t
+            \label{equ:position}
+        \end{equation}
+        where $\vec r$ is the position of the ball, $\vec r_0$ is the starting position, $\vec v$ is the velocity of the ball and
+        $t$ is the amount of time elapsed. Then, for each possible collision to occur, the program needs to find at what times the
+        distance from one ball to the other is equal to twice the radius of the ball. Mathematically, this becomes
+        \begin{eqnarray}
+            | \vec r_1 - \vec r_2 | &=& 2 R   \nonumber   \\
+            \sqrt{ (\vec r_1 - \vec r_2) \cdot (\vec r_1 - \vec r_2) } &=& 2 R  \nonumber
+        \end{eqnarray}
+        where $R$ is the radius of a ball. Squaring both sides, and subbing in Equation~\ref{equ:position} for both
+        $\vec r_1$ and $\vec r_2$ (using $\vec{dr_0} = \vec r_{0_1} - \vec r_{0_2}$ and $\vec{dv} = \vec v_1 - \vec v_2$),
+        \begin{eqnarray}
+            (\vec{dr_0} \cdot \vec{dr_0}) + (\vec{dr_0} \cdot \vec{dv}) t + (\vec{dv} \cdot \vec{dv}) t^2 &=& 4 R^2
+            \label{equ:collision_time}
+        \end{eqnarray}
+        This is a quadratic equation for $t$ which can be solved easily. If there are real roots to the equation, then
+        a collision occurs, and it occurs at the minimal possible $t$ value which is a solution to Equation~\ref{equ:collision_time}.
+        %\end{Ball-Ball Collision Detection}
         
-        \subsection{Event Detection}
-            \subsubsection{Ball-Ball Collision Detection}
-            A ball-ball collision will occur when the centers of the balls are two radii apart. In gl-billiards, the trajectory
-            of each ball is simplified to be a straight line per frame since friction is only applied at the end of each frame.
-            Thus, the trajectory of each ball becomes,
-            \begin{equation}
-                \vec r = \vec r_0 + \vec v t
-                \label{equ:position}
-            \end{equation}
-            where $\vec r$ is the position of the ball, $\vec r_0$ is the starting position, $\vec v$ is the velocity of the ball and
-            $t$ is the amount of time elapsed. Then, for each possible collision to occur, the program needs to find at what times the
-            distance from one ball to the other is equal to twice the radius of the ball. Mathematically, this becomes
-            \begin{eqnarray}
-                | \vec r_1 - \vec r_2 | &=& 2 R   \nonumber   \\
-                \sqrt{ (\vec r_1 - \vec r_2) \cdot (\vec r_1 - \vec r_2) } &=& 2 R  \nonumber
-            \end{eqnarray}
-            where $R$ is the radius of a ball. Squaring both sides, and subbing in Equation~\ref{equ:position} for both
-            $\vec r_1$ and $\vec r_2$ (using $\vec{dr_0} = \vec r_{0_1} - \vec r_{0_2}$ and $\vec{dv} = \vec v_1 - \vec v_2$),
-            \begin{eqnarray}
-                (\vec{dr_0} \cdot \vec{dr_0}) + (\vec{dr_0} \cdot \vec{dv}) t + (\vec{dv} \cdot \vec{dv}) t^2 &=& 4 R^2
-                \label{equ:collision_time}
-            \end{eqnarray}
-            This is a quadratic equation for $t$ which can be solved easily. If there are real roots to the equation, then
-            a collision occurs, and it occurs at the minimal possible $t$ value which is a solution to Equation~\ref{equ:collision_time}.
-            %\end{Ball-Ball Collision Detection}
-            
-            \subsubsection{Ball-Wall Collision Detection}
-            Ball-wall collision detection is similar to ball-ball, except the ball is a distance one radius away from the wall when it collides.
-            Since the wall doesn't move, a different strategy had to be employed to detect when a ball-wall collision occurs. In this case,
-            both the and wall positions are described using parametric equations.
-            \begin{eqnarray}
-                \vec r = \vec r_0 + (dt~\vec v) T_b         \label{equ:ball_parametric} \\
-                \vec w = \vec s + (\vec f - \vec s) T_w     \label{equ:wall_parametric}
-            \end{eqnarray}
-            Where, $\vec r$ is the position of the ball, $\vec r_0$ is the initial position of the ball, $\vec v$ is the velocity of the ball,
-            $dt$ is the amount of time that will pass this frame; $\vec w$ is a point on the wall, $\vec s$ is one endpoint on the wall, and $\vec f$
-            is the other endpoint of the wall. $T_b$ and $T_w$ are the parametric variables, and range between $0$ and $1$. \\
-            To determine when the ball hits the wall, where the ball hits must be determined first. The center of the ball hits the wall when
-            $\vec r = \vec w$, thus the ball actually collides with the wall when $\vec r - R \vec n = \vec w$, where $\vec n$ is the normal
-            vector to the wall. For simplicity below, we will ignore this offset value, as it is a fairly simple transformation. So, the collision
-            occurs when
-            \begin{eqnarray}
-                r_{0_x} + (dt~v_x) T_b = s_x + (f_x - s_x) T_w  \nonumber \\
-                r_{0_y} + (dt~v_y) T_b = s_y + (f_y - s_y) T_w  \nonumber
-            \end{eqnarray}
-            Solving for $T_b$ and $T_w$ gives
-            \begin{eqnarray}
-                T_b &=& \frac{(f_x - s_x)\cdot(s_y - r_{0_y}) - (f_y - s_y)\cdot(s_y - r_{0_y})}{(dt~v_y)\cdot(f_x - s_x) - (dt~v_x)\cdot(f_y - s_y)} \nonumber \\
-                T_w &=& \frac{(dt~v_x)\cdot(s_y - r_{0_y}) - (dt~v_y)\cdot(s_y - r_{0_y})}{(dt~v_y)\cdot(f_x - s_x) - (dt~v_x)\cdot(f_y - s_y)} \nonumber
-            \end{eqnarray}
-            If both $T_b$ and $T_w$ are between $0$ and $1$, then a ball-wall collision occurs. The point at which can be found by subbing in $T_b$ or $T_w$
-            into Equations~\ref{equ:ball_parametric} or \ref{equ:wall_parametric} respectfully. Then the amount of time passed can be solved for using Equations~\ref{equ:position}.
-            %\end{Ball-Wall Collision Detection}
-        %\end{Event Detection}
+        \subsubsection{Ball-Wall Collision Detection}
+        Ball-wall collision detection is similar to ball-ball, except the ball is a distance one radius away from the wall when it collides.
+        Since the wall doesn't move, a different strategy had to be employed to detect when a ball-wall collision occurs. In this case,
+        both the and wall positions are described using parametric equations.
+        \begin{eqnarray}
+            \vec r = \vec r_0 + (dt~\vec v) T_b         \label{equ:ball_parametric} \\
+            \vec w = \vec s + (\vec f - \vec s) T_w     \label{equ:wall_parametric}
+        \end{eqnarray}
+        Where, $\vec r$ is the position of the ball, $\vec r_0$ is the initial position of the ball, $\vec v$ is the velocity of the ball,
+        $dt$ is the amount of time that will pass this frame; $\vec w$ is a point on the wall, $\vec s$ is one endpoint on the wall, and $\vec f$
+        is the other endpoint of the wall. $T_b$ and $T_w$ are the parametric variables, and range between $0$ and $1$. \\
+        To determine when the ball hits the wall, where the ball hits must be determined first. The center of the ball hits the wall when
+        $\vec r = \vec w$, thus the ball actually collides with the wall when $\vec r - R \vec n = \vec w$, where $\vec n$ is the normal
+        vector to the wall. For simplicity below, we will ignore this offset value, as it is a fairly simple transformation. So, the collision
+        occurs when
+        \begin{eqnarray}
+            r_{0_x} + (dt~v_x) T_b = s_x + (f_x - s_x) T_w  \nonumber \\
+            r_{0_y} + (dt~v_y) T_b = s_y + (f_y - s_y) T_w  \nonumber
+        \end{eqnarray}
+        Solving for $T_b$ and $T_w$ gives
+        \begin{eqnarray}
+            T_b &=& \frac{(f_x - s_x)\cdot(s_y - r_{0_y}) - (f_y - s_y)\cdot(s_y - r_{0_y})}{(dt~v_y)\cdot(f_x - s_x) - (dt~v_x)\cdot(f_y - s_y)} \nonumber \\
+            T_w &=& \frac{(dt~v_x)\cdot(s_y - r_{0_y}) - (dt~v_y)\cdot(s_y - r_{0_y})}{(dt~v_y)\cdot(f_x - s_x) - (dt~v_x)\cdot(f_y - s_y)} \nonumber
+        \end{eqnarray}
+        If both $T_b$ and $T_w$ are between $0$ and $1$, then a ball-wall collision occurs. The point at which can be found by subbing in $T_b$ or $T_w$
+        into Equations~\ref{equ:ball_parametric} or \ref{equ:wall_parametric} respectfully. Then the amount of time passed can be solved for using Equations~\ref{equ:position}.
+        %\end{Ball-Wall Collision Detection}
+    %\end{Event Detection}
+    
+    \subsection{Event Handling and Velocity Updates}
+        \subsubsection{Ball-Ball Collisions}
+        The first step in handling a ball-ball collision is to break up the velocity into two components: normal to the collision plane
+        and tangential to the plane. The normal components of each ball's velocity are given by
+        \begin{eqnarray}
+            \vec v_{n_1} &=& (\vec v_1 \cdot \vec n) \vec n       \nonumber \\
+            \vec v_{n_2} &=& (\vec v_1 \cdot (-\vec n)) (-\vec n) \nonumber
+        \end{eqnarray}
+        where $\vec n$ is the normal to the plane. Then, the tangential components can be obtains from
+        \begin{eqnarray}
+            \vec v_{t_1} &=& \vec v_{n_1} - \vec v_1    \nonumber   \\
+            \vec v_{t_2} &=& \vec v_{n_2} - \vec v_2    \nonumber
+        \end{eqnarray}
+        During the collision, the tangential components of the velocity of each ball do not change. Thus, the collision can be
+        reduced to a $1D$ collision along the normal components. For a $1D$ collision, the final velocities are given by
+        \begin{eqnarray}
+            \vec v_1^\prime &=& \frac{(m_1 - \epsilon m_2) \vec v_1 + (m_2 + \epsilon m_2) \vec v_2}{m_1 + m_2}   \nonumber \\
+            \vec v_2^\prime &=& \frac{(m_1 + \epsilon m_1) \vec v_1 + (m_2 - \epsilon m_1) \vec v_2}{m_1 + m_2}   \nonumber
+        \end{eqnarray}
+        where $\epsilon$ is the coefficient of restitution. In our case $m_1 = m_2$, and $\epsilon = 1$ since all balls have
+        an equal mass and the collision is totally elastic. The above equations simplify to
+        \begin{eqnarray}
+            \vec v_1^\prime &=& \vec v_2    \nonumber   \\
+            \vec v_2^\prime &=& \vec v_1    \nonumber
+        \end{eqnarray}
+        Thus, the normal components of the velocities of the balls simply switch. The final velocities of each ball after the collision are
+        \begin{eqnarray}
+            \vec v_1^\prime &=& \vec v_{t_1} + \vec v_{n_2} \nonumber   \\
+            \vec v_2^\prime &=& \vec v_{t_2} + \vec v_{n_1} \label{equ:after_ball_ball}
+        \end{eqnarray}
+        %\end{Ball-Ball Collisions}
         
-        \subsection{Event Handling and Velocity Updates}
-            \subsubsection{Ball-Ball Collisions}
-            The first step in handling a ball-ball collision is to break up the velocity into two components: normal to the collision plane
-            and tangential to the plane. The normal components of each ball's velocity are given by
-            \begin{eqnarray}
-                \vec v_{n_1} &=& (\vec v_1 \cdot \vec n) \vec n       \nonumber \\
-                \vec v_{n_2} &=& (\vec v_1 \cdot (-\vec n)) (-\vec n) \nonumber
-            \end{eqnarray}
-            where $\vec n$ is the normal to the plane. Then, the tangential components can be obtains from
-            \begin{eqnarray}
-                \vec v_{t_1} &=& \vec v_{n_1} - \vec v_1    \nonumber   \\
-                \vec v_{t_2} &=& \vec v_{n_2} - \vec v_2    \nonumber
-            \end{eqnarray}
-            During the collision, the tangential components of the velocity of each ball do not change. Thus, the collision can be
-            reduced to a $1D$ collision along the normal components. For a $1D$ collision, the final velocities are given by
-            \begin{eqnarray}
-                \vec v_1^\prime &=& \frac{(m_1 - \epsilon m_2) \vec v_1 + (m_2 + \epsilon m_2) \vec v_2}{m_1 + m_2}   \nonumber \\
-                \vec v_2^\prime &=& \frac{(m_1 + \epsilon m_1) \vec v_1 + (m_2 - \epsilon m_1) \vec v_2}{m_1 + m_2}   \nonumber
-            \end{eqnarray}
-            where $\epsilon$ is the coefficient of restitution. In our case $m_1 = m_2$, and $\epsilon = 1$ since all balls have
-            an equal mass and the collision is totally elastic. The above equations simplify to
-            \begin{eqnarray}
-                \vec v_1^\prime &=& \vec v_2    \nonumber   \\
-                \vec v_2^\prime &=& \vec v_1    \nonumber
-            \end{eqnarray}
-            Thus, the normal components of the velocities of the balls simply switch. The final velocities of each ball after the collision are
-            \begin{eqnarray}
-                \vec v_1^\prime &=& \vec v_{t_1} + \vec v_{n_2} \nonumber   \\
-                \vec v_2^\prime &=& \vec v_{t_2} + \vec v_{n_1} \label{equ:after_ball_ball}
-            \end{eqnarray}
-            %\end{Ball-Ball Collisions}
-            
-            \subsubsection{Ball-Wall Collisions}
-            Ball-wall collisions are much simpler than ball-ball, as the velocity of the ball is reflected through the vector normal to the
-            surface of the wall. The velocity after the event becomes
-            \begin{equation}
-                \vec v^\prime = \vec v - 2 (\vec v \cdot \vec n) \vec n
-                \label{equ:after_ball_wall}
-            \end{equation}
-            However, there is some energy loss due to the rubberiness of the wall. To account for this, the resultant velocity is scaled down by
-            a small percentage to represent the loss. In gl-billiards, this speed loss factor is $0.3$, which equates to about a $20\%$ energy
-            loss from the collision with the wall.\\
-            %\end{Ball-Wall Collisions}
-            
-            \subsubsection{Friction}
-            At the end of each frame, friction slows down every moving ball slightly. There are two types of friction, kinetic and static.
-            Kinetic friction slows down objects which are moving, and static friction must be overcome to either start or continue moving.
-            Simpler of the two in gl-billiards is static friction, which is just a simple speed check. If the speed of a ball is less than
-            some threshold ($1$cm/s in gl-billiards), then the ball's velocity is set to $0$. \\
-            Kinetic friction acts in the opposite direction of the ball's velocity, and is equal to
-            \begin{equation}
-                \vec F_f = -\epsilon m g
-                \label{equ:friction}
-            \end{equation}
-            where $\epsilon$ of the coefficient of kinetic friction between the table surface and a pool ball. Using Equations~\ref{equ:newton},
-            this final velocity of the ball can be obtained after the frictional force is applied.
-            \begin{equation}
-                \vec v^\prime = \vec v + \vec F_f \cdot dt
-                \label{equ:friction_velocity}
-            \end{equation}
-            where $dt$ is the amount of time that passed in the frame. And that's it! That's all of the physics in gl-billiards in a nutshell.
-            %\end{Friction}
-        %\end{Event Handling and Velocity Updates}
-    %\end{Physics}
-
-\end{document}
+        \subsubsection{Ball-Wall Collisions}
+        Ball-wall collisions are much simpler than ball-ball, as the velocity of the ball is reflected through the vector normal to the
+        surface of the wall. The velocity after the event becomes
+        \begin{equation}
+            \vec v^\prime = \vec v - 2 (\vec v \cdot \vec n) \vec n
+            \label{equ:after_ball_wall}
+        \end{equation}
+        However, there is some energy loss due to the rubberiness of the wall. To account for this, the resultant velocity is scaled down by
+        a small percentage to represent the loss. In gl-billiards, this speed loss factor is $0.3$, which equates to about a $20\%$ energy
+        loss from the collision with the wall.\\
+        %\end{Ball-Wall Collisions}
+        
+        \subsubsection{Friction}
+        At the end of each frame, friction slows down every moving ball slightly. There are two types of friction, kinetic and static.
+        Kinetic friction slows down objects which are moving, and static friction must be overcome to either start or continue moving.
+        Simpler of the two in gl-billiards is static friction, which is just a simple speed check. If the speed of a ball is less than
+        some threshold ($1$cm/s in gl-billiards), then the ball's velocity is set to $0$. \\
+        Kinetic friction acts in the opposite direction of the ball's velocity, and is equal to
+        \begin{equation}
+            \vec F_f = -\epsilon m g
+            \label{equ:friction}
+        \end{equation}
+        where $\epsilon$ of the coefficient of kinetic friction between the table surface and a pool ball. Using Equations~\ref{equ:newton},
+        this final velocity of the ball can be obtained after the frictional force is applied.
+        \begin{equation}
+            \vec v^\prime = \vec v + \vec F_f \cdot dt
+            \label{equ:friction_velocity}
+        \end{equation}
+        where $dt$ is the amount of time that passed in the frame. And that's it! That's all of the physics in gl-billiards in a nutshell.
+        %\end{Friction}
+    %\end{Event Handling and Velocity Updates}
+%\end{Physics}

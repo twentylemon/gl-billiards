@@ -1,0 +1,10 @@
+\contentsline {section}{\numberline {1}Physics Engine}{1}
+\contentsline {subsection}{\numberline {1.1}Taking a Shot}{1}
+\contentsline {subsection}{\numberline {1.2}Event System}{1}
+\contentsline {subsection}{\numberline {1.3}Event Detection}{2}
+\contentsline {subsubsection}{\numberline {1.3.1}Ball-Ball Collision Detection}{2}
+\contentsline {subsubsection}{\numberline {1.3.2}Ball-Wall Collision Detection}{3}
+\contentsline {subsection}{\numberline {1.4}Event Handling and Velocity Updates}{4}
+\contentsline {subsubsection}{\numberline {1.4.1}Ball-Ball Collisions}{4}
+\contentsline {subsubsection}{\numberline {1.4.2}Ball-Wall Collisions}{4}
+\contentsline {subsubsection}{\numberline {1.4.3}Friction}{5}
