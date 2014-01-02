@@ -49,8 +49,7 @@ typedef struct {
     GLUI_Listbox* cameraFollowList;
 
 	int glutWindow;
-	int windowHeight;
-	int windowWidth;
+	int windowWidth, windowHeight;
 
     std::vector<Ball*> balls;
     std::vector<Ball> prev;
@@ -74,6 +73,9 @@ typedef struct {
 } Global;
 
 extern Global global;
+
+void displayFunc();
+void keyboardFunc(int, int, int);
 
 void takeShot();
 void swapTurns();

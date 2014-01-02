@@ -250,9 +250,7 @@ void updateSunkBalls(){
  * Explicitly define the main window if it loses focus.
 **/
 void idleFunc(){
-	if (glutGetWindow() != global.glutWindow){
-		glutSetWindow(global.glutWindow);
-    }
+    glutSetWindow(global.glutWindow);
 	glutPostRedisplay();
 }
 
@@ -288,7 +286,7 @@ void displayFunc(){
         }
     }
     global.clock = now;
-	
+
     glPopMatrix();
 	glutSwapBuffers();
 }
@@ -340,15 +338,6 @@ void keyboardFunc(int key, int x, int y){
 int main(int argc, char** argv){
     glutInit(&argc, argv);
     init();
-
-    glutDisplayFunc(displayFunc);
-    glutSpecialFunc(keyboardFunc);
-
-	GLUI_Master.set_glutReshapeFunc(resizeWindow);
-	initializeGlui();
-
-    swapTurns();
-
     glutMainLoop();
     return 0;
 }

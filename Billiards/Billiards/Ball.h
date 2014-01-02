@@ -35,6 +35,7 @@ public:
     void draw();
     void pushRotation(Vector, double);
     void consolidateRotation();
+    void resetRotation();
     void sink();
 
     double getRadius();

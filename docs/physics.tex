@@ -51,24 +51,21 @@
     simulate $1$s of play before returning, then the screen would be updated as if $1$s had passed.
     \\
     So, the engine determines which events occur within time $dt$. Event detection then becomes \textit{when} do events happen instead
-    of \textit{if} they happened. The entire update function works as follows:\\
-    \texttt{
-        update($dt$)                                                        \\
-        \begin{addmargin}[1em]{0em}
-        find earliest event that occurs within time $dt$, call it $event$   \\
-        if no such event                                                    \\
-            \begin{addmargin}[1em]{0em}
-            roll balls until $dt$                                           \\
-            \end{addmargin}
-        otherwise                                                           \\
-            \begin{addmargin}[1em]{0em}
-            roll balls until $event$ occurs                                 \\
-            handle $event$                                                  \\
-            $dt$ <-- $dt$ - $event$.$getTime()$                             \\
-            call update($dt$) again                                         \\
-            \end{addmargin}
-        \end{addmargin}
-    }
+    of \textit{if} they happened. The entire update function works as described in Algorithm \ref{algo:update} below. \\
+    \begin{center}
+    \begin{pseudocode}[framebox]{update}{dt}
+        event \gets \text{earliest event that occurs with time } dt     \\
+        \IF \text{no events}
+        \THEN \text{roll balls for } dt                                 \\
+        \ELSE \BEGIN
+            \text{rolls balls until } event \text{ occurs}              \\
+            \text{handle the event, update velocities}                  \\
+            \CALL{update}{dt - event.getTime()}
+        \END
+        \label{algo:update}
+    \end{pseudocode}
+    \end{center}
+
     In this manner, all events that happen within $dt$ and handled automatically before the frame updates and the balls slow
     down due to friction. Note that "roll balls" simply means each ball moves at it's speed for some amount of time. Pocketing
     detection needs to be done there, as it is not a standard event. That is, if a ball is pocketed, it cannot possible participate

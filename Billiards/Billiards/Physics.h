@@ -118,6 +118,7 @@ namespace physics
     const double ballMass = 0.170079;        //6 oz (in kg)
     const double ballRadius = 0.028575;      //1.125in (in m)
     const double ballRadiusSq = ballRadius * ballRadius;
+    const double ballDiameter = 2.0 * ballRadius;
     const double ballCircumference = 2.0 * PI * ballRadius;
 
     /*     width                 ^

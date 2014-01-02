@@ -37,12 +37,12 @@ void initializeWindow(){
     glClearColor(0, 0, 0, 1);
 	glShadeModel(GL_SMOOTH);
 
-	glViewport(0, 0, global.windowWidth, global.windowHeight);  
+    glViewport(0, 0, global.windowWidth, global.windowHeight);  
 
     glMatrixMode(GL_PROJECTION); 
     glLoadIdentity(); 
 	gluPerspective(PERSPECTIVE_FIELD_OF_VIEW_ANGLE, global.windowWidth/global.windowHeight, MIN_CLIPPING, MAX_CLIPPING); 
-	gluLookAt(130 * 0.0254, 0, 50 * 0.0254, 0, 0, 0 * 0.0254, 0, 0, 1);
+	gluLookAt(130 * 0.0254, 0, 50 * 0.0254, 0, 0, 0, 0, 0, 1);
    
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
@@ -95,6 +95,7 @@ void initializeGame(){
         global.balls.push_back(new Ball(ballNum));
         global.prev.push_back(Ball(ballNum));
     }
+
 	global.players[0] = Player(1);
     global.players[1] = Player(2);
     global.numPlayers = 2;
@@ -118,7 +119,11 @@ void initializeGame(){
  * for initializeGame() to be called
 **/
 void restartGame(){
-	global.balls.clear();
+    while (!global.balls.empty()){
+        delete global.balls.back();
+        global.balls.pop_back();
+    }
+    global.prev.clear();
 	global.shootButton->set_name("Shoot");
 	global.shotPowerSpinner->set_float_val(0.0);
     global.cueTranslate->set_z(180);
@@ -138,17 +143,23 @@ void init(){
     srand((unsigned)time(NULL));
     
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
+    glutInitWindowPosition(50, 50);
 
 	global.windowHeight = 600;
 	global.windowWidth = 800;
 	glutInitWindowSize(global.windowWidth, global.windowHeight);
 
     global.glutWindow = glutCreateWindow("gl-billiards");
+
+    glutDisplayFunc(displayFunc);
+    glutSpecialFunc(keyboardFunc);
+
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-	initializeWindow();
+    initializeWindow();
 	initializeLighting();
-	initializeMaterials();
-    initializeGame();
+	initializeMaterials();    
+    initializeGlui();
+    restartGame();
 }

@@ -20,9 +20,7 @@ Ball::Ball(int number) : RADIUS(BALL_RADIUS), DIAMETER(2.0 * BALL_RADIUS), MASS(
     setPosition(getStartPosition());
 
     //initialize a random rotation
-    for (int i = 0; i < 16; i++){
-        rotMatrix[i] = (i % 5 == 0) ? 1 : 0;    //makes 4x4 identity matrix
-    }
+    resetRotation();
     pushRotation(Vector(rand(), rand(), rand()), rand() % 360);
     consolidateRotation();
 }
@@ -38,6 +36,17 @@ void Ball::draw(){
     doRotate();
     model.draw();
     glPopMatrix();
+}
+
+
+/**
+ * Resets the rotation matrix to the identity matrix
+**/
+void Ball::resetRotation(){
+    for (int i = 0; i < 16; i++){
+        rotMatrix[i] = (i % 5 == 0) ? 1 : 0;    //makes 4x4 identity matrix
+    }
+    rotList.clear();
 }
 
 
@@ -157,11 +166,10 @@ Vector Ball::getStartPosition(){
  * Bookkeeping copy. Used for keeping the previous state of a ball, so only the key
  * attributes are copied, like number, position and pocketed state.
  *
- * @param other the ball to deep copy
+ * @param other the ball to copy
 **/
 void Ball::copy(Ball* ball){
     number = ball->getNumber();
-    position = ball->getPosition();
     sunk = ball->isSunk();
 }
 

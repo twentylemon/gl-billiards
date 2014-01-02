@@ -131,7 +131,6 @@ void initializeGlui(){
 	GLUI_Panel* cameraRotatePanel = global.glui->add_panel_to_panel(cameraPanel, NULL);
     GLUI_Panel* followPanel = global.glui->add_panel_to_panel(cameraPanel, "Follow a Ball");
 	GLUI_Panel* zoomPanel = global.glui->add_panel_to_panel(cameraPanel, NULL);
-	//GLUI_Panel* resetZoomPanel = global.glui->add_panel_to_panel(cameraPanel, NULL);
 
 	global.cameraTranslate = new GLUI_Translation(cameraRotatePanel, "Rotate", GLUI_TRANSLATION_XY);
     global.cameraCenterType = new GLUI_RadioGroup(cameraRotatePanel, (int*)0, -1, (GLUI_Update_CB)updateCamera);
@@ -148,12 +147,11 @@ void initializeGlui(){
 	new GLUI_Button(cameraRotatePanel, "Reset Camera", 0, (GLUI_Update_CB)resetCamera);
 	new GLUI_Button(zoomPanel, "Zoom In", 0, (GLUI_Update_CB)zoomIn);
 	new GLUI_Button(zoomPanel, "Zoom Out", 0, (GLUI_Update_CB)zoomOut);
-	//new GLUI_Button(resetZoomPanel, "Reset Zoom", 0, (GLUI_Update_CB)resetZoom);
 	new GLUI_Button(zoomPanel, "Reset Zoom", 0, (GLUI_Update_CB)resetZoom);
 
 	//link main glut window with our control panel
 	global.glui->set_main_gfx_window(global.glutWindow);
 	
-	//make sure GLUI knows about our idle function
 	GLUI_Master.set_glutIdleFunc(idleFunc);
+	GLUI_Master.set_glutReshapeFunc(resizeWindow);
 }

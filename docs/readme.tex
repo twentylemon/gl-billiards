@@ -1,8 +1,9 @@
 \documentclass[12pt]{article}
 \usepackage{graphicx}
-\usepackage{float}
 \usepackage{amsmath}
 \usepackage{scrextend}
+\usepackage{float}
+\usepackage{pseudocode}
 \addtolength{\textwidth}{1in}
 \addtolength{\textheight}{1in}
 \addtolength{\evensidemargin}{0.5in}
@@ -14,8 +15,8 @@
 
 \begin{document}
 \maketitle
-    \begin{abstract}
-    \end{abstract}
+    %\begin{abstract}
+    %\end{abstract}
 
     \thispagestyle{empty}
     \tableofcontents
@@ -26,6 +27,10 @@
     \clearpage
     \setcounter{page}{1}
     
-    \include{physics}
+    \input{controls}
+    
+    \input{physics}
+    
+    \include{biblio}
 
 \end{document}
