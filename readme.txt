@@ -5,7 +5,7 @@ Dan Lapp
 Taras Mychaskiw
 
 Run the exe
-	exe/Billiards.exe
+	exe/gl-billiards.exe
 
 Supporting Document
 	readme.pdf
