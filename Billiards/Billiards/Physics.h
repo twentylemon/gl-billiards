@@ -14,8 +14,17 @@
 #include "Cue.h"
 #include "Ball.h"
 
-#include <Windows.h>
-#include "resource.h"
+/**
+ * Sound flag. Uncomment and recompile to turn sounds on.
+ * They are a bit buggy is all, it seems if too many sounds are playing,
+ * then no sounds will occur at all.
+**/
+//#define SOUND_ON
+
+#ifdef SOUND_ON
+    #include <Windows.h>
+    #include "resource.h"
+#endif
 
 #define PI 3.14159
 #undef min  //from Model.h -> stdio.h
@@ -97,7 +106,9 @@ namespace physics
         Cushion cushion;
     };
 
+#ifdef SOUND_ON
     void playSound(int);
+#endif
 
     Vector cueShot(Cue, Ball*);
     bool update(std::vector<Ball*>, double);

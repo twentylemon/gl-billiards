@@ -157,7 +157,15 @@ xcopy Objects ..\..\exe\Objects\ /s /y</Command>
     <ResourceCompile Include="Billiards.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Media Include="sound\test.wav" />
+    <Media Include="sound\break.wav" />
+    <Media Include="sound\cue.wav" />
+    <Media Include="sound\cue_soft.wav" />
+    <Media Include="sound\impact_fast.wav" />
+    <Media Include="sound\impact_med.wav" />
+    <Media Include="sound\impact_soft.wav" />
+    <Media Include="sound\pocketed.wav" />
+    <Media Include="sound\rail_hard.wav" />
+    <Media Include="sound\rail_soft.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -217,7 +217,31 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Media Include="sound\test.wav">
+    <Media Include="sound\break.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="sound\cue.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="sound\cue_soft.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="sound\impact_fast.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="sound\impact_med.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="sound\impact_soft.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="sound\pocketed.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="sound\rail_hard.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="sound\rail_soft.wav">
       <Filter>Resource Files</Filter>
     </Media>
   </ItemGroup>

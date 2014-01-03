@@ -2,6 +2,7 @@
 % gl-billiards
 % Dan Lapp
 % Taras Mychaskiw
+\newcommand{\pvec}[1]{\vec{#1}\mkern2mu\vphantom{#1}}
 
 \section{Physics Engine}
 
@@ -41,17 +42,16 @@
     where $\vec x$ is the distance between the ball and the tip of the cue, $m$ is the mass of the ball, $t$ is how much time the
     cue is in contact with the ball and $k$ is the spring constant of the cue. The values for $t$ and $k$ needed to be experimentally
     found though trial and error, essentially trying values until what happened in the simulation closely represented real life. The
-    values for $t$ and $k$ were found to be $0.01$s and $200$N/m.
+    values for $t$ and $k$ were found to be $0.01$s and $200$N/m respectfully.
     %\end{Taking a Shot}
     
     \subsection{Event System}
-    For the purposes of this program, an event is a ball-ball collision, or a ball banking off of the cushion. The way gl-billiards works
-    is each time the screen is redisplayed, some physics updater function is called with a parameter $dt$, which is how much time has passed
-    since the last frame. The engine simulates the pool game up until a time $dt$ has passed. For example, if $1$s was passed, then it would
-    simulate $1$s of play before returning, then the screen would be updated as if $1$s had passed.
-    \\
+    For the purposes of this program, an event is a ball-ball collision, or a ball banking off of the cushion (a ball-wall collision). The
+    way gl-billiards works is each time the screen is redisplayed, some physics updater function is called with a parameter $dt$, which
+    is how much time has passed since the last frame. The engine simulates the pool game up until a time $dt$ has passed. For example,
+    if $1$s was passed, then it would  simulate $1$s of play before returning, then the screen would be updated as if $1$s had passed.  \\
     So, the engine determines which events occur within time $dt$. Event detection then becomes \textit{when} do events happen instead
-    of \textit{if} they happened. The entire update function works as described in Algorithm \ref{algo:update} below. \\
+    of \textit{if} they happened. The entire update function works as described in Algorithm \ref{algo:update} below.   \\
     \begin{center}
     \begin{pseudocode}[framebox]{update}{dt}
         event \gets \text{earliest event that occurs with time } dt     \\
@@ -145,19 +145,19 @@
         During the collision, the tangential components of the velocity of each ball do not change. Thus, the collision can be
         reduced to a $1D$ collision along the normal components. For a $1D$ collision, the final velocities are given by
         \begin{eqnarray}
-            \vec v_1^\prime &=& \frac{(m_1 - \epsilon m_2) \vec v_1 + (m_2 + \epsilon m_2) \vec v_2}{m_1 + m_2}   \nonumber \\
-            \vec v_2^\prime &=& \frac{(m_1 + \epsilon m_1) \vec v_1 + (m_2 - \epsilon m_1) \vec v_2}{m_1 + m_2}   \nonumber
+            \pvec{v_1}' &=& \frac{(m_1 - \epsilon m_2) \vec v_1 + (m_2 + \epsilon m_2) \vec v_2}{m_1 + m_2}   \nonumber \\
+            \pvec{v_2}' &=& \frac{(m_1 + \epsilon m_1) \vec v_1 + (m_2 - \epsilon m_1) \vec v_2}{m_1 + m_2}   \nonumber
         \end{eqnarray}
         where $\epsilon$ is the coefficient of restitution. In our case $m_1 = m_2$, and $\epsilon = 1$ since all balls have
         an equal mass and the collision is totally elastic. The above equations simplify to
         \begin{eqnarray}
-            \vec v_1^\prime &=& \vec v_2    \nonumber   \\
-            \vec v_2^\prime &=& \vec v_1    \nonumber
+            \pvec{v_1}' &=& \vec v_2    \nonumber   \\
+            \pvec{v_2}' &=& \vec v_1    \nonumber
         \end{eqnarray}
         Thus, the normal components of the velocities of the balls simply switch. The final velocities of each ball after the collision are
         \begin{eqnarray}
-            \vec v_1^\prime &=& \vec v_{t_1} + \vec v_{n_2} \nonumber   \\
-            \vec v_2^\prime &=& \vec v_{t_2} + \vec v_{n_1} \label{equ:after_ball_ball}
+            \pvec{v_1}' &=& \vec v_{t_1} + \vec v_{n_2} \nonumber   \\
+            \pvec{v_2}' &=& \vec v_{t_2} + \vec v_{n_1} \label{equ:after_ball_ball}
         \end{eqnarray}
         %\end{Ball-Ball Collisions}
         
@@ -165,7 +165,7 @@
         Ball-wall collisions are much simpler than ball-ball, as the velocity of the ball is reflected through the vector normal to the
         surface of the wall. The velocity after the event becomes
         \begin{equation}
-            \vec v^\prime = \vec v - 2 (\vec v \cdot \vec n) \vec n
+            \pvec{v}' = \vec v - 2 (\vec v \cdot \vec n) \vec n
             \label{equ:after_ball_wall}
         \end{equation}
         However, there is some energy loss due to the rubberiness of the wall. To account for this, the resultant velocity is scaled down by
@@ -186,7 +186,7 @@
         where $\epsilon$ of the coefficient of kinetic friction between the table surface and a pool ball. Using Equations~\ref{equ:newton},
         this final velocity of the ball can be obtained after the frictional force is applied.
         \begin{equation}
-            \vec v^\prime = \vec v + \vec F_f \cdot dt
+            \pvec{v}' = \vec v + \vec F_f \cdot dt
             \label{equ:friction_velocity}
         \end{equation}
         where $dt$ is the amount of time that passed in the frame. And that's it! That's all of the physics in gl-billiards in a nutshell.

@@ -86,6 +86,19 @@ void CollisionEvent::handle(){
     Vector norm2 = Vector::scale(normal, Vector::dotProduct(ball2->getVelocity(), normal));
     Vector tan2 = Vector::subtract(ball2->getVelocity(), norm2);
 
+#ifdef SOUND_ON
+    double len = Vector::subtract(ball1->getVelocity(), ball2->getVelocity()).lengthSq();
+    if (len < 1){
+        playSound(IDW_HIT_SLOW);
+    }
+    else if (len < 8){
+        playSound(IDW_HIT_MEDIUM);
+    }
+    else {
+        playSound(IDW_HIT_FAST);
+    }
+#endif
+
     //conservation of linear momentum, assume the collision is 100% elastic
     ball1->setVelocity(Vector::add(tan1, norm2));
     ball2->setVelocity(Vector::add(tan2, norm1));
@@ -112,6 +125,15 @@ void BankEvent::handle(){
     Vector velocity = ball->getVelocity();
     Vector normal = cushion.getNormal();
 
+#ifdef SOUND_ON
+    if (velocity.lengthSq() < 1){
+        playSound(IDW_RAIL_SOFT);
+    }
+    else {
+        playSound(IDW_RAIL_HARD);
+    }
+#endif
+
     //reflect the velocity through the cushion normal
     normal.scale(2.0 * velocity.dotProduct(normal));
     velocity.subtract(normal);
@@ -128,6 +150,7 @@ void BankEvent::handle(){
 }
 
 
+#ifdef SOUND_N
 /**
  * Plays a sound asynchronously.
  *
@@ -136,6 +159,7 @@ void BankEvent::handle(){
 void playSound(int resourceID){
     PlaySound(MAKEINTRESOURCE(resourceID), GetModuleHandle(NULL), SND_ASYNC | SND_RESOURCE);
 }
+#endif
 
 
 /**
@@ -148,8 +172,15 @@ void playSound(int resourceID){
 **/
 Vector cueShot(Cue cue, Ball* ball){
     //get the vector between the cue and the ball
-    playSound(IDW_TEST);
     Vector direction = Vector::subtract(ball->getPosition(), cue.getPosition());
+#ifdef SOUND_ON
+    if (direction.lengthSq() >= 0.25){
+        playSound(IDW_CUE_HARD);
+    }
+    else {
+        playSound(IDW_CUE_SOFT);
+    }
+#endif
     direction.scale(cueSpringConstant * cueBallContactTime / ballMass);
     return direction;
 }
@@ -212,6 +243,9 @@ void rollBalls(std::vector<Ball*> balls, double dt){
             int p = detectPocket(balls[i]->getPosition());
             if (p != -1){
                 balls[i]->sink();
+#ifdef SOUND_ON
+                playSound(IDW_POCKET);
+#endif
             }
         }
     }
