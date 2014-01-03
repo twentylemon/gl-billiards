@@ -1,6 +1,10 @@
 /**
  * 3D imported model, loaded from disk
  *
+ * Some code was used from spacesimulator.net tutorials
+ * released under tthe BSD licence
+ * http://opensource.org/licenses/bsd-license.php
+ *
  * @author Dan Lapp
  * @version 1.0
  * @since 2013-12-10
@@ -72,9 +76,6 @@ void Model::loadObject(char* modelPath, char* texture){
  * FUNCTION Load3DS (obj_type_ptr, char *)
  *
  * This function loads a mesh from a 3ds file.
- * Please note that we are loading only the vertices, polygons and mapping lists.
- * If you need to load meshes with advanced features as for example: 
- * multi objects, materials, lights and so on, you must insert other chunk parsers.
  *
  *********************************************************/
 int Model::load3DS(char* p_filename){
@@ -219,7 +220,6 @@ int Model::load3DS(char* p_filename){
  *
  *********************************************************/
 int Model::loadTextureBitmap(char *filename){
-	//int num_texture = -1;
     int i, j=0; //Index variables
     FILE *l_file; //File pointer
     unsigned char *l_texture; //The pointer to the memory zone in which we will load the texture
@@ -282,7 +282,6 @@ int Model::loadTextureBitmap(char *filename){
 
 
 /*
- * Modified code from Damiano Vitulli makes up this function.
  * Basically, each surface normal is calculated and saved, and we keep track of which
  * surfaces are next to each vertex. Then each vertex normal becomes the average
  * normal of all it's adjacent surface normals.
