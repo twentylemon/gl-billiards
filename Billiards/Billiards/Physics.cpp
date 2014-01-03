@@ -150,7 +150,7 @@ void BankEvent::handle(){
 }
 
 
-#ifdef SOUND_N
+#ifdef SOUND_ON
 /**
  * Plays a sound asynchronously.
  *
