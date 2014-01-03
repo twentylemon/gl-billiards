@@ -9,3 +9,7 @@
 \contentsline {subsubsection}{\numberline {2.4.1}Ball-Ball Collisions}{5}
 \contentsline {subsubsection}{\numberline {2.4.2}Ball-Wall Collisions}{6}
 \contentsline {subsubsection}{\numberline {2.4.3}Friction}{6}
+\contentsline {section}{\numberline {3}3D Engine}{7}
+\contentsline {subsection}{\numberline {3.1}Loading Models}{7}
+\contentsline {subsection}{\numberline {3.2}Calculating Normals}{7}
+\contentsline {subsection}{\numberline {3.3}Optimizations}{8}
