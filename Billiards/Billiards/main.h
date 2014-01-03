@@ -1,5 +1,6 @@
 /**
  * Header for the main program.
+ * Note! Go into physics.h to turn on sounds!
  *
  * @author Taras Mychaskiw
  * @version 1.0

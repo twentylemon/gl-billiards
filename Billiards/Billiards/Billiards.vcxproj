@@ -167,6 +167,9 @@ xcopy Objects ..\..\exe\Objects\ /s /y</Command>
     <Media Include="sound\rail_hard.wav" />
     <Media Include="sound\rail_soft.wav" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\readme.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

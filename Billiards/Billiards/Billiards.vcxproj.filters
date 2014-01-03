@@ -245,4 +245,7 @@
       <Filter>Resource Files</Filter>
     </Media>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\readme.txt" />
+  </ItemGroup>
 </Project>
