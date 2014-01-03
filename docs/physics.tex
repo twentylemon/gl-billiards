@@ -18,7 +18,7 @@
         \vec F = -k \vec x
         \label{equ:hookes_law}
     \end{equation}
-    where, $\vec F$ is the force, $\vec x$ is how much the spring is stretched and $k$ is the spring constant, which
+    where $\vec F$ is the force, $\vec x$ is how much the spring is stretched and $k$ is the spring constant, which
     describes basically how powerful (springy) the spring is.
     \\
     Hooke's Law is equivalent to Newton's Second Law, which states
@@ -26,14 +26,14 @@
         \vec F = m \vec a
         \label{equ:newton}
     \end{equation}
-    where, $\vec F$ is the force, $m$ is the mass of the object and $\vec a$ is the acceleration of the object. Setting
+    where $\vec F$ is the force, $m$ is the mass of the object and $\vec a$ is the acceleration of the object. Setting
     Equation~\ref{equ:hookes_law} equal to Equation~\ref{equ:newton} gives
     \begin{eqnarray}
         -k \vec x &=& m \vec a \nonumber \\
         -k \vec x &=& m \frac{\Delta \vec v}{\Delta t} \nonumber \\
         \Delta \vec v &=& \frac{-k \Delta t}{m}\vec x  \nonumber
     \end{eqnarray}
-    where $\vec v$ is the velocity of the object, and $t$ is the time. For pool, the initial velocity of the ball being struck is
+    where $\vec v$ is the velocity of the object and $t$ is the time. For pool, the initial velocity of the ball being struck is
     always zero, so we can simplify the above equation to
     \begin{equation}
         \vec v = \frac{-k t}{m}\vec x
@@ -49,8 +49,8 @@
     For the purposes of this program, an event is a ball-ball collision, or a ball banking off of the cushion (a ball-wall collision). The
     way gl-billiards works is each time the screen is redisplayed, some physics updater function is called with a parameter $dt$, which
     is how much time has passed since the last frame. The engine simulates the pool game up until a time $dt$ has passed. For example,
-    if $1$s was passed, then it would  simulate $1$s of play before returning, then the screen would be updated as if $1$s had passed.  \\
-    So, the engine determines which events occur within time $dt$. Event detection then becomes \textit{when} do events happen instead
+    if $1$s has passed, then it would simulate $1$s of play before returning, then the screen would be updated as if $1$s had passed.   \\
+    The engine determines which events occur within time $dt$. Event detection then becomes \textit{when} do events happen instead
     of \textit{if} they happened. The entire update function works as described in Algorithm \ref{algo:update} below.   \\
     \begin{center}
     \begin{pseudocode}[framebox]{update}{dt}
@@ -59,7 +59,7 @@
         \THEN \text{roll balls for } dt                                 \\
         \ELSE \BEGIN
             \text{rolls balls until } event \text{ occurs}              \\
-            \text{handle the event, update velocities}                  \\
+            \text{handle } event \text{, update velocities}             \\
             \CALL{update}{dt - event.getTime()}
         \END
         \label{algo:update}
@@ -67,7 +67,7 @@
     \end{center}
 
     In this manner, all events that happen within $dt$ and handled automatically before the frame updates and the balls slow
-    down due to friction. Note that "roll balls" simply means each ball moves at it's speed for some amount of time. Pocketing
+    down due to friction. Note that "roll balls" simply means each ball moves at it's (constant) speed for some amount of time. Pocketing
     detection needs to be done there, as it is not a standard event. That is, if a ball is pocketed, it cannot possible participate
     in any events in time $dt$, since it would bank off the cushion or collide with another ball first. \\
     After $update(dt)$ is finished, each ball gets affected by friction and slows down slightly. Friction takes the form of a
@@ -108,7 +108,7 @@
             \vec r = \vec r_0 + (dt~\vec v) T_b         \label{equ:ball_parametric} \\
             \vec w = \vec s + (\vec f - \vec s) T_w     \label{equ:wall_parametric}
         \end{eqnarray}
-        Where, $\vec r$ is the position of the ball, $\vec r_0$ is the initial position of the ball, $\vec v$ is the velocity of the ball,
+        Where $\vec r$ is the position of the ball, $\vec r_0$ is the initial position of the ball, $\vec v$ is the velocity of the ball,
         $dt$ is the amount of time that will pass this frame; $\vec w$ is a point on the wall, $\vec s$ is one endpoint on the wall, and $\vec f$
         is the other endpoint of the wall. $T_b$ and $T_w$ are the parametric variables, and range between $0$ and $1$. \\
         To determine when the ball hits the wall, where the ball hits must be determined first. The center of the ball hits the wall when
@@ -125,7 +125,7 @@
             T_w &=& \frac{(dt~v_x)\cdot(s_y - r_{0_y}) - (dt~v_y)\cdot(s_y - r_{0_y})}{(dt~v_y)\cdot(f_x - s_x) - (dt~v_x)\cdot(f_y - s_y)} \nonumber
         \end{eqnarray}
         If both $T_b$ and $T_w$ are between $0$ and $1$, then a ball-wall collision occurs. The point at which can be found by subbing in $T_b$ or $T_w$
-        into Equations~\ref{equ:ball_parametric} or \ref{equ:wall_parametric} respectfully. Then the amount of time passed can be solved for using Equations~\ref{equ:position}.
+        into Equations~\ref{equ:ball_parametric} or \ref{equ:wall_parametric} respectfully. Then the amount of time passed can be solved for using Equation~\ref{equ:position}.
         %\end{Ball-Wall Collision Detection}
     %\end{Event Detection}
     

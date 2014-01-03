@@ -4,71 +4,63 @@
 % Taras Mychaskiw
 
 \section{3D Engine}
-
 	\subsection{Loading Models}
-	To use 3d models that are more complex than simple primitive shapes, it is important to import custom models. Gl-billiards uses 3D Studio Max to create 
-and texture all of the models in the game. The main advantage of this approach is that all vertex coordinates and texture mapping coordinates can be handled 
-by 3D Studio and loaded into OpenGL. Programming a pool table directly in OpenGL would be virtually impossible.\\
-	Gl-billiards uses the \textit{.3ds} file format to read models into OpenGL. This is a binary file format that is fairly simple to parse, well documented, and 
-natively supported by 3D Studio. The binary data is organized into a heirarchy of chunks. An imported model is abstracted into it's own class \textit{Model}. 
-Each object in the scene, such as \textit{Table}, and \textit{Cue} have a \textit{Model}. Initialization is shown in Figure \ref{eqn:modelInit}
-	\begin{equation}
-	\label{eqn:modelInit}
-	Model{\enskip}model = Model(std::string{\enskip}modelPath,{\enskip}std::string{\enskip}texturePath)
-	\end{equation}
-The texture specified must be a \textit{.bmp} file for the texture parser to read. When the model is initialized, the 3ds parser skips through the file chunks 
-and stores three things. First are the actual \textit{(x, y, z)} coordinates of the vertices, then the polygon list, which is the order to draw the vertices. Last 
-is the texture mapping coordinates.\\
-	The bitmap parser reads in a \textit{.bmp} file used as a texture for the model. The texture must have a width and a height that is a power of $2$, 
-and must be maximum $2048$ pixels in any dimension. The textures are then handed to OpenGL and a texture id is saved in the model.
-
-	%end{Loading Models}
+	To use 3d models that are more complex than simple primitive shapes, it is important to import custom models. gl-billiards employs 3D Studio Max
+    to create and texture all of the models in the game. The main advantage of this approach is that all vertex coordinates and texture mapping 
+    coordinates can be handled by 3D Studio Max and loaded into OpenGL. Programming a pool table directly in OpenGL would be virtually impossible.
+    \\
+	gl-billiards uses the \textit{.3ds} file format to read models into OpenGL. This is a binary file format that is fairly simple to parse,
+    well documented and natively supported by 3D Studio Max. The data is organized into a hierarchy of chunks. An imported model is
+    abstracted into it's own class \textit{Model}. Each object in the scene, such as \textit{Table} or \textit{Cue} have a \textit{Model}.
+    An example of the model initialization is shown below,
+	\begin{eqnarray}
+        Model{\enskip}model = Model(std::string{\enskip}modelPath,{\enskip}std::string{\enskip}texturePath) \nonumber
+	\end{eqnarray}
+    The texture specified must be a \textit{.bmp} file for the texture parser to read. When the model is initialized, the 3ds parser skips
+    through the file chunks and stores three things. First are the actual \textit{(x, y, z)} coordinates of the vertices, then the polygon list,
+    which is the order to draw the vertices. Last is the texture mapping coordinates.
+    \\
+    The bitmap parser reads in a \textit{.bmp} file used as a texture for the model. The texture must have a width and a height that is a power of $2$, 
+    and must be maximum $2048$ pixels in any dimension. The textures are then handed to OpenGL and a texture id is saved in the model.
+	%\end{Loading Models}
 
 	\subsection{Calculating Normals}
-	After the model and texture is loaded, normals have to be calculated to be used with game lighting. Gl-billiards calculates normals itself. This way 
-we could get the vertex normals without having to parse the smoothing groups in the \textit{.3ds} file. Smoothing groups are a different representation 
-of smoothed vertex normals used by 3D Studio Max, and are not directly used with OpenGL's \textit{glNormal3f()}. Since every polygon in this file 
-format is a triangle, calculating normals was fairly simple. 
-The pseudocode for this is shown below in Algorithm \ref{algo:calcNormals}
-
+	After the model and texture is loaded, normals have to be calculated to be used with game lighting. gl-billiards calculates normals itself. This way 
+    we could get the vertex normals without having to parse the smoothing groups in the \textit{.3ds} file. Smoothing groups are a different representation 
+    of smoothed vertex normals used by 3D Studio Max, and are not directly used with OpenGL's $glNormal()$. Since every polygon in this file 
+    format is a triangle, calculating normals was fairly simple. 
+    The pseudocode for this is shown in Algorithm \ref{algo:calcNormals}.
 	\begin{center}
 	\begin{pseudocode}[framebox]{calculateNormals}{vertexList, polygonList}
 	\label{algo:calcNormals}
-	\LOCAL{numPolygons}[vertexList.size]\\
-	\FOREACH polygon \in \text{polygonList} \DO
+	\LOCAL{numPolygons}[vertexList.size]    \\
+	\FOREACH polygon \in polygonList \DO
 	\BEGIN
-	\vec v_1 \gets\vec polygon.P_1 - \vec polygon.P_2\\
-	\vec v_2 \gets\vec polygon.P_1  - \vec polygon.P_3 \\
+	\vec v_1 \gets polygon.\vec P_1 - polygon.\vec P_2  \\
+	\vec v_2 \gets polygon.\vec P_1  - polygon.\vec P_3 \\
 	\vec n \gets \vec v_1 \times \vec v_2 \\\\
-		\FOREACH coordinate \in \text{i} \DO
+		\FOREACH coord \in polygon \DO
 		\BEGIN
-			\text{add } \vec n \text{ to normalList[i.coordinate]}\\
-			\text{numPolygons[i.coordinate]}++
+            normalList[coord] \gets normalList[coord] + \vec n    \\
+			numPolygons[coord] \gets numPolygons[coord] + 1
 		\END
 	\END
-	\\\\
-	\FOREACH i \in \text{normalList} \DO
-		\IF{numPolygons[i] > 1}
-		\THEN{i (1.0 / numPolygons[i])}
+	\\  \\
+	\FOREACH i \in normalList \DO
+        normalList[i] \gets normalList[i] \div numPolygons[i]
     \end{pseudocode}
     \end{center}
 	
-	First, for each triangular polygon \textit{$(P_1, P_2, P_3)$} polygonList, calculate two vectors $\vec v_1, \vec v_2$ to use for the cross
- product. The cross product returns a vector $\vec n$ perpendicular to the polygon face. \textit{numPolygons} keeps track of which surfaces are next 
-to each vertex. Then in the final \textit{for} loop the polygon normals are averaged to give each vertex normal a smoothed effect.
-
+    First, for each triangular polygon $(P_1, P_2, P_3)$ polygonList, calculate two vectors $\vec v_1, \vec v_2$ to use for the cross
+    product. The cross product returns a vector $\vec n$ perpendicular to the polygon face. \textit{numPolygons} keeps track of which surfaces are next 
+    to each vertex. Then in the final \textit{for} loop the polygon normals are averaged to give each vertex normal a smoothed effect.
 	%\end{Calculating Normals}
 
 	\subsection{Optimizations}
-	To optimize 3d rendering, OpenGL display lists are implemented for \textit{Model}. Large floating point arrays used to store vertex coordinates 
-require alot of memory to manage these arrays. Using display lists significantly reduces the overhead associated with storing vertex arrays. 
-From the results of running benchmarks on gl-billiards, the user interface used $\sim43\%$ of the program's computation time, and
- physics used $\sim27\%$. Therefore speeding up the model rendering provided a noticable speed increase of at least $5\times$.
-
+    To optimize 3d rendering, OpenGL display lists are implemented for \textit{Model}. Large floating point arrays used to store vertex coordinates 
+    require a lot of memory to manage these arrays. Using display lists significantly reduces the overhead associated with storing vertex arrays. 
+    From the results of running benchmarks on gl-billiards, the user interface used $\sim43\%$ of the program's computation time, and
+    physics used $\sim27\%$. Therefore speeding up the model rendering provided a noticable speed increase of at least $5\times$.
 	%\end{Optimizations}
-	
-
-	
-
 
 %\end{3D Engine}
